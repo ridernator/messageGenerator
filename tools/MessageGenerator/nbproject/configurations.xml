@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="Configuration" projectFiles="true">
+        <itemPath>include/Structure.hxx</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Generators" projectFiles="true">
+        <itemPath>include/CppGenerator.hpp</itemPath>
+        <itemPath>include/JavaGenerator.hpp</itemPath>
+      </logicalFolder>
+      <itemPath>include/FileParser.hpp</itemPath>
+      <itemPath>include/Language.hpp</itemPath>
+      <itemPath>include/MessageGenerator.hpp</itemPath>
+      <itemPath>include/Type.hpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="Configuration" projectFiles="true">
+        <itemPath>src/Structure.cxx</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Generators" projectFiles="true">
+        <itemPath>src/CppGenerator.cpp</itemPath>
+        <itemPath>src/JavaGenerator.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>src/FileParser.cpp</itemPath>
+      <itemPath>src/MessageGenerator.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>config/Structure.xsd</itemPath>
+      <itemPath>config/blob.xml</itemPath>
+      <itemPath>scripts/generateSourceFromXSD</itemPath>
+      <itemPath>config/stressTest.xml</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+          <commandLine>--std=c++17</commandLine>
+          <warningLevel>0</warningLevel>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>xerces-c</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="include/CppGenerator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/FileParser.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/JavaGenerator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Language.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/MessageGenerator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Structure.hxx" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Type.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/CppGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/FileParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/JavaGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/MessageGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Structure.cxx" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+          <commandLine>-Wall -Wextra --std=c++17</commandLine>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="include/CppGenerator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/FileParser.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/JavaGenerator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Language.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/MessageGenerator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Structure.hxx" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Type.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/CppGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/FileParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/JavaGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/MessageGenerator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Structure.cxx" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

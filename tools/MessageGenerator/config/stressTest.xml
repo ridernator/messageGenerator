@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<structure name="StressTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Structure.xsd">
+    <documentation>This class is the stress test class</documentation>
+    
+    <constants>
+		<constant name="SIZE_OF_INT_ARRAY" type="int_32" value="10">
+			<documentation>Size of the "intArray" array</documentation>
+		</constant>
+    </constants>
+      
+    <elements>  
+        <element name="simpleInt" type="int_32">
+            <documentation>This type is called simpleInt</documentation>
+        </element>
+        
+        <element name="simpleIntNoDoc" type="int_32" />
+    
+        <element name="simpleFloat" type="float_32">
+            <documentation>This type is called simpleFloat</documentation>
+        </element>
+    
+        <element name="intArray" type="array" arraySize="SIZE_OF_INT_ARRAY">
+            <documentation>This type is called intArray</documentation>
+            <subElement type="int_32" />
+        </element>
+    
+        <element name="floatSequence" type="sequence">
+            <documentation>This type is called floatSequence</documentation>
+            <subElement type="float_32" />
+        </element>
+    
+        <element name="arrayOfIntSequences" type="array" arraySize="10">
+            <documentation>This type is called arrayOfIntSequences</documentation>
+            <subElement type="sequence">
+                <subElement type="int_32" />
+            </subElement>
+        </element>
+    
+        <element name="sequenceOfIntArrays" type="sequence">
+            <documentation>This type is called arrayOfIntSequences</documentation>
+            <subElement type="array" arraySize="10">
+                <subElement type="int_32" />
+            </subElement>
+        </element>
+    
+        <element name="intToDoubleMap" type="map">
+            <subElement type="int_32" />
+            <subElement2 type="float_64" />
+        </element>
+    
+        <element name="intArray5d" type="array" arraySize="2">
+            <documentation>This type is called intArray5d</documentation>
+            <subElement type="array" arraySize="3">
+                <subElement type="array" arraySize="4">
+                    <subElement type="array" arraySize="5">
+                        <subElement type="array" arraySize="6">
+                            <subElement type="int_32" />
+                        </subElement>
+                    </subElement>
+                </subElement>
+            </subElement>
+        </element>
+    
+        <element name="floatSequence5d" type="sequence">
+            <documentation>This type is called floatSequence5d</documentation>
+            <subElement type="sequence">
+                <subElement type="sequence">
+                    <subElement type="sequence">
+                        <subElement type="sequence">
+                            <subElement type="float_32" />
+                        </subElement>
+                    </subElement>
+                </subElement>
+            </subElement>
+        </element>
+		
+        <element name="blobSequence5d" type="sequence">
+            <documentation>This type is called floatSequence5d</documentation>
+            <subElement type="sequence">
+                <subElement type="sequence">
+                    <subElement type="sequence">
+                        <subElement type="sequence">
+                            <subElement type="structure" structureName="Blob" />
+                        </subElement>
+                    </subElement>
+                </subElement>
+            </subElement>
+        </element>
+    </elements>
+</structure>

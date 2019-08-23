@@ -1,0 +1,52 @@
+#pragma once
+
+#include "Structure.hxx"
+
+class CppGenerator {
+    public:
+        bool generate(const Structure& structure,
+                      const std::string& outputFolder);
+
+    private:
+        bool generateHeaderFile(const Structure& structure,
+                                const std::string& outputFolder);
+        
+        bool generateSourceFile(const Structure& structure,
+                                const std::string& outputFolder);
+
+        std::string generateConstructorHxx(const Structure& structure);
+
+        std::string generateConstructorCxx(const Structure& structure);
+
+        std::string generateDestructorHxx(const Structure& structure);
+
+        std::string generateDestructorCxx(const Structure& structure);
+
+        bool needsArrayInclude(const Structure& structure);
+
+        bool needsVectorInclude(const Structure& structure);
+
+        bool needsMapInclude(const Structure& structure);
+
+        std::set<std::string> getListOfStructIncludes(const Structure& structure);
+
+        std::set<std::string> getListOfStructIncludes(const Element& element);
+
+        std::string generateSerialiseHxx();
+
+        std::string generateSerialiseCxx(const Structure& structure);
+
+        std::string generateDeserialiseHxx();
+
+        std::string generateDeserialiseCxx(const Structure& structure);
+
+        std::string generateGetterHxx(const Element& element);
+        
+        std::string generateSetterHxx(const Element& element);
+
+        std::string convertElementToCppType(const Element& element);
+
+        bool isPrimitiveType(const Element& element);
+
+        std::string convertConstantToCppConstant(const Constant& constant);
+};

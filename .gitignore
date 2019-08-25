@@ -10,3 +10,5 @@
 /tools/MessageGenerator/nbproject/private/
 /tools/MessageGenerator/test/StressTest/.dep.inc
 /tools/MessageGenerator/test/StressTest/nbproject/private/
+/tools/MessageGenerator/include/Structure.hxx
+/tools/MessageGenerator/src/Structure.cxx

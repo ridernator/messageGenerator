@@ -5,9 +5,6 @@
 #include "Serialiser.hpp"
 
 #include "Blob.hxx"
-#include <array>
-#include <vector>
-#include <map>
 /**
  * This class is the stress test class
  */

@@ -96,18 +96,6 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
 	os << "#include \"" << include << ".hxx\"\n";
     }
     
-    if (needsArrayInclude(structure)) {
-        os << "#include <array>\n";
-    }
-    
-    if (needsVectorInclude(structure)) {
-        os << "#include <vector>\n";
-    }
-    
-    if (needsMapInclude(structure)) {
-        os << "#include <map>\n";
-    }
-    
     return os.str();
 }
 
@@ -182,18 +170,6 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
 
     sourceFile.close();
 }
-
-bool CppGenerator::needsArrayInclude(const Structure& structure) {
-    return true;
-}
-
-bool CppGenerator::needsVectorInclude(const Structure& structure) {
-    return true;
-}
-
-bool CppGenerator::needsMapInclude(const Structure& structure) {
-    return true;
-}
     
 std::string CppGenerator::generateConstructorHxx(const Structure& structure) {
     std::ostringstream os;
@@ -260,29 +236,46 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
     
     if (structure.getElements().present()) {
         for (const auto& element : structure.getElements().get().getElement()) {
-            if (isPrimitiveType(element)) {
-                os << "\tSerialiser::serialisePrimitive(data, " << element.getName() << ", offset);\n";
-            } else if (element.getType() == "array") {
-                if (isPrimitiveType(element.getSubElement().get())) {
-                    os << "\tSerialiser::serialisePrimitiveArray(data, " << element.getName() << ", offset);\n";
-                } else {
-                    // array of extended
-                }
-            } else if (element.getType() == "sequence") {
-                // sequence
-            } else if (element.getType() == "string") {
-                os << "\tSerialiser::serialiseString(data, " << element.getName() << ", offset);\n";
-            } else if (element.getType() == "map") {
-                // map
-            } else if (element.getType() == "structure") {
-                os << "\t" << element.getName() << ".serialise(data, offset);\n";
-            }
+            os << generateMemberSerialisation(element, element.getName().get());
         }
     } else {
         os << "\t// Nothing to serialise\n";
     }
     os << "}";
 
+    return os.str();
+}
+
+std::string CppGenerator::generateMemberSerialisation(const Element& element,
+                                                      const std::string& nameToUse) {
+    std::ostringstream os;
+
+    if (isPrimitiveType(element)) {
+        os << "\tSerialiser::serialisePrimitive(data, " << nameToUse << ", offset);\n";
+    } else if (element.getType() == "array") {
+        if (isPrimitiveType(element.getSubElement().get())) {
+            os << "\tSerialiser::serialisePrimitiveArray(data, " << nameToUse << ", offset);\n";
+        } else {
+            os << "\tfor (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
+            os << "\t" << generateMemberSerialisation(element.getSubElement().get(), nameToUse + "a");
+            os << "\t}\n";
+        }
+    } else if (element.getType() == "sequence") {
+        if (isPrimitiveType(element.getSubElement().get())) {
+            os << "\tSerialiser::serialisePrimitiveSequence(data, " << nameToUse << ", offset);\n";
+        } else {
+            os << "\tfor (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
+            os << "\t" << generateMemberSerialisation(element.getSubElement().get(), nameToUse + "a");
+            os << "\t}\n";
+        }
+    } else if (element.getType() == "string") {
+        os << "\tSerialiser::serialiseString(data, " << nameToUse << ", offset);\n";
+    } else if (element.getType() == "map") {
+        // map
+    } else if (element.getType() == "structure") {
+        os << "\t" << nameToUse << ".serialise(data, offset);\n";
+    }
+    
     return os.str();
 }
 
@@ -306,8 +299,42 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
     std::ostringstream os;   
     
     os << "void " << structure.getName() << "::deserialise(const char* data, uint64_t& offset) {\n";
-    //os << "\treturn true;\n";
-    os << "}"; 
+    
+    if (structure.getElements().present()) {
+        for (const auto& element : structure.getElements().get().getElement()) {
+            os << generateMemberDeserialisation(element, element.getName().get());
+        }
+    } else {
+        os << "\t// Nothing to deserialise\n";
+    }
+    os << "}";
+
+    return os.str();
+}
+
+std::string CppGenerator::generateMemberDeserialisation(const Element& element,
+                                                        const std::string& nameToUse) {
+    std::ostringstream os;
+
+    if (isPrimitiveType(element)) {
+        os << "\tSerialiser::deserialisePrimitive(data, " << nameToUse << ", offset);\n";
+    } else if (element.getType() == "array") {
+        if (isPrimitiveType(element.getSubElement().get())) {
+            os << "\tSerialiser::deserialisePrimitiveArray(data, " << nameToUse << ", offset);\n";
+        } else {
+            os << "\tfor (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
+            os << "\t" << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "a");
+            os << "\t}\n";
+        }
+    } else if (element.getType() == "sequence") {
+        // deserialise sequence
+    } else if (element.getType() == "string") {
+        os << "\tSerialiser::deserialiseString(data, " << nameToUse << ", offset);\n";
+    } else if (element.getType() == "map") {
+        // map
+    } else if (element.getType() == "structure") {
+        os << "\t" << nameToUse << ".deserialise(data, offset);\n";
+    }
     
     return os.str();
 }

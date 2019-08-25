@@ -2,7 +2,10 @@
 
 #include <cstdint>
 #include <array>
+#include <array>
+#include <map>
 #include <cstring>
+#include <vector>
 
 class Serialiser {
     public:
@@ -15,16 +18,49 @@ class Serialiser {
             offset += sizeof (PrimitiveType);
         }
 
-        template <class PrimitiveType, std::size_t Size>
+        template <class PrimitiveType, std::size_t size>
         static void serialisePrimitiveArray(char* data,
-                                            const std::array<PrimitiveType, Size>& value,
+                                            const std::array<PrimitiveType, size>& value,
                                             uint64_t& offset) {
-            memcpy(data + offset, value.data(), sizeof (PrimitiveType) * Size);
+            memcpy(data + offset, value.data(), sizeof (PrimitiveType) * size);
 
-            offset += sizeof (PrimitiveType) * Size;
+            offset += sizeof (PrimitiveType) * size;
+        }
+
+        template <class PrimitiveType>
+        static void serialisePrimitiveSequence(char* data,
+                                               const std::vector<PrimitiveType>& value,
+                                               uint64_t& offset) {
+            serialisePrimitive(data, value.size(), offset);
+            
+            memcpy(data + offset, value.data(), sizeof (PrimitiveType) * value.size());
+
+            offset += sizeof (PrimitiveType) * value.size();
         }
         
         static void serialiseString(char* data,
                                     const std::string& value,
                                     uint64_t& offset);
+        
+        template <class PrimitiveType>
+        static void deserialisePrimitive(const char* data,
+                                         PrimitiveType& value,
+                                         uint64_t& offset) {
+            memcpy(&value, data + offset, sizeof (PrimitiveType));
+
+            offset += sizeof (PrimitiveType);
+        }
+
+        template <class PrimitiveType, std::size_t size>
+        static void deserialisePrimitiveArray(const char* data,
+                                              std::array<PrimitiveType, size>& value,
+                                              uint64_t& offset) {
+            memcpy(value.data(), data + offset, sizeof (PrimitiveType) * size);
+
+            offset += sizeof (PrimitiveType) * size;
+        }
+        
+        static void deserialiseString(const char* data,
+                                      std::string& value,
+                                      uint64_t& offset);
 };

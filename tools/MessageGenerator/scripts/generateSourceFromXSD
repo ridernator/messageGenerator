@@ -6,10 +6,8 @@ if test "../config/Structure.xsd" -nt "../include/Structure.hxx" -o \
         "../config/Structure.xsd" -nt "../src/Structure.cxx"     -o \
         "$(basename "$0")"        -nt "../include/Structure.hxx" -o \
         "$(basename "$0")"        -nt "../src/Structure.cxx"; then
-    #xsdcxx cxx-tree --output-dir ../include --std c++11 ../config/Structure.xsd
     xsdcxx cxx-tree --std c++11 \
                     --output-dir ../include \
-                    --generate-inline \
                     --type-naming java \
                     --function-naming java \
                     --generate-ostream \

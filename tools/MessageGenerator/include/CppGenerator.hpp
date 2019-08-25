@@ -22,12 +22,6 @@ class CppGenerator {
 
         std::string generateDestructorCxx(const Structure& structure);
 
-        bool needsArrayInclude(const Structure& structure);
-
-        bool needsVectorInclude(const Structure& structure);
-
-        bool needsMapInclude(const Structure& structure);
-
         std::set<std::string> getListOfStructIncludes(const Structure& structure);
 
         std::set<std::string> getListOfStructIncludes(const Element& element);
@@ -59,4 +53,10 @@ class CppGenerator {
         bool isPrimitiveType(const Element& element);
 
         std::string convertConstantToCppConstant(const Constant& constant);
+
+        std::string generateMemberSerialisation(const Element& element,
+                                                const std::string& nameToUse);
+
+        std::string generateMemberDeserialisation(const Element& element,
+                                                  const std::string& nameToUse);
 };

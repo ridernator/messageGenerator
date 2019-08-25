@@ -4,9 +4,6 @@
 
 #include "Serialiser.hpp"
 
-#include <array>
-#include <vector>
-#include <map>
 /**
  * This class is the blob class
  */

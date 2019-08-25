@@ -13,6 +13,7 @@ void Blob::serialise(char* data, uint64_t& offset) {
 }
 
 void Blob::deserialise(const char* data, uint64_t& offset) {
+	Serialiser::deserialisePrimitiveArray(data, fatArray, offset);
 }
 
 decltype(Blob::fatArray)& Blob::getFatArray() {

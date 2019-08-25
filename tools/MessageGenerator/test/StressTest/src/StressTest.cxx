@@ -8,16 +8,28 @@ StressTest::~StressTest() {
 
 }
 
-bool StressTest::serialise(char* data, uint32_t& offset) {
-	return true;
+void StressTest::serialise(char* data, uint64_t& offset) {
+	Serialiser::serialisePrimitive(data, simpleInt, offset);
+	blobber.serialise(data, offset);
+	Serialiser::serialiseString(data, stringer, offset);
+	Serialiser::serialisePrimitive(data, simpleIntNoDoc, offset);
+	Serialiser::serialisePrimitive(data, simpleFloat, offset);
+	Serialiser::serialisePrimitiveArray(data, intArray, offset);
 }
 
-bool StressTest::deserialise(const char* data, uint32_t& offset) {
-	return true;
+void StressTest::deserialise(const char* data, uint64_t& offset) {
 }
 
 decltype(StressTest::simpleInt) StressTest::getSimpleInt() {
 	return simpleInt;
+}
+
+decltype(StressTest::blobber)& StressTest::getBlobber() {
+	return blobber;
+}
+
+decltype(StressTest::stringer)& StressTest::getStringer() {
+	return stringer;
 }
 
 decltype(StressTest::simpleIntNoDoc) StressTest::getSimpleIntNoDoc() {

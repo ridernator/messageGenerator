@@ -17,23 +17,7 @@ bool CppGenerator::generateHeaderFile(const Structure& structure,
 
     headerFile << "#pragma once\n\n";
     
-    headerFile << "#include \"BaseMessage.hpp\"\n\n";
-    
-    for (const auto& include : getListOfStructIncludes(structure)) {
-	headerFile << "#include \"" << include << ".hxx\"\n";
-    }
-    
-    if (needsArrayInclude(structure)) {
-        headerFile << "#include <array>\n";
-    }
-    
-    if (needsVectorInclude(structure)) {
-        headerFile << "#include <vector>\n";
-    }
-    
-    if (needsMapInclude(structure)) {
-        headerFile << "#include <map>\n";
-    }
+    headerFile << generateIncludesHxx(structure);
 
     if (structure.getDocumentation().present()) {
         headerFile << "/**\n";
@@ -42,18 +26,8 @@ bool CppGenerator::generateHeaderFile(const Structure& structure,
     }
     headerFile << "class " + structure.getName() + " : public Messaging::BaseMessage {\n";
     headerFile << "\tpublic :\n";
-
-    if (structure.getConstants().present()) {
-        for (const Constant& constant : structure.getConstants().get().getConstant()) {
-            if (constant.getDocumentation().present()) {
-                headerFile << "\t\t/**\n";
-                headerFile << "\t\t * " << constant.getDocumentation().get() + '\n';
-                headerFile << "\t\t */\n";
-            }
-	    
-            headerFile << "\t\t" << convertConstantToCppConstant(constant) << "\n\n";
-        }
-    }
+    
+    headerFile << generateConstants(structure);
     
     headerFile << generateConstructorHxx(structure);   
     
@@ -62,34 +36,105 @@ bool CppGenerator::generateHeaderFile(const Structure& structure,
     headerFile << generateSerialiseHxx();
     
     headerFile << generateDeserialiseHxx();
-
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
-            headerFile << generateGetterHxx(element);
-            
-	    if (isPrimitiveType(element)) {
-		headerFile << generateSetterHxx(element);
-	    }
-        }
-    }
+    
+    headerFile << generateGettersHxx(structure);
+    
+    headerFile << generateSettersHxx(structure);
 
     headerFile << "\tprivate :\n";
-
-    if (structure.getElements().present()) {
-        for (const Element& element : structure.getElements().get().getElement()) {
-            if (element.getDocumentation().present()) {
-                headerFile << "\t\t/**\n";
-                headerFile << "\t\t * " << element.getDocumentation().get() + '\n';
-                headerFile << "\t\t */\n";
-            }
-            
-            headerFile << "\t\t" << convertElementToCppType(element) << ' ' << element.getName() << ";\n\n";
-        }
-    }
+    
+    headerFile << generateMembersHxx(structure);
 
     headerFile << "};\n";
 
     headerFile.close();
+}
+
+std::string CppGenerator::generateMembersHxx(const Structure& structure) {
+    std::ostringstream os;
+
+    if (structure.getElements().present()) {
+        for (const auto& element : structure.getElements().get().getElement()) {
+            if (element.getDocumentation().present()) {
+                os << "\t\t/**\n";
+                os << "\t\t * " << element.getDocumentation().get() + '\n';
+                os << "\t\t */\n";
+            }
+            
+            os << "\t\t" << convertElementToCppType(element) << ' ' << element.getName() << ";\n\n";
+        }
+    }
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateConstants(const Structure& structure) {
+    std::ostringstream os;
+
+    if (structure.getConstants().present()) {
+        for (const auto& constant : structure.getConstants().get().getConstant()) {
+            if (constant.getDocumentation().present()) {
+                os << "\t\t/**\n";
+                os << "\t\t * " << constant.getDocumentation().get() + '\n';
+                os << "\t\t */\n";
+            }
+	    
+            os << "\t\t" << convertConstantToCppConstant(constant) << "\n\n";
+        }
+    }
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
+    std::ostringstream os;
+    
+    os << "#include \"BaseMessage.hpp\"\n\n";
+    os << "#include \"Serialiser.hpp\"\n\n";
+    
+    for (const auto& include : getListOfStructIncludes(structure)) {
+	os << "#include \"" << include << ".hxx\"\n";
+    }
+    
+    if (needsArrayInclude(structure)) {
+        os << "#include <array>\n";
+    }
+    
+    if (needsVectorInclude(structure)) {
+        os << "#include <vector>\n";
+    }
+    
+    if (needsMapInclude(structure)) {
+        os << "#include <map>\n";
+    }
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGettersHxx(const Structure& structure) {
+    std::ostringstream os;
+    
+    if (structure.getElements().present()) {
+        for (const auto& element : structure.getElements().get().getElement()) {
+            os << generateGetterHxx(element);
+        }
+    }
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateSettersHxx(const Structure& structure) {
+    std::ostringstream os;
+    
+    if (structure.getElements().present()) {
+        for (const auto& element : structure.getElements().get().getElement()) {
+            if (isPrimitiveType(element)) {
+		os << generateSetterHxx(element);
+	    }
+        }
+    }
+    
+    return os.str();
 }
 
 bool CppGenerator::generateSourceFile(const Structure& structure,
@@ -202,8 +247,8 @@ std::string CppGenerator::generateSerialiseHxx() {
     os << "\t\t * @param offset The offset into the data to start serialising to. Will be updated with the new offset on return\n";
     os << "\t\t * @return True if the operation was successful or false if not\n";
     os << "\t\t */\n";
-    os << "\t\tbool serialise(char* data,\n";
-    os << "\t\t               uint32_t& offset);\n\n"; 
+    os << "\t\tvoid serialise(char* data,\n";
+    os << "\t\t               uint64_t& offset);\n\n"; 
     
     return os.str(); 
 }
@@ -211,10 +256,33 @@ std::string CppGenerator::generateSerialiseHxx() {
 std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
     std::ostringstream os;   
     
-    os << "bool " << structure.getName() << "::serialise(char* data, uint32_t& offset) {\n";
-    os << "\treturn true;\n";
-    os << "}";
+    os << "void " << structure.getName() << "::serialise(char* data, uint64_t& offset) {\n";
     
+    if (structure.getElements().present()) {
+        for (const auto& element : structure.getElements().get().getElement()) {
+            if (isPrimitiveType(element)) {
+                os << "\tSerialiser::serialisePrimitive(data, " << element.getName() << ", offset);\n";
+            } else if (element.getType() == "array") {
+                if (isPrimitiveType(element.getSubElement().get())) {
+                    os << "\tSerialiser::serialisePrimitiveArray(data, " << element.getName() << ", offset);\n";
+                } else {
+                    // array of extended
+                }
+            } else if (element.getType() == "sequence") {
+                // sequence
+            } else if (element.getType() == "string") {
+                os << "\tSerialiser::serialiseString(data, " << element.getName() << ", offset);\n";
+            } else if (element.getType() == "map") {
+                // map
+            } else if (element.getType() == "structure") {
+                os << "\t" << element.getName() << ".serialise(data, offset);\n";
+            }
+        }
+    } else {
+        os << "\t// Nothing to serialise\n";
+    }
+    os << "}";
+
     return os.str();
 }
 
@@ -228,8 +296,8 @@ std::string CppGenerator::generateDeserialiseHxx() {
     os << "\t\t * @param offset The offset into the data to start deserialising from. Will be updated with the new offset on return\n";
     os << "\t\t * @return True if the operation was successful or false if not\n";
     os << "\t\t */\n";
-    os << "\t\tbool deserialise(const char* data,\n";
-    os << "\t\t                 uint32_t& offset);\n\n"; 
+    os << "\t\tvoid deserialise(const char* data,\n";
+    os << "\t\t                 uint64_t& offset);\n\n"; 
     
     return os.str();   
 }
@@ -237,8 +305,8 @@ std::string CppGenerator::generateDeserialiseHxx() {
 std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
     std::ostringstream os;   
     
-    os << "bool " << structure.getName() << "::deserialise(const char* data, uint32_t& offset) {\n";
-    os << "\treturn true;\n";
+    os << "void " << structure.getName() << "::deserialise(const char* data, uint64_t& offset) {\n";
+    //os << "\treturn true;\n";
     os << "}"; 
     
     return os.str();

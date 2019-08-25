@@ -273,8 +273,7 @@ class SimpleType: public ::xml_schema::String
     int_32,
     int_64,
     float_32,
-    float_64,
-    string
+    float_64
   };
 
   SimpleType (Value v);
@@ -320,8 +319,8 @@ class SimpleType: public ::xml_schema::String
   _xsd_SimpleType_convert () const;
 
   public:
-  static const char* const _xsd_SimpleType_literals_[11];
-  static const Value _xsd_SimpleType_indexes_[11];
+  static const char* const _xsd_SimpleType_literals_[10];
+  static const Value _xsd_SimpleType_indexes_[10];
 };
 
 class ExtendedType: public ::xml_schema::String
@@ -329,6 +328,7 @@ class ExtendedType: public ::xml_schema::String
   public:
   enum Value
   {
+    string,
     complex_unsigned_int_8,
     complex_unsigned_int_16,
     complex_unsigned_int_32,
@@ -388,8 +388,8 @@ class ExtendedType: public ::xml_schema::String
   _xsd_ExtendedType_convert () const;
 
   public:
-  static const char* const _xsd_ExtendedType_literals_[14];
-  static const Value _xsd_ExtendedType_indexes_[14];
+  static const char* const _xsd_ExtendedType_literals_[15];
+  static const Value _xsd_ExtendedType_indexes_[15];
 };
 
 class Type: public ::xml_schema::String

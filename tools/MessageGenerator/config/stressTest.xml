@@ -4,14 +4,22 @@
     <documentation>This class is the stress test class</documentation>
     
     <constants>
-		<constant name="SIZE_OF_INT_ARRAY" type="int_32" value="10">
-			<documentation>Size of the "intArray" array</documentation>
-		</constant>
+        <constant name="SIZE_OF_INT_ARRAY" type="int_32" value="10">
+            <documentation>Size of the "intArray" array</documentation>
+        </constant>
     </constants>
       
     <elements>  
         <element name="simpleInt" type="int_32">
             <documentation>This type is called simpleInt</documentation>
+        </element>
+        
+        <element name="blobber" type="structure" structureName="Blob">
+            <documentation>This type is called blobber</documentation>
+        </element>
+        
+        <element name="stringer" type="string">
+            <documentation>This type is called stringer</documentation>
         </element>
         
         <element name="simpleIntNoDoc" type="int_32" />

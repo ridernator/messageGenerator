@@ -32,6 +32,8 @@ class CppGenerator {
 
         std::set<std::string> getListOfStructIncludes(const Element& element);
 
+        std::string generateConstants(const Structure& structure);
+
         std::string generateSerialiseHxx();
 
         std::string generateSerialiseCxx(const Structure& structure);
@@ -41,8 +43,16 @@ class CppGenerator {
         std::string generateDeserialiseCxx(const Structure& structure);
 
         std::string generateGetterHxx(const Element& element);
+
+        std::string generateGettersHxx(const Structure& structure);
         
         std::string generateSetterHxx(const Element& element);
+
+        std::string generateSettersHxx(const Structure& structure);
+
+        std::string generateIncludesHxx(const Structure& structure);
+
+        std::string generateMembersHxx(const Structure& structure);
 
         std::string convertElementToCppType(const Element& element);
 

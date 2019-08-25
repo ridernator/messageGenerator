@@ -8,12 +8,11 @@ Blob::~Blob() {
 
 }
 
-bool Blob::serialise(char* data, uint32_t& offset) {
-	return true;
+void Blob::serialise(char* data, uint64_t& offset) {
+	Serialiser::serialisePrimitiveArray(data, fatArray, offset);
 }
 
-bool Blob::deserialise(const char* data, uint32_t& offset) {
-	return true;
+void Blob::deserialise(const char* data, uint64_t& offset) {
 }
 
 decltype(Blob::fatArray)& Blob::getFatArray() {

@@ -9,10 +9,10 @@ namespace Messaging {
 			
             virtual ~BaseMessage();
 
-            virtual bool serialise(char* data,
-                                   uint32_t& offset) = 0;
+            virtual void serialise(char* data,
+                                   uint64_t& offset) = 0;
 
-            virtual bool deserialise(const char* data,
-                                     uint32_t& offset) = 0;
+            virtual void deserialise(const char* data,
+                                     uint64_t& offset) = 0;
     };
 }

@@ -35,7 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/BaseMessage.o
+	${OBJECTDIR}/src/BaseMessage.o \
+	${OBJECTDIR}/src/Serialiser.o
 
 
 # C Compiler Flags
@@ -68,6 +69,11 @@ ${OBJECTDIR}/src/BaseMessage.o: src/BaseMessage.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/BaseMessage.o src/BaseMessage.cpp
+
+${OBJECTDIR}/src/Serialiser.o: src/Serialiser.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Serialiser.o src/Serialiser.cpp
 
 # Subprojects
 .build-subprojects:

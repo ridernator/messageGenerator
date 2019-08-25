@@ -2,6 +2,8 @@
 
 #include "BaseMessage.hpp"
 
+#include "Serialiser.hpp"
+
 #include "Blob.hxx"
 #include <array>
 #include <vector>
@@ -33,8 +35,8 @@ class StressTest : public Messaging::BaseMessage {
 		 * @param offset The offset into the data to start serialising to. Will be updated with the new offset on return
 		 * @return True if the operation was successful or false if not
 		 */
-		bool serialise(char* data,
-		               uint32_t& offset);
+		void serialise(char* data,
+		               uint64_t& offset);
 
 		/**
 		 * Deserialise a block of data into this class
@@ -43,8 +45,8 @@ class StressTest : public Messaging::BaseMessage {
 		 * @param offset The offset into the data to start deserialising from. Will be updated with the new offset on return
 		 * @return True if the operation was successful or false if not
 		 */
-		bool deserialise(const char* data,
-		                 uint32_t& offset);
+		void deserialise(const char* data,
+		                 uint64_t& offset);
 
 		/**
 		 * Getter for simpleInt
@@ -56,13 +58,22 @@ class StressTest : public Messaging::BaseMessage {
 		int32_t getSimpleInt();
 
 		/**
-		 * Setter for simpleInt
+		 * Getter for blobber
 		 *
-		 * simpleInt defined as : This type is called simpleInt
+		 * blobber defined as : This type is called blobber
 		 *
-		 * @param value The new value to set
+		 * @return blobber
 		 */
-		void setSimpleInt(const int32_t value);
+		Blob& getBlobber();
+
+		/**
+		 * Getter for stringer
+		 *
+		 * stringer defined as : This type is called stringer
+		 *
+		 * @return stringer
+		 */
+		std::string& getStringer();
 
 		/**
 		 * Getter for simpleIntNoDoc
@@ -72,13 +83,6 @@ class StressTest : public Messaging::BaseMessage {
 		int32_t getSimpleIntNoDoc();
 
 		/**
-		 * Setter for simpleIntNoDoc
-		 *
-		 * @param value The new value to set
-		 */
-		void setSimpleIntNoDoc(const int32_t value);
-
-		/**
 		 * Getter for simpleFloat
 		 *
 		 * simpleFloat defined as : This type is called simpleFloat
@@ -86,15 +90,6 @@ class StressTest : public Messaging::BaseMessage {
 		 * @return simpleFloat
 		 */
 		float getSimpleFloat();
-
-		/**
-		 * Setter for simpleFloat
-		 *
-		 * simpleFloat defined as : This type is called simpleFloat
-		 *
-		 * @param value The new value to set
-		 */
-		void setSimpleFloat(const float value);
 
 		/**
 		 * Getter for intArray
@@ -166,11 +161,46 @@ class StressTest : public Messaging::BaseMessage {
 		 */
 		std::vector<std::vector<std::vector<std::vector<std::vector<Blob>>>>>& getBlobSequence5d();
 
+		/**
+		 * Setter for simpleInt
+		 *
+		 * simpleInt defined as : This type is called simpleInt
+		 *
+		 * @param value The new value to set
+		 */
+		void setSimpleInt(const int32_t value);
+
+		/**
+		 * Setter for simpleIntNoDoc
+		 *
+		 * @param value The new value to set
+		 */
+		void setSimpleIntNoDoc(const int32_t value);
+
+		/**
+		 * Setter for simpleFloat
+		 *
+		 * simpleFloat defined as : This type is called simpleFloat
+		 *
+		 * @param value The new value to set
+		 */
+		void setSimpleFloat(const float value);
+
 	private :
 		/**
 		 * This type is called simpleInt
 		 */
 		int32_t simpleInt;
+
+		/**
+		 * This type is called blobber
+		 */
+		Blob blobber;
+
+		/**
+		 * This type is called stringer
+		 */
+		std::string stringer;
 
 		int32_t simpleIntNoDoc;
 

@@ -86,11 +86,11 @@ _xsd_SimpleType_convert () const
   ::xsd::cxx::tree::enum_comparator< char > c (_xsd_SimpleType_literals_);
   const Value* i (::std::lower_bound (
                     _xsd_SimpleType_indexes_,
-                    _xsd_SimpleType_indexes_ + 11,
+                    _xsd_SimpleType_indexes_ + 10,
                     *this,
                     c));
 
-  if (i == _xsd_SimpleType_indexes_ + 11 || _xsd_SimpleType_literals_[*i] != *this)
+  if (i == _xsd_SimpleType_indexes_ + 10 || _xsd_SimpleType_literals_[*i] != *this)
   {
     throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
   }
@@ -99,7 +99,7 @@ _xsd_SimpleType_convert () const
 }
 
 const char* const SimpleType::
-_xsd_SimpleType_literals_[11] =
+_xsd_SimpleType_literals_[10] =
 {
   "unsigned_int_8",
   "unsigned_int_16",
@@ -110,12 +110,11 @@ _xsd_SimpleType_literals_[11] =
   "int_32",
   "int_64",
   "float_32",
-  "float_64",
-  "string"
+  "float_64"
 };
 
 const SimpleType::Value SimpleType::
-_xsd_SimpleType_indexes_[11] =
+_xsd_SimpleType_indexes_[10] =
 {
   ::SimpleType::float_32,
   ::SimpleType::float_64,
@@ -123,7 +122,6 @@ _xsd_SimpleType_indexes_[11] =
   ::SimpleType::int_32,
   ::SimpleType::int_64,
   ::SimpleType::int_8,
-  ::SimpleType::string,
   ::SimpleType::unsigned_int_16,
   ::SimpleType::unsigned_int_32,
   ::SimpleType::unsigned_int_64,
@@ -174,11 +172,11 @@ _xsd_ExtendedType_convert () const
   ::xsd::cxx::tree::enum_comparator< char > c (_xsd_ExtendedType_literals_);
   const Value* i (::std::lower_bound (
                     _xsd_ExtendedType_indexes_,
-                    _xsd_ExtendedType_indexes_ + 14,
+                    _xsd_ExtendedType_indexes_ + 15,
                     *this,
                     c));
 
-  if (i == _xsd_ExtendedType_indexes_ + 14 || _xsd_ExtendedType_literals_[*i] != *this)
+  if (i == _xsd_ExtendedType_indexes_ + 15 || _xsd_ExtendedType_literals_[*i] != *this)
   {
     throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
   }
@@ -187,8 +185,9 @@ _xsd_ExtendedType_convert () const
 }
 
 const char* const ExtendedType::
-_xsd_ExtendedType_literals_[14] =
+_xsd_ExtendedType_literals_[15] =
 {
+  "string",
   "complex_unsigned_int_8",
   "complex_unsigned_int_16",
   "complex_unsigned_int_32",
@@ -206,7 +205,7 @@ _xsd_ExtendedType_literals_[14] =
 };
 
 const ExtendedType::Value ExtendedType::
-_xsd_ExtendedType_indexes_[14] =
+_xsd_ExtendedType_indexes_[15] =
 {
   ::ExtendedType::array,
   ::ExtendedType::complex_float_32,
@@ -221,6 +220,7 @@ _xsd_ExtendedType_indexes_[14] =
   ::ExtendedType::complex_unsigned_int_8,
   ::ExtendedType::map,
   ::ExtendedType::sequence,
+  ::ExtendedType::string,
   ::ExtendedType::structure
 };
 

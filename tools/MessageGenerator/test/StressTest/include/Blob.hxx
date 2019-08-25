@@ -2,6 +2,8 @@
 
 #include "BaseMessage.hpp"
 
+#include "Serialiser.hpp"
+
 #include <array>
 #include <vector>
 #include <map>
@@ -32,8 +34,8 @@ class Blob : public Messaging::BaseMessage {
 		 * @param offset The offset into the data to start serialising to. Will be updated with the new offset on return
 		 * @return True if the operation was successful or false if not
 		 */
-		bool serialise(char* data,
-		               uint32_t& offset);
+		void serialise(char* data,
+		               uint64_t& offset);
 
 		/**
 		 * Deserialise a block of data into this class
@@ -42,8 +44,8 @@ class Blob : public Messaging::BaseMessage {
 		 * @param offset The offset into the data to start deserialising from. Will be updated with the new offset on return
 		 * @return True if the operation was successful or false if not
 		 */
-		bool deserialise(const char* data,
-		                 uint32_t& offset);
+		void deserialise(const char* data,
+		                 uint64_t& offset);
 
 		/**
 		 * Getter for fatArray

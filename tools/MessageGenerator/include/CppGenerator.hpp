@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Structure.hxx"
+#include "Definitions.hxx"
 
 class CppGenerator {
     public:
-        bool generate(const Structure& structure,
+        bool generate(const Definitions& definitions,
                       const std::string& outputFolder);
 
     private:

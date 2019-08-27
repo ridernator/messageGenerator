@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<structure name="StressTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Structure.xsd">
-    <documentation>This class is the stress test class</documentation>
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Definitions.xsd">
+    <structure name="StressTest">
+        <documentation>This class is the stress test class</documentation>
     
-    <constants>
         <constant name="SIZE_OF_INT_ARRAY" type="int_32" value="10">
             <documentation>Size of the "intArray" array</documentation>
         </constant>
-    </constants>
-      
-    <elements>  
+          
         <element name="simpleInt" type="int_32">
             <documentation>This type is called simpleInt</documentation>
         </element>
@@ -95,5 +93,18 @@
                 </subElement>
             </subElement>
         </element>
-    </elements>
-</structure>
+    </structure>
+    
+    <structure name="Blob">
+        <documentation>This class is the blob class</documentation>
+    
+        <constant name="SIZE_OF_ARRAY" type="unsigned_int_32" value="5">
+            <documentation>Size of the "intArray" array</documentation>
+        </constant>
+    
+        <element name="fatArray" type="array" arraySize="SIZE_OF_ARRAY">
+            <documentation>This type is called fatArray</documentation>
+            <subElement type="float_64"/>
+        </element>
+    </structure>
+</definitions>

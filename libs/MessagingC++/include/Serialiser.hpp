@@ -59,6 +59,21 @@ class Serialiser {
 
             offset += sizeof (PrimitiveType) * size;
         }
+
+        template <class PrimitiveType>
+        static void deserialisePrimitiveSequence(const char* data,
+                                                 std::vector<PrimitiveType>& value,
+                                                 uint64_t& offset) {
+            decltype(value.size()) size;
+            deserialisePrimitive(data, size, offset);
+            
+            value.reserve(size);
+            
+            for (decltype(size) index = 0; index < size; ++index) {
+                value.push_back((PrimitiveType) *(data + offset));
+                offset += sizeof (PrimitiveType);
+            }
+        }
         
         static void deserialiseString(const char* data,
                                       std::string& value,

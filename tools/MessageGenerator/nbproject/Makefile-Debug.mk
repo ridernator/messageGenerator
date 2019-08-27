@@ -36,10 +36,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/CppGenerator.o \
+	${OBJECTDIR}/src/Definitions.o \
 	${OBJECTDIR}/src/FileParser.o \
 	${OBJECTDIR}/src/JavaGenerator.o \
-	${OBJECTDIR}/src/MessageGenerator.o \
-	${OBJECTDIR}/src/Structure.o
+	${OBJECTDIR}/src/MessageGenerator.o
 
 
 # C Compiler Flags
@@ -71,6 +71,11 @@ ${OBJECTDIR}/src/CppGenerator.o: src/CppGenerator.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/CppGenerator.o src/CppGenerator.cpp
 
+${OBJECTDIR}/src/Definitions.o: src/Definitions.cxx
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Definitions.o src/Definitions.cxx
+
 ${OBJECTDIR}/src/FileParser.o: src/FileParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -85,11 +90,6 @@ ${OBJECTDIR}/src/MessageGenerator.o: src/MessageGenerator.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MessageGenerator.o src/MessageGenerator.cpp
-
-${OBJECTDIR}/src/Structure.o: src/Structure.cxx
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Structure.o src/Structure.cxx
 
 # Subprojects
 .build-subprojects:

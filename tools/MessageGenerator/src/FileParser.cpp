@@ -1,5 +1,5 @@
 #include "FileParser.hpp"
-#include "Structure.hxx"
+#include "Definitions.hxx"
 #include "CppGenerator.hpp"
 #include "JavaGenerator.hpp"
 
@@ -16,17 +16,17 @@ bool FileParser::parse(const std::string& file,
                        const std::string& outputFolder) {
     try {
         xml_schema::Properties properties;
-        auto structure(parseStructure(file, 0, properties));
+        auto definitions(parseDefinitions(file, 0, properties));
     
         switch (language) {
             case CPP : {
-                cppGenerator.generate(*structure, outputFolder);
+                cppGenerator.generate(*definitions, outputFolder);
 
                 break;
             }
 
             case JAVA : {
-                //JavaOutputter::generate(structure, outputFolder);
+                //JavaOutputter::generate(definitions, outputFolder);
 
                 break;
             }

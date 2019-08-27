@@ -60,8 +60,10 @@ void StressTest::deserialise(const char* data, uint64_t& offset) {
 	Serialiser::deserialisePrimitive(data, simpleIntNoDoc, offset);
 	Serialiser::deserialisePrimitive(data, simpleFloat, offset);
 	Serialiser::deserialisePrimitiveArray(data, intArray, offset);
+	Serialiser::deserialisePrimitiveSequence(data, floatSequence, offset);
 	for (auto& arrayOfIntSequencesa : arrayOfIntSequences) {
-		}
+		Serialiser::deserialisePrimitiveSequence(data, arrayOfIntSequencesa, offset);
+	}
 	for (auto& intArray5da : intArray5d) {
 		for (auto& intArray5daa : intArray5da) {
 		for (auto& intArray5daaa : intArray5daa) {

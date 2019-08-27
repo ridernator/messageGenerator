@@ -5,10 +5,12 @@
 #include <sstream>
 #include <cctype>
 
-bool CppGenerator::generate(const Structure& structure,
+bool CppGenerator::generate(const Definitions& definitions,
                             const std::string& outputFolder) {
-    generateHeaderFile(structure, outputFolder);
-    generateSourceFile(structure, outputFolder);
+    for (auto& structure : definitions.getStructure()) {
+        generateHeaderFile(structure, outputFolder);
+        generateSourceFile(structure, outputFolder);
+    }
 }
 
 bool CppGenerator::generateHeaderFile(const Structure& structure,
@@ -53,16 +55,14 @@ bool CppGenerator::generateHeaderFile(const Structure& structure,
 std::string CppGenerator::generateMembersHxx(const Structure& structure) {
     std::ostringstream os;
 
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
-            if (element.getDocumentation().present()) {
-                os << "\t\t/**\n";
-                os << "\t\t * " << element.getDocumentation().get() + '\n';
-                os << "\t\t */\n";
-            }
-            
-            os << "\t\t" << convertElementToCppType(element) << ' ' << element.getName() << ";\n\n";
+    for (const auto& element : structure.getElement()) {
+        if (element.getDocumentation().present()) {
+            os << "\t\t/**\n";
+            os << "\t\t * " << element.getDocumentation().get() + '\n';
+            os << "\t\t */\n";
         }
+
+        os << "\t\t" << convertElementToCppType(element) << ' ' << element.getName() << ";\n\n";
     }
     
     return os.str();
@@ -71,16 +71,14 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
 std::string CppGenerator::generateConstants(const Structure& structure) {
     std::ostringstream os;
 
-    if (structure.getConstants().present()) {
-        for (const auto& constant : structure.getConstants().get().getConstant()) {
-            if (constant.getDocumentation().present()) {
-                os << "\t\t/**\n";
-                os << "\t\t * " << constant.getDocumentation().get() + '\n';
-                os << "\t\t */\n";
-            }
-	    
-            os << "\t\t" << convertConstantToCppConstant(constant) << "\n\n";
+    for (const auto& constant : structure.getConstant()) {
+        if (constant.getDocumentation().present()) {
+            os << "\t\t/**\n";
+            os << "\t\t * " << constant.getDocumentation().get() + '\n';
+            os << "\t\t */\n";
         }
+
+        os << "\t\t" << convertConstantToCppConstant(constant) << "\n\n";
     }
     
     return os.str();
@@ -102,10 +100,8 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
 std::string CppGenerator::generateGettersHxx(const Structure& structure) {
     std::ostringstream os;
     
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
-            os << generateGetterHxx(element);
-        }
+    for (const auto& element : structure.getElement()) {
+        os << generateGetterHxx(element);
     }
     
     return os.str();
@@ -114,11 +110,9 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
 std::string CppGenerator::generateSettersHxx(const Structure& structure) {
     std::ostringstream os;
     
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
-            if (isPrimitiveType(element)) {
-		os << generateSetterHxx(element);
-	    }
+    for (const auto& element : structure.getElement()) {
+        if (isPrimitiveType(element)) {
+            os << generateSetterHxx(element);
         }
     }
     
@@ -139,32 +133,28 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
 
     sourceFile << generateDeserialiseCxx(structure) << "\n\n";
 
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
-            std::string upperName = element.getName().get();
-            upperName[0] = toupper(upperName[0]);
+    for (const auto& element : structure.getElement()) {
+        std::string upperName = element.getName().get();
+        upperName[0] = toupper(upperName[0]);
 
-            if (isPrimitiveType(element)) {
-                sourceFile << "decltype(" << structure.getName() << "::" << element.getName().get() << ") " << structure.getName() << "::get" << upperName << "() {\n";
-            } else {
-                sourceFile << "decltype(" << structure.getName() << "::" << element.getName().get() << ")& " << structure.getName() << "::get" << upperName << "() {\n";
-            }
-            
-            sourceFile << "\treturn " << element.getName().get() << ";\n";
-            sourceFile << "}\n\n";
+        if (isPrimitiveType(element)) {
+            sourceFile << "decltype(" << structure.getName() << "::" << element.getName().get() << ") " << structure.getName() << "::get" << upperName << "() {\n";
+        } else {
+            sourceFile << "decltype(" << structure.getName() << "::" << element.getName().get() << ")& " << structure.getName() << "::get" << upperName << "() {\n";
         }
+
+        sourceFile << "\treturn " << element.getName().get() << ";\n";
+        sourceFile << "}\n\n";
     }
 
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
-            std::string upperName = element.getName().get();
-            upperName[0] = toupper(upperName[0]);
+    for (const auto& element : structure.getElement()) {
+        std::string upperName = element.getName().get();
+        upperName[0] = toupper(upperName[0]);
 
-            if (isPrimitiveType(element)) {
-                sourceFile << "void " << structure.getName() << "::set" << upperName << "(const decltype(" << structure.getName() << "::" << element.getName().get() << ") value) {\n";
-                sourceFile << "\t" << element.getName().get() << " = value;\n";
-                sourceFile << "}\n\n";
-            }
+        if (isPrimitiveType(element)) {
+            sourceFile << "void " << structure.getName() << "::set" << upperName << "(const decltype(" << structure.getName() << "::" << element.getName().get() << ") value) {\n";
+            sourceFile << "\t" << element.getName().get() << " = value;\n";
+            sourceFile << "}\n\n";
         }
     }
 
@@ -234,12 +224,12 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
     
     os << "void " << structure.getName() << "::serialise(char* data, uint64_t& offset) {\n";
     
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
+    if (structure.getElement().size() == 0) {
+        os << "\t// Nothing to serialise\n";
+    } else {
+        for (const auto& element : structure.getElement()) {
             os << generateMemberSerialisation(element, element.getName().get());
         }
-    } else {
-        os << "\t// Nothing to serialise\n";
     }
     os << "}";
 
@@ -300,12 +290,12 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
     
     os << "void " << structure.getName() << "::deserialise(const char* data, uint64_t& offset) {\n";
     
-    if (structure.getElements().present()) {
-        for (const auto& element : structure.getElements().get().getElement()) {
+    if (structure.getElement().size() == 0) {
+        os << "\t// Nothing to deserialise\n";
+    } else {
+        for (const auto& element : structure.getElement()) {
             os << generateMemberDeserialisation(element, element.getName().get());
         }
-    } else {
-        os << "\t// Nothing to deserialise\n";
     }
     os << "}";
 
@@ -327,7 +317,13 @@ std::string CppGenerator::generateMemberDeserialisation(const Element& element,
             os << "\t}\n";
         }
     } else if (element.getType() == "sequence") {
-        // deserialise sequence
+        if (isPrimitiveType(element.getSubElement().get())) {
+            os << "\tSerialiser::deserialisePrimitiveSequence(data, " << nameToUse << ", offset);\n";
+        } else {
+//            os << "\tfor (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
+//            os << "\t" << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "a");
+//            os << "\t}\n";
+        }
     } else if (element.getType() == "string") {
         os << "\tSerialiser::deserialiseString(data, " << nameToUse << ", offset);\n";
     } else if (element.getType() == "map") {
@@ -500,12 +496,10 @@ bool CppGenerator::isPrimitiveType(const Element& element) {
 std::set<std::string> CppGenerator::getListOfStructIncludes(const Structure& structure) {
     std::set<std::string> returnVal;
     
-    if (structure.getElements().present()) {
-	for (const auto& element : structure.getElements().get().getElement()) {
-	    std::set<std::string> includes = getListOfStructIncludes(element);
+    for (const auto& element : structure.getElement()) {
+        std::set<std::string> includes = getListOfStructIncludes(element);
 
-	    returnVal.insert(includes.begin(), includes.end());
-	}
+        returnVal.insert(includes.begin(), includes.end());
     }
     
     return returnVal;

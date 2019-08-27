@@ -12,7 +12,7 @@ class Blob : public Messaging::BaseMessage {
 		/**
 		 * Size of the "intArray" array
 		 */
-		static const uint32_t SIZE_OF_ARRAY = 10000;
+		static const uint32_t SIZE_OF_ARRAY = 5;
 
 		/**
 		 * Constructor for this class

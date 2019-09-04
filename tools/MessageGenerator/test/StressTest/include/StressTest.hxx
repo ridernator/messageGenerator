@@ -46,6 +46,14 @@ class StressTest : public Messaging::BaseMessage {
 		                 uint64_t& offset);
 
 		/**
+		 * Get the serialised size of this class in bytes.
+		 * Use to create an array for serialisation.
+		 *
+		 * @return The size of the serialised version of this class in bytes
+		 */
+		uint64_t getSizeInBytes();
+
+		/**
 		 * Getter for simpleInt
 		 *
 		 * simpleInt defined as : This type is called simpleInt

@@ -11,6 +11,9 @@ class CppGenerator {
         bool generateHeaderFile(const Structure& structure,
                                 const std::string& outputFolder);
         
+        bool generateHeaderFile(const Enumeration& enumeration,
+                                const std::string& outputFolder);
+        
         bool generateSourceFile(const Structure& structure,
                                 const std::string& outputFolder);
 
@@ -27,6 +30,10 @@ class CppGenerator {
         std::set<std::string> getListOfStructIncludes(const Element& element);
 
         std::string generateConstants(const Structure& structure);
+
+        std::string generateGetSizeInBytesHxx();
+
+        std::string generateGetSizeInBytesCxx(const Structure& structure);
 
         std::string generateSerialiseHxx();
 
@@ -53,6 +60,8 @@ class CppGenerator {
         bool isPrimitiveType(const Element& element);
 
         std::string convertConstantToCppConstant(const Constant& constant);
+        
+        std::string convertBaseTypeToCppType(const Enumeration::BaseTypeType& type);
 
         std::string generateMemberSerialisation(const Element& element,
                                                 const std::string& nameToUse);

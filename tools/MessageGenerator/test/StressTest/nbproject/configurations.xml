@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>include/Blob.hxx</itemPath>
+      <itemPath>include/Colour.hxx</itemPath>
       <itemPath>include/StressTest.hxx</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -65,6 +66,8 @@
       </compileType>
       <item path="include/Blob.hxx" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/Colour.hxx" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/StressTest.hxx" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/Blob.cxx" ex="false" tool="1" flavor2="0">
@@ -116,6 +119,8 @@
         </linkerTool>
       </compileType>
       <item path="include/Blob.hxx" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Colour.hxx" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/StressTest.hxx" ex="false" tool="3" flavor2="0">
       </item>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    
     <xs:simpleType name="signedIntType">
         <xs:annotation>
             <xs:documentation>Enumeration of the signed integer types</xs:documentation>
@@ -32,7 +31,6 @@
             </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
-    
     
     <xs:simpleType name="unsignedIntType">
         <xs:annotation>
@@ -66,7 +64,6 @@
         </xs:restriction>
     </xs:simpleType>
     
-    
     <xs:simpleType name="floatingPointType">
         <xs:annotation>
             <xs:documentation>Enumeration of the floating point types (float, double)</xs:documentation>
@@ -89,7 +86,7 @@
     
     <xs:simpleType name="primitiveType">
         <xs:annotation>
-            <xs:documentation>All types (Union of unsigned int, signed int and floating poitn types)</xs:documentation>
+            <xs:documentation>All types (Union of unsigned int, signed int and floating point types)</xs:documentation>
         </xs:annotation>
         
         <xs:union memberTypes="unsignedIntType signedIntType floatingPointType"/>
@@ -187,7 +184,13 @@
             
             <xs:enumeration value="structure">                
                 <xs:annotation>                    
-                    <xs:documentation>Structure type. Type is another custom structure</xs:documentation>                
+                    <xs:documentation>Structure or union type. Type is another custom structure</xs:documentation>                
+                </xs:annotation>            
+            </xs:enumeration>
+            
+            <xs:enumeration value="enumeration">                
+                <xs:annotation>                    
+                    <xs:documentation>Enumeration type. Type is an enumeration</xs:documentation>                
                 </xs:annotation>            
             </xs:enumeration>
         </xs:restriction>
@@ -229,6 +232,32 @@
         <xs:attribute name="value" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>The value of this constant</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="enumerationMember">
+        <xs:annotation>
+            <xs:documentation>Definition of a member of an enumeration</xs:documentation>
+        </xs:annotation>
+        
+        <xs:all>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this member. Will be added to generated source files></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all>        
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this member</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="value" type="xs:unsignedLong" use="optional">
+            <xs:annotation>
+                <xs:documentation>The (optional) value of this member</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
@@ -278,7 +307,7 @@
         
         <xs:attribute name="structureName" type="xs:string" use="optional">
             <xs:annotation>
-                <xs:documentation>If the type of this element is "structure" then this is the structure's name</xs:documentation>
+                <xs:documentation>If the type of this element is "structure" or "enumeration" then this is the structure or enumeration's name</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
@@ -329,8 +358,7 @@
                 </xs:annotation>
             </xs:element>
             
-            <xs:element name="member" type="xs:unsignedLong" minOccurs="1" maxOccurs="unbounded">
-            </xs:element>
+            <xs:element name="member" type="enumerationMember" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>     
             
         <xs:attribute name="name" type="xs:string" use="required">
@@ -341,7 +369,7 @@
             
         <xs:attribute name="baseType" type="unsignedIntType" use="required">
             <xs:annotation>
-                <xs:documentation>The name of this enumeration</xs:documentation>
+                <xs:documentation>The base type of this enum (Must be one of the unsignedIntTypes)</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>

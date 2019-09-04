@@ -14,5 +14,7 @@ namespace Messaging {
 
             virtual void deserialise(const char* data,
                                      uint64_t& offset) = 0;
+
+            virtual uint64_t getSizeInBytes() = 0;
     };
 }

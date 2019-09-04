@@ -1,4 +1,5 @@
 #include "Blob.hxx"
+#include "Colour.hxx"
 
 #include <iostream>
 
@@ -12,7 +13,7 @@ int main(const int argc,
     blobIn.getFatArray().at(3) = 3;
     blobIn.getFatArray().at(4) = 4;
 
-    char data[40];
+    char data[blobIn.getSizeInBytes()];
     uint64_t offset = 0;
 
 
@@ -27,4 +28,6 @@ int main(const int argc,
     std::cout << "blobOut.getFatArray().at(3) = " << blobOut.getFatArray().at(3) << std::endl;
     std::cout << "blobOut.getFatArray().at(4) = " << blobOut.getFatArray().at(4) << std::endl;
     std::cout << "offset = " << offset << std::endl;
+    
+    Colour colour = Colour::AMBER;
 }

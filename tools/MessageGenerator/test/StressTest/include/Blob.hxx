@@ -4,6 +4,7 @@
 
 #include "Serialiser.hpp"
 
+#include "Colour.hxx"
 /**
  * This class is the blob class
  */
@@ -45,6 +46,14 @@ class Blob : public Messaging::BaseMessage {
 		                 uint64_t& offset);
 
 		/**
+		 * Get the serialised size of this class in bytes.
+		 * Use to create an array for serialisation.
+		 *
+		 * @return The size of the serialised version of this class in bytes
+		 */
+		uint64_t getSizeInBytes();
+
+		/**
 		 * Getter for fatArray
 		 *
 		 * fatArray defined as : This type is called fatArray
@@ -53,10 +62,24 @@ class Blob : public Messaging::BaseMessage {
 		 */
 		std::array<double, SIZE_OF_ARRAY>& getFatArray();
 
+		/**
+		 * Getter for colourArray
+		 *
+		 * colourArray defined as : This type is called colourArray
+		 *
+		 * @return colourArray
+		 */
+		std::array<Colour, 3>& getColourArray();
+
 	private :
 		/**
 		 * This type is called fatArray
 		 */
 		std::array<double, SIZE_OF_ARRAY> fatArray;
+
+		/**
+		 * This type is called colourArray
+		 */
+		std::array<Colour, 3> colourArray;
 
 };

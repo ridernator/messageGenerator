@@ -7,9 +7,13 @@
 
 bool CppGenerator::generate(const Definitions& definitions,
                             const std::string& outputFolder) {
-    for (auto& structure : definitions.getStructure()) {
+    for (const auto& structure : definitions.getStructure()) {
         generateHeaderFile(structure, outputFolder);
         generateSourceFile(structure, outputFolder);
+    }
+    
+    for (const auto& enumeration : definitions.getEnumeration()) {
+        generateHeaderFile(enumeration, outputFolder);
     }
 }
 
@@ -39,6 +43,8 @@ bool CppGenerator::generateHeaderFile(const Structure& structure,
     
     headerFile << generateDeserialiseHxx();
     
+    headerFile << generateGetSizeInBytesHxx();
+    
     headerFile << generateGettersHxx(structure);
     
     headerFile << generateSettersHxx(structure);
@@ -48,6 +54,29 @@ bool CppGenerator::generateHeaderFile(const Structure& structure,
     headerFile << generateMembersHxx(structure);
 
     headerFile << "};\n";
+
+    headerFile.close();
+}
+
+bool CppGenerator::generateHeaderFile(const Enumeration& enumeration,
+                                      const std::string& outputFolder) {    
+    std::ofstream headerFile(outputFolder + '/' + enumeration.getName() + ".hxx");
+
+    headerFile << "#pragma once\n\n";
+    
+    headerFile << "#include <cstdint>\n\n";
+    
+    headerFile << "typedef enum class " << enumeration.getName() << " : " << convertBaseTypeToCppType(enumeration.getBaseType()) << " {\n";
+    
+    for (const auto& member : enumeration.getMember()) {
+        if (member.getValue().present()) {
+            headerFile << "\t" << member.getName() << " = "<< member.getValue().get() <<",\n";
+        } else {
+            headerFile << "\t" << member.getName() << ",\n";
+        }
+    }
+    
+    headerFile << "} " << enumeration.getName() << ";\n";
 
     headerFile.close();
 }
@@ -132,6 +161,8 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
     sourceFile << generateSerialiseCxx(structure) << "\n\n";
 
     sourceFile << generateDeserialiseCxx(structure) << "\n\n";
+    
+    sourceFile << generateGetSizeInBytesCxx(structure) << "\n\n";
 
     for (const auto& element : structure.getElement()) {
         std::string upperName = element.getName().get();
@@ -201,6 +232,30 @@ std::string CppGenerator::generateDestructorCxx(const Structure& structure) {
     os << "}";
     
     return os.str();
+}
+
+std::string CppGenerator::generateGetSizeInBytesHxx() {
+    std::ostringstream os;   
+    
+    os << "\t\t/**\n";
+    os << "\t\t * Get the serialised size of this class in bytes.\n";
+    os << "\t\t * Use to create an array for serialisation.\n";
+    os << "\t\t *\n";
+    os << "\t\t * @return The size of the serialised version of this class in bytes\n";
+    os << "\t\t */\n";
+    os << "\t\tuint64_t getSizeInBytes();\n\n"; 
+    
+    return os.str(); 
+}
+
+std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) {
+    std::ostringstream os;   
+    
+    os << "uint64_t " << structure.getName() << "::getSizeInBytes() {\n";
+    os << "\treturn 1000;\n";
+    os << "}";
+    
+    return os.str(); 
 }
 
 std::string CppGenerator::generateSerialiseHxx() {
@@ -320,9 +375,9 @@ std::string CppGenerator::generateMemberDeserialisation(const Element& element,
         if (isPrimitiveType(element.getSubElement().get())) {
             os << "\tSerialiser::deserialisePrimitiveSequence(data, " << nameToUse << ", offset);\n";
         } else {
-//            os << "\tfor (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
-//            os << "\t" << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "a");
-//            os << "\t}\n";
+            os << "\tfor (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
+            os << "\t" << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "a");
+            os << "\t}\n";
         }
     } else if (element.getType() == "string") {
         os << "\tSerialiser::deserialiseString(data, " << nameToUse << ", offset);\n";
@@ -441,6 +496,24 @@ std::string CppGenerator::convertElementToCppType(const Element& element) {
 
     return os.str();
 }
+    
+std::string CppGenerator::convertBaseTypeToCppType(const Enumeration::BaseTypeType& type) {
+    std::ostringstream os;
+
+    if (type == "unsigned_int_8") {
+        os << "uint8_t";
+    } else if (type == "unsigned_int_16") {
+        os << "uint16_t";
+    } else if (type == "unsigned_int_32") {
+        os << "uint32_t";
+    } else if (type == "unsigned_int_64") {
+        os << "uint64_t";
+    } else {
+        os << "???";
+    }
+
+    return os.str();
+}
 
 std::string CppGenerator::convertConstantToCppConstant(const Constant& constant) {
     std::ostringstream os;
@@ -508,7 +581,8 @@ std::set<std::string> CppGenerator::getListOfStructIncludes(const Structure& str
 std::set<std::string> CppGenerator::getListOfStructIncludes(const Element& element) {
     std::set<std::string> returnVal;
     
-    if (element.getType() == "structure") {
+    if ((element.getType() == "structure") ||
+        (element.getType() == "enumeration")) {
 	if (element.getStructureName().present()) {
 	    returnVal.insert(element.getStructureName().get());
 	}

@@ -64,6 +64,9 @@ void StressTest::deserialise(const char* data, uint64_t& offset) {
 	for (auto& arrayOfIntSequencesa : arrayOfIntSequences) {
 		Serialiser::deserialisePrimitiveSequence(data, arrayOfIntSequencesa, offset);
 	}
+	for (auto& sequenceOfIntArraysa : sequenceOfIntArrays) {
+		Serialiser::deserialisePrimitiveArray(data, sequenceOfIntArraysa, offset);
+	}
 	for (auto& intArray5da : intArray5d) {
 		for (auto& intArray5daa : intArray5da) {
 		for (auto& intArray5daaa : intArray5daa) {
@@ -73,6 +76,30 @@ void StressTest::deserialise(const char* data, uint64_t& offset) {
 	}
 	}
 	}
+	for (auto& floatSequence5da : floatSequence5d) {
+		for (auto& floatSequence5daa : floatSequence5da) {
+		for (auto& floatSequence5daaa : floatSequence5daa) {
+		for (auto& floatSequence5daaaa : floatSequence5daaa) {
+		Serialiser::deserialisePrimitiveSequence(data, floatSequence5daaaa, offset);
+	}
+	}
+	}
+	}
+	for (auto& blobSequence5da : blobSequence5d) {
+		for (auto& blobSequence5daa : blobSequence5da) {
+		for (auto& blobSequence5daaa : blobSequence5daa) {
+		for (auto& blobSequence5daaaa : blobSequence5daaa) {
+		for (auto& blobSequence5daaaaa : blobSequence5daaaa) {
+		blobSequence5daaaaa.deserialise(data, offset);
+	}
+	}
+	}
+	}
+	}
+}
+
+uint64_t StressTest::getSizeInBytes() {
+	return 1000;
 }
 
 decltype(StressTest::simpleInt) StressTest::getSimpleInt() {

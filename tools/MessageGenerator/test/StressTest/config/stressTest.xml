@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Definitions.xsd">
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../config/Definitions.xsd">
     <structure name="StressTest">
         <documentation>This class is the stress test class</documentation>
     
@@ -106,5 +106,26 @@
             <documentation>This type is called fatArray</documentation>
             <subElement type="float_64"/>
         </element>
+    
+        <element name="colourArray" type="array" arraySize="3">
+            <documentation>This type is called colourArray</documentation>
+            <subElement type="enumeration" structureName="Colour" />
+        </element>
     </structure>
+    
+    <enumeration name="Colour" baseType="unsigned_int_8">
+        <documentation>Enumeration of traffic light colours</documentation>
+        
+        <member name="RED" value="0">
+            <documentation>Stop colour</documentation>
+        </member>
+        
+        <member name="AMBER" value="1">
+            <documentation>Middle colour</documentation>
+        </member>
+        
+        <member name="GREEN" value="2">
+            <documentation>Go colour</documentation>
+        </member>
+    </enumeration>
 </definitions>

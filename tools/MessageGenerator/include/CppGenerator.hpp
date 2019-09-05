@@ -7,7 +7,7 @@ class CppGenerator {
         bool generate(const Definitions& definitions,
                       const std::string& outputFolder);
 
-    private:
+    private:        
         bool generateHeaderFile(const Structure& structure,
                                 const std::string& outputFolder);
         
@@ -64,8 +64,18 @@ class CppGenerator {
         std::string convertBaseTypeToCppType(const Enumeration::BaseTypeType& type);
 
         std::string generateMemberSerialisation(const Element& element,
-                                                const std::string& nameToUse);
+                                                const std::string& nameToUse,
+                                                const uint8_t numTabs = 1);
 
         std::string generateMemberDeserialisation(const Element& element,
-                                                  const std::string& nameToUse);
+                                                  const std::string& nameToUse,
+                                                  const uint8_t numTabs = 1);
+        
+        uint64_t sizeOfPrimitiveType(const Element::TypeType type);
+
+        std::string generateSizeStatement(const Element& element,
+                                          const std::string& nameToUse,
+                                          const uint8_t numTabs = 1);
+        
+        std::string insertTabs(const uint8_t numTabs);
 };

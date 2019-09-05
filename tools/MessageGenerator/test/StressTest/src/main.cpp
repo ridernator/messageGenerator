@@ -28,6 +28,7 @@ int main(const int argc,
     std::cout << "blobOut.getFatArray().at(3) = " << blobOut.getFatArray().at(3) << std::endl;
     std::cout << "blobOut.getFatArray().at(4) = " << blobOut.getFatArray().at(4) << std::endl;
     std::cout << "offset = " << offset << std::endl;
+    std::cout << "blobOut.getSizeInBytes() = " << blobOut.getSizeInBytes();
     
     Colour colour = Colour::AMBER;
 }

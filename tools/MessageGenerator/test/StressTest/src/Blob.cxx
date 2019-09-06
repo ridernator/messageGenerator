@@ -14,7 +14,6 @@ void Blob::serialise(char* data, uint64_t& offset) const {
 
     // Serialise colourArray
     Serialiser::serialisePrimitiveArray(data, colourArray, offset);
-
 }
 
 void Blob::deserialise(const char* data, uint64_t& offset) {
@@ -23,7 +22,6 @@ void Blob::deserialise(const char* data, uint64_t& offset) {
 
     // Deserialise colourArray
     Serialiser::deserialisePrimitiveArray(data, colourArray, offset);
-
 }
 
 uint64_t Blob::getSizeInBytes() const {

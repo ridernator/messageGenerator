@@ -71,14 +71,21 @@ bool CppGenerator::generateHeaderFile(const Enumeration& enumeration,
     headerFile << "typedef enum class " << enumeration.getName() << " : " << convertBaseTypeToCppType(enumeration.getBaseType()) << " {\n";
     
     for (const auto& member : enumeration.getMember()) {
+        if (member.getDocumentation().present()) {
+            headerFile << insertTabs(1) << "/**\n";
+            headerFile << insertTabs(1) << " * " << member.getDocumentation().get() + '\n';
+            headerFile << insertTabs(1) << " */\n";
+        }
+            
         if (member.getValue().present()) {
-            headerFile << insertTabs(1) << member.getName() << " = "<< member.getValue().get() <<",\n";
+            headerFile << insertTabs(1) << member.getName() << " = "<< member.getValue().get() << ",\n";
         } else {
             headerFile << insertTabs(1) << member.getName() << ",\n";
         }
     }
     
-    headerFile << "} " << enumeration.getName() << ";\n";
+    headerFile.seekp(-2, headerFile.cur);
+    headerFile << "\n} " << enumeration.getName() << ";\n";
 
     headerFile.close();
 }
@@ -307,18 +314,18 @@ std::string CppGenerator::generateSizeStatement(const Element& element,
         if (isPrimitiveType(element.getSubElement().get())) {
             os << insertTabs(numTabs) << "size += " << element.getArraySize().get() << " * sizeof(" << convertElementToCppType(element.getSubElement().get()) << ");";
         } else {
-            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "a : " << nameToUse << ") {\n";
-            os << generateSizeStatement(element.getSubElement().get(), nameToUse + "a", numTabs + 1) << "\n";
+            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "Member : " << nameToUse << ") {\n";
+            os << generateSizeStatement(element.getSubElement().get(), nameToUse + "Member", numTabs + 1) << "\n";
             os << insertTabs(numTabs) << "}";
         }
     } else if (element.getType() == "sequence") {
         if (isPrimitiveType(element.getSubElement().get())) {
             os << insertTabs(numTabs) << "size += (" << nameToUse << ".size() * sizeof(" << convertElementToCppType(element.getSubElement().get()) << ")) + sizeof(" << nameToUse << ".size());";
         } else {
-            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "a : " << nameToUse << ") {\n";
-            os << generateSizeStatement(element.getSubElement().get(), nameToUse + "a", numTabs + 1) << "\n";
+            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "Member : " << nameToUse << ") {\n";
+            os << generateSizeStatement(element.getSubElement().get(), nameToUse + "Member", numTabs + 1) << "\n";
             os << insertTabs(numTabs) << "}\n";
-            os << insertTabs(numTabs) << "// Extra field for size of " << nameToUse << "sequence\n";
+            os << insertTabs(numTabs) << "// Extra field for size of " << nameToUse << " sequence\n";
             os << insertTabs(numTabs) << "size += sizeof(" << nameToUse << ".size());";
         }
     } else if (element.getType() == "string") {
@@ -373,6 +380,8 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
             os << generateMemberSerialisation(element, element.getName().get()) << "\n\n";
         }
     }
+    
+    os.seekp(-1, os.cur);
     os << "}";
 
     return os.str();
@@ -389,16 +398,16 @@ std::string CppGenerator::generateMemberSerialisation(const Element& element,
         if (isPrimitiveType(element.getSubElement().get())) {
             os << insertTabs(numTabs) << "Serialiser::serialisePrimitiveArray(data, " << nameToUse << ", offset);";
         } else {
-            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "a : " << nameToUse << ") {\n";
-            os << generateMemberSerialisation(element.getSubElement().get(), nameToUse + "a", numTabs + 1) << "\n";
+            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "Member : " << nameToUse << ") {\n";
+            os << generateMemberSerialisation(element.getSubElement().get(), nameToUse + "Member", numTabs + 1) << "\n";
             os << insertTabs(numTabs) << "}";
         }
     } else if (element.getType() == "sequence") {
         if (isPrimitiveType(element.getSubElement().get())) {
             os << insertTabs(numTabs) << "Serialiser::serialisePrimitiveSequence(data, " << nameToUse << ", offset);";
         } else {
-            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "a : " << nameToUse << ") {\n";
-            os << generateMemberSerialisation(element.getSubElement().get(), nameToUse + "a", numTabs + 1) << "\n";
+            os << insertTabs(numTabs) << "for (const auto& " << nameToUse << "Member : " << nameToUse << ") {\n";
+            os << generateMemberSerialisation(element.getSubElement().get(), nameToUse + "Member", numTabs + 1) << "\n";
             os << insertTabs(numTabs) << "}";
         }
     } else if (element.getType() == "string") {
@@ -441,6 +450,8 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
             os << generateMemberDeserialisation(element, element.getName().get()) << "\n\n";
         }
     }
+    
+    os.seekp(-1, os.cur);
     os << "}";
 
     return os.str();
@@ -457,16 +468,16 @@ std::string CppGenerator::generateMemberDeserialisation(const Element& element,
         if (isPrimitiveType(element.getSubElement().get())) {
             os << insertTabs(numTabs) << "Serialiser::deserialisePrimitiveArray(data, " << nameToUse << ", offset);";
         } else {
-            os << insertTabs(numTabs) << "for (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
-            os << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "a", numTabs + 1) << "\n";
+            os << insertTabs(numTabs) << "for (auto& " << nameToUse << "Member : " << nameToUse << ") {\n";
+            os << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "Member", numTabs + 1) << "\n";
             os << insertTabs(numTabs) << "}";
         }
     } else if (element.getType() == "sequence") {
         if (isPrimitiveType(element.getSubElement().get())) {
             os << insertTabs(numTabs) << "Serialiser::deserialisePrimitiveSequence(data, " << nameToUse << ", offset);";
         } else {
-            os << insertTabs(numTabs) << "for (auto& " << nameToUse << "a : " << nameToUse << ") {\n";
-            os << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "a", numTabs + 1) << "\n";
+            os << insertTabs(numTabs) << "for (auto& " << nameToUse << "Member : " << nameToUse << ") {\n";
+            os << generateMemberDeserialisation(element.getSubElement().get(), nameToUse + "Member", numTabs + 1) << "\n";
             os << insertTabs(numTabs) << "}";
         }
     } else if (element.getType() == "string") {

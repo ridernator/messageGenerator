@@ -31,53 +31,52 @@ void StressTest::serialise(char* data, uint64_t& offset) const {
     Serialiser::serialisePrimitiveSequence(data, floatSequence, offset);
 
     // Serialise arrayOfIntSequences
-    for (const auto& arrayOfIntSequencesa : arrayOfIntSequences) {
-        Serialiser::serialisePrimitiveSequence(data, arrayOfIntSequencesa, offset);
+    for (const auto& arrayOfIntSequencesMember : arrayOfIntSequences) {
+        Serialiser::serialisePrimitiveSequence(data, arrayOfIntSequencesMember, offset);
     }
 
     // Serialise sequenceOfIntArrays
-    for (const auto& sequenceOfIntArraysa : sequenceOfIntArrays) {
-        Serialiser::serialisePrimitiveArray(data, sequenceOfIntArraysa, offset);
+    for (const auto& sequenceOfIntArraysMember : sequenceOfIntArrays) {
+        Serialiser::serialisePrimitiveArray(data, sequenceOfIntArraysMember, offset);
     }
 
     // Serialise intToDoubleMap
     // Don't know what to do with map=intToDoubleMap
 
     // Serialise intArray5d
-    for (const auto& intArray5da : intArray5d) {
-        for (const auto& intArray5daa : intArray5da) {
-            for (const auto& intArray5daaa : intArray5daa) {
-                for (const auto& intArray5daaaa : intArray5daaa) {
-                    Serialiser::serialisePrimitiveArray(data, intArray5daaaa, offset);
+    for (const auto& intArray5dMember : intArray5d) {
+        for (const auto& intArray5dMemberMember : intArray5dMember) {
+            for (const auto& intArray5dMemberMemberMember : intArray5dMemberMember) {
+                for (const auto& intArray5dMemberMemberMemberMember : intArray5dMemberMemberMember) {
+                    Serialiser::serialisePrimitiveArray(data, intArray5dMemberMemberMemberMember, offset);
                 }
             }
         }
     }
 
     // Serialise floatSequence5d
-    for (const auto& floatSequence5da : floatSequence5d) {
-        for (const auto& floatSequence5daa : floatSequence5da) {
-            for (const auto& floatSequence5daaa : floatSequence5daa) {
-                for (const auto& floatSequence5daaaa : floatSequence5daaa) {
-                    Serialiser::serialisePrimitiveSequence(data, floatSequence5daaaa, offset);
+    for (const auto& floatSequence5dMember : floatSequence5d) {
+        for (const auto& floatSequence5dMemberMember : floatSequence5dMember) {
+            for (const auto& floatSequence5dMemberMemberMember : floatSequence5dMemberMember) {
+                for (const auto& floatSequence5dMemberMemberMemberMember : floatSequence5dMemberMemberMember) {
+                    Serialiser::serialisePrimitiveSequence(data, floatSequence5dMemberMemberMemberMember, offset);
                 }
             }
         }
     }
 
     // Serialise blobSequence5d
-    for (const auto& blobSequence5da : blobSequence5d) {
-        for (const auto& blobSequence5daa : blobSequence5da) {
-            for (const auto& blobSequence5daaa : blobSequence5daa) {
-                for (const auto& blobSequence5daaaa : blobSequence5daaa) {
-                    for (const auto& blobSequence5daaaaa : blobSequence5daaaa) {
-                        blobSequence5daaaaa.serialise(data, offset);
+    for (const auto& blobSequence5dMember : blobSequence5d) {
+        for (const auto& blobSequence5dMemberMember : blobSequence5dMember) {
+            for (const auto& blobSequence5dMemberMemberMember : blobSequence5dMemberMember) {
+                for (const auto& blobSequence5dMemberMemberMemberMember : blobSequence5dMemberMemberMember) {
+                    for (const auto& blobSequence5dMemberMemberMemberMemberMember : blobSequence5dMemberMemberMemberMember) {
+                        blobSequence5dMemberMemberMemberMemberMember.serialise(data, offset);
                     }
                 }
             }
         }
     }
-
 }
 
 void StressTest::deserialise(const char* data, uint64_t& offset) {
@@ -103,53 +102,52 @@ void StressTest::deserialise(const char* data, uint64_t& offset) {
     Serialiser::deserialisePrimitiveSequence(data, floatSequence, offset);
 
     // Deserialise arrayOfIntSequences
-    for (auto& arrayOfIntSequencesa : arrayOfIntSequences) {
-        Serialiser::deserialisePrimitiveSequence(data, arrayOfIntSequencesa, offset);
+    for (auto& arrayOfIntSequencesMember : arrayOfIntSequences) {
+        Serialiser::deserialisePrimitiveSequence(data, arrayOfIntSequencesMember, offset);
     }
 
     // Deserialise sequenceOfIntArrays
-    for (auto& sequenceOfIntArraysa : sequenceOfIntArrays) {
-        Serialiser::deserialisePrimitiveArray(data, sequenceOfIntArraysa, offset);
+    for (auto& sequenceOfIntArraysMember : sequenceOfIntArrays) {
+        Serialiser::deserialisePrimitiveArray(data, sequenceOfIntArraysMember, offset);
     }
 
     // Deserialise intToDoubleMap
     // Don't know what to do with map=intToDoubleMap
 
     // Deserialise intArray5d
-    for (auto& intArray5da : intArray5d) {
-        for (auto& intArray5daa : intArray5da) {
-            for (auto& intArray5daaa : intArray5daa) {
-                for (auto& intArray5daaaa : intArray5daaa) {
-                    Serialiser::deserialisePrimitiveArray(data, intArray5daaaa, offset);
+    for (auto& intArray5dMember : intArray5d) {
+        for (auto& intArray5dMemberMember : intArray5dMember) {
+            for (auto& intArray5dMemberMemberMember : intArray5dMemberMember) {
+                for (auto& intArray5dMemberMemberMemberMember : intArray5dMemberMemberMember) {
+                    Serialiser::deserialisePrimitiveArray(data, intArray5dMemberMemberMemberMember, offset);
                 }
             }
         }
     }
 
     // Deserialise floatSequence5d
-    for (auto& floatSequence5da : floatSequence5d) {
-        for (auto& floatSequence5daa : floatSequence5da) {
-            for (auto& floatSequence5daaa : floatSequence5daa) {
-                for (auto& floatSequence5daaaa : floatSequence5daaa) {
-                    Serialiser::deserialisePrimitiveSequence(data, floatSequence5daaaa, offset);
+    for (auto& floatSequence5dMember : floatSequence5d) {
+        for (auto& floatSequence5dMemberMember : floatSequence5dMember) {
+            for (auto& floatSequence5dMemberMemberMember : floatSequence5dMemberMember) {
+                for (auto& floatSequence5dMemberMemberMemberMember : floatSequence5dMemberMemberMember) {
+                    Serialiser::deserialisePrimitiveSequence(data, floatSequence5dMemberMemberMemberMember, offset);
                 }
             }
         }
     }
 
     // Deserialise blobSequence5d
-    for (auto& blobSequence5da : blobSequence5d) {
-        for (auto& blobSequence5daa : blobSequence5da) {
-            for (auto& blobSequence5daaa : blobSequence5daa) {
-                for (auto& blobSequence5daaaa : blobSequence5daaa) {
-                    for (auto& blobSequence5daaaaa : blobSequence5daaaa) {
-                        blobSequence5daaaaa.deserialise(data, offset);
+    for (auto& blobSequence5dMember : blobSequence5d) {
+        for (auto& blobSequence5dMemberMember : blobSequence5dMember) {
+            for (auto& blobSequence5dMemberMemberMember : blobSequence5dMemberMember) {
+                for (auto& blobSequence5dMemberMemberMemberMember : blobSequence5dMemberMemberMember) {
+                    for (auto& blobSequence5dMemberMemberMemberMemberMember : blobSequence5dMemberMemberMemberMember) {
+                        blobSequence5dMemberMemberMemberMemberMember.deserialise(data, offset);
                     }
                 }
             }
         }
     }
-
 }
 
 uint64_t StressTest::getSizeInBytes() const {
@@ -169,25 +167,25 @@ uint64_t StressTest::getSizeInBytes() const {
     size += (floatSequence.size() * sizeof(float)) + sizeof(floatSequence.size());
 
     // Calculate size of arrayOfIntSequences
-    for (const auto& arrayOfIntSequencesa : arrayOfIntSequences) {
-        size += (arrayOfIntSequencesa.size() * sizeof(int32_t)) + sizeof(arrayOfIntSequencesa.size());
+    for (const auto& arrayOfIntSequencesMember : arrayOfIntSequences) {
+        size += (arrayOfIntSequencesMember.size() * sizeof(int32_t)) + sizeof(arrayOfIntSequencesMember.size());
     }
 
     // Calculate size of sequenceOfIntArrays
-    for (const auto& sequenceOfIntArraysa : sequenceOfIntArrays) {
+    for (const auto& sequenceOfIntArraysMember : sequenceOfIntArrays) {
         size += 10 * sizeof(int32_t);
     }
-    // Extra field for size of sequenceOfIntArrayssequence
+    // Extra field for size of sequenceOfIntArrays sequence
     size += sizeof(sequenceOfIntArrays.size());
 
     // Calculate size of intToDoubleMap
     // Don't know what to do with map=intToDoubleMap
 
     // Calculate size of intArray5d
-    for (const auto& intArray5da : intArray5d) {
-        for (const auto& intArray5daa : intArray5da) {
-            for (const auto& intArray5daaa : intArray5daa) {
-                for (const auto& intArray5daaaa : intArray5daaa) {
+    for (const auto& intArray5dMember : intArray5d) {
+        for (const auto& intArray5dMemberMember : intArray5dMember) {
+            for (const auto& intArray5dMemberMemberMember : intArray5dMemberMember) {
+                for (const auto& intArray5dMemberMemberMemberMember : intArray5dMemberMemberMember) {
                     size += 6 * sizeof(int32_t);
                 }
             }
@@ -195,45 +193,45 @@ uint64_t StressTest::getSizeInBytes() const {
     }
 
     // Calculate size of floatSequence5d
-    for (const auto& floatSequence5da : floatSequence5d) {
-        for (const auto& floatSequence5daa : floatSequence5da) {
-            for (const auto& floatSequence5daaa : floatSequence5daa) {
-                for (const auto& floatSequence5daaaa : floatSequence5daaa) {
-                    size += (floatSequence5daaaa.size() * sizeof(float)) + sizeof(floatSequence5daaaa.size());
+    for (const auto& floatSequence5dMember : floatSequence5d) {
+        for (const auto& floatSequence5dMemberMember : floatSequence5dMember) {
+            for (const auto& floatSequence5dMemberMemberMember : floatSequence5dMemberMember) {
+                for (const auto& floatSequence5dMemberMemberMemberMember : floatSequence5dMemberMemberMember) {
+                    size += (floatSequence5dMemberMemberMemberMember.size() * sizeof(float)) + sizeof(floatSequence5dMemberMemberMemberMember.size());
                 }
-                // Extra field for size of floatSequence5daaasequence
-                size += sizeof(floatSequence5daaa.size());
+                // Extra field for size of floatSequence5dMemberMemberMember sequence
+                size += sizeof(floatSequence5dMemberMemberMember.size());
             }
-            // Extra field for size of floatSequence5daasequence
-            size += sizeof(floatSequence5daa.size());
+            // Extra field for size of floatSequence5dMemberMember sequence
+            size += sizeof(floatSequence5dMemberMember.size());
         }
-        // Extra field for size of floatSequence5dasequence
-        size += sizeof(floatSequence5da.size());
+        // Extra field for size of floatSequence5dMember sequence
+        size += sizeof(floatSequence5dMember.size());
     }
-    // Extra field for size of floatSequence5dsequence
+    // Extra field for size of floatSequence5d sequence
     size += sizeof(floatSequence5d.size());
 
     // Calculate size of blobSequence5d
-    for (const auto& blobSequence5da : blobSequence5d) {
-        for (const auto& blobSequence5daa : blobSequence5da) {
-            for (const auto& blobSequence5daaa : blobSequence5daa) {
-                for (const auto& blobSequence5daaaa : blobSequence5daaa) {
-                    for (const auto& blobSequence5daaaaa : blobSequence5daaaa) {
-                        size += blobSequence5daaaaa.getSizeInBytes();
+    for (const auto& blobSequence5dMember : blobSequence5d) {
+        for (const auto& blobSequence5dMemberMember : blobSequence5dMember) {
+            for (const auto& blobSequence5dMemberMemberMember : blobSequence5dMemberMember) {
+                for (const auto& blobSequence5dMemberMemberMemberMember : blobSequence5dMemberMemberMember) {
+                    for (const auto& blobSequence5dMemberMemberMemberMemberMember : blobSequence5dMemberMemberMemberMember) {
+                        size += blobSequence5dMemberMemberMemberMemberMember.getSizeInBytes();
                     }
-                    // Extra field for size of blobSequence5daaaasequence
-                    size += sizeof(blobSequence5daaaa.size());
+                    // Extra field for size of blobSequence5dMemberMemberMemberMember sequence
+                    size += sizeof(blobSequence5dMemberMemberMemberMember.size());
                 }
-                // Extra field for size of blobSequence5daaasequence
-                size += sizeof(blobSequence5daaa.size());
+                // Extra field for size of blobSequence5dMemberMemberMember sequence
+                size += sizeof(blobSequence5dMemberMemberMember.size());
             }
-            // Extra field for size of blobSequence5daasequence
-            size += sizeof(blobSequence5daa.size());
+            // Extra field for size of blobSequence5dMemberMember sequence
+            size += sizeof(blobSequence5dMemberMember.size());
         }
-        // Extra field for size of blobSequence5dasequence
-        size += sizeof(blobSequence5da.size());
+        // Extra field for size of blobSequence5dMember sequence
+        size += sizeof(blobSequence5dMember.size());
     }
-    // Extra field for size of blobSequence5dsequence
+    // Extra field for size of blobSequence5d sequence
     size += sizeof(blobSequence5d.size());
 
     return size;

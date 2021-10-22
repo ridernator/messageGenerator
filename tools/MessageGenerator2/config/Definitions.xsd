@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="signedIntType">
+        <xs:annotation>
+            <xs:documentation>Enumeration of the signed integer types</xs:documentation>
+        </xs:annotation>
+        
+        <xs:restriction base="xs:string">            
+            <xs:enumeration value="signed_int_8">
+                <xs:annotation>
+                    <xs:documentation>Signed 8-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            
+            <xs:enumeration value="signed_int_16">
+                <xs:annotation>
+                    <xs:documentation>Signed 16-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            
+            <xs:enumeration value="signed_int_32">
+                <xs:annotation>
+                    <xs:documentation>Signed 32-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            
+            <xs:enumeration value="signed_int_64">
+                <xs:annotation>
+                    <xs:documentation>Signed 64-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="unsignedIntType">
+        <xs:annotation>
+            <xs:documentation>Enumeration of the unsigned integer types</xs:documentation>
+        </xs:annotation>
+        
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unsigned_int_8">
+                <xs:annotation>
+                    <xs:documentation>Unsigned 8-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            
+            <xs:enumeration value="unsigned_int_16">
+                <xs:annotation>
+                    <xs:documentation>Unsigned 16-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            
+            <xs:enumeration value="unsigned_int_32">
+                <xs:annotation>
+                    <xs:documentation>Unsigned 32-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            
+            <xs:enumeration value="unsigned_int_64">
+                <xs:annotation>
+                    <xs:documentation>Unsigned 64-bit integer</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="intType">
+        <xs:annotation>
+            <xs:documentation>All types of signed or unsigned integers</xs:documentation>
+        </xs:annotation>
+        
+        <xs:union memberTypes="unsignedIntType signedIntType"/>
+    </xs:simpleType>
+    
+    <xs:simpleType name="floatingPointType">
+        <xs:annotation>
+            <xs:documentation>Enumeration of the floating point types (float, double)</xs:documentation>
+        </xs:annotation>
+        
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="float_32">
+                <xs:annotation>
+                    <xs:documentation>32-bit floating point number</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            
+            <xs:enumeration value="float_64">                
+                <xs:annotation>                    
+                    <xs:documentation>64-bit floating point number</xs:documentation>                
+                </xs:annotation>            
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="primitiveType">
+        <xs:annotation>
+            <xs:documentation>All types (Union of unsigned int, signed int and floating point types)</xs:documentation>
+        </xs:annotation>
+        
+        <xs:union memberTypes="intType floatingPointType"/>
+    </xs:simpleType>
+    
+    <xs:complexType name="enumerationMember">
+        <xs:annotation>
+            <xs:documentation>Definition of a member of an enumeration</xs:documentation>
+        </xs:annotation>
+        
+        <xs:all>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this member. Will be added to generated source files></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all>        
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this member</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="value" type="xs:unsignedLong" use="optional">
+            <xs:annotation>
+                <xs:documentation>The (optional) value of this member</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="primitiveElement">
+        <xs:annotation>
+            <xs:documentation>Definition of an element in a structure</xs:documentation>
+        </xs:annotation>
+        
+        <xs:all>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all>
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this element</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        
+        <xs:attribute name="type" type="primitiveType" use="required">
+            <xs:annotation>
+                <xs:documentation>The type of this element</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="structure">
+        <xs:annotation>
+            <xs:documentation>Definition of a structure and all its elements</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this structure. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+                
+            <xs:choice minOccurs="0" maxOccurs="unbounded">                
+                <xs:element name="primitiveElement" type="primitiveElement">
+                    <xs:annotation>
+                        <xs:documentation>Element which makes up part of this structure</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this structure</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="enumeration">
+        <xs:annotation>
+            <xs:documentation>Definition of an enumeration</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this constant Will be added to generated source files></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="member" type="enumerationMember" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>     
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this enumeration</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+            
+        <xs:attribute name="baseType" type="intType" use="required">
+            <xs:annotation>
+                <xs:documentation>The base type of this enum (Must be one of the intTypes)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="definitions">
+        <xs:annotation>
+            <xs:documentation>Definitions of structure, enumerations and unions</xs:documentation>
+        </xs:annotation>
+        
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>Documentation for this structure. Will be added to generated source files</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="structure" type="structure">
+                        <xs:annotation>
+                            <xs:documentation>Definition of a structure and all its elements</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    
+                    <xs:element name="enumeration" type="enumeration">
+                        <xs:annotation>
+                            <xs:documentation>Definition of an enumeration</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:choice>
+            </xs:sequence>
+            
+            <xs:attribute name="namespace" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>The namespace for these definitions</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element> 
+</xs:schema> 

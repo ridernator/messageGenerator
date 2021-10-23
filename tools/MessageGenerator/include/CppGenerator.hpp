@@ -57,6 +57,14 @@ class CppGenerator : Generator {
 
         std::string generateDeserialiseCxx(const Structure& structure);
 
+        std::string generateSerialisePrimitiveElement(const PrimitiveElement& element);
+
+        std::string generateDeserialisePrimitiveElement(const PrimitiveElement& element);
+
+        std::string generateSerialiseEnumeration(const IncludedEnumeration& enumeration);
+
+        std::string generateDeserialiseEnumeration(const IncludedEnumeration& enumeration);
+
         std::string generateGettersCxx(const Structure& structure);
 
         std::string generateSettersCxx(const Structure& structure);

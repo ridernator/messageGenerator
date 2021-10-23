@@ -486,10 +486,11 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
         os << insertTabs(1) << "// Nothing to serialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitiveElement()) {
-            os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
-            os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
-            os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
-            os << std::endl;
+            os << generateSerialisePrimitiveElement(element);
+        }
+        
+        for (const auto& enumeration : structure.getEnumeration()) {
+            os << generateSerialiseEnumeration(enumeration);
         }
     }
     
@@ -508,15 +509,60 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
         os << insertTabs(1) << "// Nothing to deserialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitiveElement()) {
-            os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
-            os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
-            os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
-            os << std::endl;
+            os << generateDeserialisePrimitiveElement(element);
+        }
+        
+        for (const auto& enumeration : structure.getEnumeration()) {
+            os << generateDeserialiseEnumeration(enumeration);
         }
     }
     
     os.seekp(-1, os.cur);
     os << insertTabs() << '}' << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateSerialisePrimitiveElement(const PrimitiveElement& element) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialisePrimitiveElement(const PrimitiveElement& element) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateSerialiseEnumeration(const IncludedEnumeration& enumeration) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Serialise " << enumeration.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(data + offset, &" << enumeration.getName() << ", sizeof (" << enumeration.getType() << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << enumeration.getType() << ");" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialiseEnumeration(const IncludedEnumeration& enumeration) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(&" << enumeration.getName() << ", data + offset, sizeof (" << enumeration.getType() << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << enumeration.getType() << ");" << std::endl;
+    os << std::endl;
 
     return os.str();
 }

@@ -27,6 +27,18 @@ namespace arse {
         // Serialise int64Member
         memcpy(data + offset, &int64Member, sizeof (int64_t));
         offset += sizeof (int64_t);
+
+        // Serialise colour1
+        memcpy(data + offset, &colour1, sizeof (Colour));
+        offset += sizeof (Colour);
+
+        // Serialise colour2
+        memcpy(data + offset, &colour2, sizeof (Colour));
+        offset += sizeof (Colour);
+
+        // Serialise colour3
+        memcpy(data + offset, &colour3, sizeof (Colour));
+        offset += sizeof (Colour);
     }
 
     void TestStructure::deserialise(const char* data, uint64_t& offset) {
@@ -45,6 +57,18 @@ namespace arse {
         // Deserialise int64Member
         memcpy(&int64Member, data + offset, sizeof (int64_t));
         offset += sizeof (int64_t);
+
+        // Deserialise colour1
+        memcpy(&colour1, data + offset, sizeof (Colour));
+        offset += sizeof (Colour);
+
+        // Deserialise colour2
+        memcpy(&colour2, data + offset, sizeof (Colour));
+        offset += sizeof (Colour);
+
+        // Deserialise colour3
+        memcpy(&colour3, data + offset, sizeof (Colour));
+        offset += sizeof (Colour);
     }
 
     uint64_t TestStructure::getSizeInBytes() const {

@@ -6,8 +6,11 @@
 #include <cctype>
 #include <filesystem>
 
-bool CppGenerator::generate(const Definitions& definitions,
-                            const std::string& outputFolder) {
+CppGenerator::CppGenerator(const Definitions& definitions) : Generator(definitions) {
+    
+}
+
+bool CppGenerator::generate(const std::string& outputFolder) {
     bool returnVal = true;
     
     setNamespace(definitions.getNamespace().present());
@@ -133,6 +136,9 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
 
     sourceFile << "#include \"" << structure.getName() << ".hxx\"" << std::endl;
     sourceFile << std::endl;
+
+    sourceFile << "#include <string.h>" << std::endl;
+    sourceFile << std::endl;
     
     if (namespaceOptional.present()) {
         sourceFile << "namespace " << namespaceOptional.get() << " {" << std::endl;
@@ -147,30 +153,10 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
     sourceFile << generateDeserialiseCxx(structure) << std::endl;
     
     sourceFile << generateGetSizeInBytesCxx(structure) << std::endl;
-
-    for (const auto& element : structure.getPrimitiveElement()) {
-        std::string upperName = element.getName();
-        upperName[0] = toupper(upperName[0]);
-
-        sourceFile << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() {" << std::endl;
-        sourceFile << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
-        sourceFile << insertTabs() << '}' << std::endl;
-        sourceFile << std::endl;
-    }
     
-    sourceFile.seekp(-1, sourceFile.cur);
-
-    for (const auto& element : structure.getPrimitiveElement()) {
-        std::string upperName = element.getName();
-        upperName[0] = toupper(upperName[0]);
-
-        sourceFile << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveElementToCppType(element) << " value) {" << std::endl;
-        sourceFile << insertTabs(1) << element.getName() << " = value;" << std::endl;
-        sourceFile << insertTabs() << '}' << std::endl;
-        sourceFile << std::endl;
-    }
+    sourceFile << generateGettersCxx(structure);
     
-    sourceFile.seekp(-1, sourceFile.cur);
+    sourceFile << generateSettersCxx(structure);
     
     if (namespaceOptional.present()) {
         sourceFile << "}" << std::endl;
@@ -179,6 +165,58 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
     sourceFile.close();
     
     return returnVal;
+}
+
+std::string CppGenerator::generateGettersCxx(const Structure& structure) {
+    std::ostringstream os;
+    
+    for (const auto& element : structure.getPrimitiveElement()) {
+        std::string upperName = element.getName();
+        upperName[0] = toupper(upperName[0]);
+
+        os << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+        os << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
+        os << insertTabs() << '}' << std::endl;
+        os << std::endl;
+    }
+    
+    for (const auto& enumeration : structure.getEnumeration()) {
+        std::string upperName = enumeration.getName();
+        upperName[0] = toupper(upperName[0]);
+
+        os << insertTabs() << enumeration.getType() << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+        os << insertTabs(1) << "return " << enumeration.getName() << ";" << std::endl;
+        os << insertTabs() << '}' << std::endl;
+        os << std::endl;
+    }
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateSettersCxx(const Structure& structure) {
+    std::ostringstream os;
+    
+    for (const auto& element : structure.getPrimitiveElement()) {
+        std::string upperName = element.getName();
+        upperName[0] = toupper(upperName[0]);
+
+        os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveElementToCppType(element) << " value) {" << std::endl;
+        os << insertTabs(1) << element.getName() << " = value;" << std::endl;
+        os << insertTabs() << '}' << std::endl;
+        os << std::endl;
+    }
+    
+    for (const auto& enumeration : structure.getEnumeration()) {
+        std::string upperName = enumeration.getName();
+        upperName[0] = toupper(upperName[0]);
+
+        os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << enumeration.getType() << " value) {" << std::endl;
+        os << insertTabs(1) << enumeration.getName() << " = value;" << std::endl;
+        os << insertTabs() << '}' << std::endl;
+        os << std::endl;
+    }
+    
+    return os.str();
 }
     
 std::string CppGenerator::generateConstructorHxx(const Structure& structure) {
@@ -206,13 +244,6 @@ std::string CppGenerator::generateDestructorHxx(const Structure& structure) {
 std::string CppGenerator::generateSerialiseHxx() {
     std::ostringstream os;   
     
-    os << insertTabs(2) << "/**" << std::endl;
-    os << insertTabs(2) << " * Serialise this class into a block of data" << std::endl;
-    os << insertTabs(2) << " *" << std::endl;
-    os << insertTabs(2) << " * @param data The data to serialise to (Ensure it is large enough!)" << std::endl;
-    os << insertTabs(2) << " * @param offset The offset into the data to start serialising to. Will be updated with the new offset on return" << std::endl;
-    os << insertTabs(2) << " * @return True if the operation was successful or false if not" << std::endl;
-    os << insertTabs(2) << " */" << std::endl;
     os << insertTabs(2) << "void serialise(char* data," << std::endl;
     os << insertTabs(2) << "               uint64_t& offset) const;" << std::endl;
     
@@ -222,13 +253,6 @@ std::string CppGenerator::generateSerialiseHxx() {
 std::string CppGenerator::generateDeserialiseHxx() {
     std::ostringstream os;   
     
-    os << insertTabs(2) << "/**" << std::endl;
-    os << insertTabs(2) << " * Deserialise a block of data into this class" << std::endl;
-    os << insertTabs(2) << " *" << std::endl;
-    os << insertTabs(2) << " * @param data The data to deserialise from" << std::endl;
-    os << insertTabs(2) << " * @param offset The offset into the data to start deserialising from. Will be updated with the new offset on return" << std::endl;
-    os << insertTabs(2) << " * @return True if the operation was successful or false if not" << std::endl;
-    os << insertTabs(2) << " */" << std::endl;
     os << insertTabs(2) << "void deserialise(const char* data," << std::endl;
     os << insertTabs(2) << "                 uint64_t& offset);" << std::endl;
     
@@ -276,6 +300,10 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
         os << generateGetterHxx(element) << std::endl;
     }
     
+    for (const auto& enumeration : structure.getEnumeration()) {
+        os << generateGetterHxx(enumeration) << std::endl;
+    }
+    
     return os.str();
 }
 
@@ -284,6 +312,10 @@ std::string CppGenerator::generateSettersHxx(const Structure& structure) {
     
     for (const auto& element : structure.getPrimitiveElement()) {
         os << generateSetterHxx(element) << std::endl;
+    }
+    
+    for (const auto& enumeration : structure.getEnumeration()) {
+        os << generateSetterHxx(enumeration) << std::endl;
     }
     
     return os.str();
@@ -334,6 +366,51 @@ std::string CppGenerator::generateSetterHxx(const PrimitiveElement& element) {
     return os.str();
 }
 
+std::string CppGenerator::generateGetterHxx(const IncludedEnumeration& enumeration) {
+    std::ostringstream os;
+    std::string name = enumeration.getName();
+    
+    name[0] = toupper(name[0]);
+        
+    os << insertTabs(2) << "/**" << std::endl;
+    os << insertTabs(2) << " * Getter for " << enumeration.getName() << std::endl;
+
+    if (enumeration.getDocumentation().present()) {
+        os << insertTabs(2) << " *" << std::endl;
+        os << insertTabs(2) << " * " << enumeration.getName() << " defined as : " << enumeration.getDocumentation().get() << std::endl;
+    }
+
+    os << insertTabs(2) << " *" << std::endl;
+    os << insertTabs(2) << " * @return " << enumeration.getName() << std::endl;
+    os << insertTabs(2) << " */" << std::endl;
+    
+    os << insertTabs(2) << enumeration.getType() << " get" << name << "() const;" << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateSetterHxx(const IncludedEnumeration& enumeration) {
+    std::ostringstream os;
+    std::string name = enumeration.getName();
+
+    name[0] = toupper(name[0]);
+
+    os << insertTabs(2) << "/**" << std::endl;
+    os << insertTabs(2) << " * Setter for " << enumeration.getName() << std::endl;
+
+    if (enumeration.getDocumentation().present()) {
+        os << insertTabs(2) << " *" << std::endl;
+        os << insertTabs(2) << " * " << enumeration.getName() << " defined as : " << enumeration.getDocumentation().get() << std::endl;
+    }
+
+    os << insertTabs(2) << " *" << std::endl;
+    os << insertTabs(2) << " * @param value The new value to set" << std::endl;
+    os << insertTabs(2) << " */" << std::endl;
+    os << insertTabs(2) << "void set" << name << "(const " << enumeration.getType() << " value);" << std::endl;
+    
+    return os.str();
+}
+
 std::string CppGenerator::generateMembersHxx(const Structure& structure) {
     std::ostringstream os;
 
@@ -347,6 +424,17 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
         os << insertTabs(2) << convertPrimitiveElementToCppType(element) << ' ' << element.getName() << ';' << std::endl;
         os << std::endl;
     }
+
+    for (const auto& enumeration : structure.getEnumeration()) {
+        if (enumeration.getDocumentation().present()) {
+            os << insertTabs(2) << "/**" << std::endl;
+            os << insertTabs(2) << " * " << enumeration.getDocumentation().get() << std::endl;
+            os << insertTabs(2) << " */" << std::endl;
+        }
+
+        os << insertTabs(2) << enumeration.getType() << ' ' << enumeration.getName() << ';' << std::endl;
+        os << std::endl;
+    }
     
     return os.str();
 }
@@ -358,11 +446,10 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
     os << std::endl;
     
     os << "#include \"BaseMessage.hpp\"" << std::endl;
-    os << "#include \"Serialiser.hpp\"" << std::endl;
     
-//    for (const auto& include : getListOfStructIncludes(structure)) {
-//	os << "#include \"" << include << ".hxx\"" << std::endl;
-//    }
+    for (const auto& enumeration : structure.getEnumeration()) {
+	os << "#include \"" << enumeration.getType() << ".hxx\"" << std::endl;
+    }
     
     return os.str();
 }
@@ -371,10 +458,14 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     std::ostringstream os;   
     uint64_t size = 0;
     
-    os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() {" << std::endl;
+    os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() const {" << std::endl;
     
     for (const auto& element : structure.getPrimitiveElement()) {
         size += sizeOfPrimitiveElement(element);
+    }
+    
+    for (const auto& enumeration : structure.getEnumeration()) {
+        size += sizeOfEnumeration(enumeration);
     }
     
     os << insertTabs(1) << "// Size of primitive types in this structure" << std::endl;
@@ -395,10 +486,11 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
         os << insertTabs(1) << "// Nothing to serialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitiveElement()) {
-            os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
-            os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
-            os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
-            os << std::endl;
+            os << generateSerialisePrimitiveElement(element);
+        }
+        
+        for (const auto& enumeration : structure.getEnumeration()) {
+            os << generateSerialiseEnumeration(enumeration);
         }
     }
     
@@ -417,15 +509,60 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
         os << insertTabs(1) << "// Nothing to deserialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitiveElement()) {
-            os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
-            os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
-            os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
-            os << std::endl;
+            os << generateDeserialisePrimitiveElement(element);
+        }
+        
+        for (const auto& enumeration : structure.getEnumeration()) {
+            os << generateDeserialiseEnumeration(enumeration);
         }
     }
     
     os.seekp(-1, os.cur);
     os << insertTabs() << '}' << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateSerialisePrimitiveElement(const PrimitiveElement& element) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialisePrimitiveElement(const PrimitiveElement& element) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateSerialiseEnumeration(const IncludedEnumeration& enumeration) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Serialise " << enumeration.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(data + offset, &" << enumeration.getName() << ", sizeof (" << enumeration.getType() << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << enumeration.getType() << ");" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialiseEnumeration(const IncludedEnumeration& enumeration) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
+    os << insertTabs(1) << "memcpy(&" << enumeration.getName() << ", data + offset, sizeof (" << enumeration.getType() << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof (" << enumeration.getType() << ");" << std::endl;
+    os << std::endl;
 
     return os.str();
 }
@@ -449,6 +586,36 @@ uint64_t CppGenerator::sizeOfPrimitiveElement(const PrimitiveElement& element) {
 
     return size;
 }
+
+uint64_t CppGenerator::sizeOfEnumeration(const IncludedEnumeration& includedEnumeration) {
+    uint64_t size = 0;
+    
+    for (const auto& enumeration : definitions.getEnumeration()) {
+        if (includedEnumeration.getType().compare(enumeration.getName()) == 0) {
+            if ((enumeration.getBaseType() == "signed_int_8") || (enumeration.getBaseType() == "unsigned_int_8")) {
+                size = 1;
+            } else if ((enumeration.getBaseType() == "signed_int_16") || (enumeration.getBaseType() == "unsigned_int_16")) {
+                size = 2;
+            } else if ((enumeration.getBaseType() == "signed_int_32") || (enumeration.getBaseType() == "unsigned_int_32")) {
+                size = 4;
+            } else if ((enumeration.getBaseType() == "signed_int_64") || (enumeration.getBaseType() == "unsigned_int_64")) {
+                size = 8;
+            } else {
+                std::cerr << "Error : Enumeration (" << enumeration.getName() << ") has an invalid base type (" << enumeration.getBaseType() << ')' << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+
+            break;
+        }
+    }
+    
+    if (size == 0) {
+        std::cerr << "Error : Enumeration (" << includedEnumeration.getName() << ") has an invalid type (" << includedEnumeration.getType() << ')' << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+    
+    return size;
+}
     
 std::string CppGenerator::convertEnumToCppBaseType(const Enumeration& enumeration) {
     std::ostringstream os;
@@ -470,7 +637,8 @@ std::string CppGenerator::convertEnumToCppBaseType(const Enumeration& enumeratio
     } else if (enumeration.getBaseType() == "signed_int_64") {
         os << "int64_t";
     } else {
-        os << "???";
+        std::cerr << "Error : Enumeration (" << enumeration.getName() << ") has an invalid base type (" << enumeration.getBaseType() << ')' << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
     return os.str();
@@ -500,7 +668,8 @@ std::string CppGenerator::convertPrimitiveElementToCppType(const PrimitiveElemen
     } else if (element.getType() == "float_64") {
         os << "double";
     } else {
-        os << "???";
+        std::cerr << "Error : Element (" << element.getName() << ") has an invalid type (" << element.getType() << ')' << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
     return os.str();

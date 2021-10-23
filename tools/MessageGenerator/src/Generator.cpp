@@ -2,7 +2,8 @@
 
 const std::string Generator::TAB = "    ";
 
-Generator::Generator() : namespaceOn(false) {
+Generator::Generator(const Definitions& definitions) : definitions(definitions),
+                                                       namespaceOn(false) {
     
 }
 

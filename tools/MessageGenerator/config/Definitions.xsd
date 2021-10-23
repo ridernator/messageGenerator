@@ -125,6 +125,60 @@
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
+    
+    <xs:complexType name="enumeration">
+        <xs:annotation>
+            <xs:documentation>Definition of an enumeration</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this enumeration Will be added to generated source files></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="member" type="enumerationMember" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>     
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this enumeration</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+            
+        <xs:attribute name="baseType" type="intType" use="required">
+            <xs:annotation>
+                <xs:documentation>The base type of this enum (Must be one of the intTypes)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="includedEnumeration">
+        <xs:annotation>
+            <xs:documentation>An enumeration which is part of a structure</xs:documentation>
+        </xs:annotation>   
+        
+        <xs:all>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this enumeration. Will be added to generated source files></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:all> 
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this enumeration</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+            
+        <xs:attribute name="type" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The type of this enum (Must be a defined enumeration)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
 
     <xs:complexType name="primitiveElement">
         <xs:annotation>
@@ -171,39 +225,19 @@
                     </xs:annotation>
                 </xs:element>
             </xs:choice>
+                
+            <xs:choice minOccurs="0" maxOccurs="unbounded">        
+                <xs:element name="enumeration" type="includedEnumeration">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration which makes up part of this structure</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
         </xs:sequence>
             
         <xs:attribute name="name" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>The name of this structure</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:complexType>
-    
-    <xs:complexType name="enumeration">
-        <xs:annotation>
-            <xs:documentation>Definition of an enumeration</xs:documentation>
-        </xs:annotation>
-        
-        <xs:sequence>
-            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation>Documentation for this constant Will be added to generated source files></xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            
-            <xs:element name="member" type="enumerationMember" minOccurs="1" maxOccurs="unbounded" />
-        </xs:sequence>     
-            
-        <xs:attribute name="name" type="xs:string" use="required">
-            <xs:annotation>
-                <xs:documentation>The name of this enumeration</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-            
-        <xs:attribute name="baseType" type="intType" use="required">
-            <xs:annotation>
-                <xs:documentation>The base type of this enum (Must be one of the intTypes)</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>

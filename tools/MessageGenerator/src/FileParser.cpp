@@ -7,6 +7,8 @@
 #include <sstream>
 #include <fstream>
 
+#include "CppGenerator.hpp"
+
 FileParser::FileParser() {
 
 }
@@ -22,7 +24,8 @@ bool FileParser::parse(const std::string& file,
     
         switch (language) {
             case Language::CPP : {
-                returnVal = cppGenerator.generate(*definitions, outputFolder);
+                CppGenerator cppGenerator(*definitions);
+                returnVal = cppGenerator.generate(outputFolder);
 
                 break;
             }

@@ -49,7 +49,7 @@ namespace arse {
 
     uint64_t TestStructure::getSizeInBytes() const {
         // Size of primitive types in this structure
-        uint64_t size = 15;
+        uint64_t size = 18;
 
         return size;
     }

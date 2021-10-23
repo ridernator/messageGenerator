@@ -6,8 +6,11 @@
 #include <cctype>
 #include <filesystem>
 
-bool CppGenerator::generate(const Definitions& definitions,
-                            const std::string& outputFolder) {
+CppGenerator::CppGenerator(const Definitions& definitions) : Generator(definitions) {
+    
+}
+
+bool CppGenerator::generate(const std::string& outputFolder) {
     bool returnVal = true;
     
     setNamespace(definitions.getNamespace().present());
@@ -461,6 +464,10 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
         size += sizeOfPrimitiveElement(element);
     }
     
+    for (const auto& enumeration : structure.getEnumeration()) {
+        size += sizeOfEnumeration(enumeration);
+    }
+    
     os << insertTabs(1) << "// Size of primitive types in this structure" << std::endl;
     os << insertTabs(1) << "uint64_t size = " << size << ';' << std::endl;
     os << std::endl;    
@@ -533,6 +540,36 @@ uint64_t CppGenerator::sizeOfPrimitiveElement(const PrimitiveElement& element) {
 
     return size;
 }
+
+uint64_t CppGenerator::sizeOfEnumeration(const IncludedEnumeration& includedEnumeration) {
+    uint64_t size = 0;
+    
+    for (const auto& enumeration : definitions.getEnumeration()) {
+        if (includedEnumeration.getType().compare(enumeration.getName()) == 0) {
+            if ((enumeration.getBaseType() == "signed_int_8") || (enumeration.getBaseType() == "unsigned_int_8")) {
+                size = 1;
+            } else if ((enumeration.getBaseType() == "signed_int_16") || (enumeration.getBaseType() == "unsigned_int_16")) {
+                size = 2;
+            } else if ((enumeration.getBaseType() == "signed_int_32") || (enumeration.getBaseType() == "unsigned_int_32")) {
+                size = 4;
+            } else if ((enumeration.getBaseType() == "signed_int_64") || (enumeration.getBaseType() == "unsigned_int_64")) {
+                size = 8;
+            } else {
+                std::cerr << "Error : Enumeration (" << enumeration.getName() << ") has an invalid base type (" << enumeration.getBaseType() << ')' << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+
+            break;
+        }
+    }
+    
+    if (size == 0) {
+        std::cerr << "Error : Enumeration (" << includedEnumeration.getName() << ") has an invalid type (" << includedEnumeration.getType() << ')' << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+    
+    return size;
+}
     
 std::string CppGenerator::convertEnumToCppBaseType(const Enumeration& enumeration) {
     std::ostringstream os;
@@ -554,7 +591,8 @@ std::string CppGenerator::convertEnumToCppBaseType(const Enumeration& enumeratio
     } else if (enumeration.getBaseType() == "signed_int_64") {
         os << "int64_t";
     } else {
-        os << "???";
+        std::cerr << "Error : Enumeration (" << enumeration.getName() << ") has an invalid base type (" << enumeration.getBaseType() << ')' << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
     return os.str();
@@ -584,7 +622,8 @@ std::string CppGenerator::convertPrimitiveElementToCppType(const PrimitiveElemen
     } else if (element.getType() == "float_64") {
         os << "double";
     } else {
-        os << "???";
+        std::cerr << "Error : Element (" << element.getName() << ") has an invalid type (" << element.getType() << ')' << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
     return os.str();

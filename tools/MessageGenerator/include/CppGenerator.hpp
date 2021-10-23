@@ -4,8 +4,9 @@
 
 class CppGenerator : Generator {
     public:
-        bool generate(const Definitions& definitions,
-                      const std::string& outputFolder);
+        CppGenerator(const Definitions& definitions);
+        
+        bool generate(const std::string& outputFolder);
 
     private:        
         bool generateHeaderFile(const Structure& structure,
@@ -61,6 +62,8 @@ class CppGenerator : Generator {
         std::string generateSettersCxx(const Structure& structure);
         
         uint64_t sizeOfPrimitiveElement(const PrimitiveElement& element);
+        
+        uint64_t sizeOfEnumeration(const IncludedEnumeration& includedEnumeration);
         
         std::string convertEnumToCppBaseType(const Enumeration& enumeration);
 

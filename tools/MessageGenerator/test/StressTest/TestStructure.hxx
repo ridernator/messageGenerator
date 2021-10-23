@@ -70,6 +70,29 @@ namespace arse {
             int64_t getInt64Member() const;
 
             /**
+             * Getter for colour1
+             *
+             * @return colour1
+             */
+            Colour getColour1() const;
+
+            /**
+             * Getter for colour2
+             *
+             * colour2 defined as : Colour 2 is wicked!
+             *
+             * @return colour2
+             */
+            Colour getColour2() const;
+
+            /**
+             * Getter for colour3
+             *
+             * @return colour3
+             */
+            Colour getColour3() const;
+
+            /**
              * Setter for int8Member
              *
              * @param value The new value to set
@@ -101,6 +124,29 @@ namespace arse {
              */
             void setInt64Member(const int64_t value);
 
+            /**
+             * Setter for colour1
+             *
+             * @param value The new value to set
+             */
+            void setColour1(const Colour value);
+
+            /**
+             * Setter for colour2
+             *
+             * colour2 defined as : Colour 2 is wicked!
+             *
+             * @param value The new value to set
+             */
+            void setColour2(const Colour value);
+
+            /**
+             * Setter for colour3
+             *
+             * @param value The new value to set
+             */
+            void setColour3(const Colour value);
+
         private :
             int8_t int8Member;
 
@@ -115,5 +161,14 @@ namespace arse {
             int32_t int32Member;
 
             int64_t int64Member;
+
+            Colour colour1;
+
+            /**
+             * Colour 2 is wicked!
+             */
+            Colour colour2;
+
+            Colour colour3;
     };
 }

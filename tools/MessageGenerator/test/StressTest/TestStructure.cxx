@@ -69,6 +69,19 @@ namespace arse {
     int64_t TestStructure::getInt64Member() const {
         return int64Member;
     }
+
+    Colour TestStructure::getColour1() const {
+        return colour1;
+    }
+
+    Colour TestStructure::getColour2() const {
+        return colour2;
+    }
+
+    Colour TestStructure::getColour3() const {
+        return colour3;
+    }
+
     void TestStructure::setInt8Member(const int8_t value) {
         int8Member = value;
     }
@@ -84,4 +97,17 @@ namespace arse {
     void TestStructure::setInt64Member(const int64_t value) {
         int64Member = value;
     }
+
+    void TestStructure::setColour1(const Colour value) {
+        colour1 = value;
+    }
+
+    void TestStructure::setColour2(const Colour value) {
+        colour2 = value;
+    }
+
+    void TestStructure::setColour3(const Colour value) {
+        colour3 = value;
+    }
+
 }

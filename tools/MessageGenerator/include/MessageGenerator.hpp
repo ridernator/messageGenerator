@@ -7,8 +7,4 @@ public :
     
 private :
     void printUsageAndExit();
-    
-    bool javaRequired;
-    bool cppRequired;
-    bool verbose;
 };

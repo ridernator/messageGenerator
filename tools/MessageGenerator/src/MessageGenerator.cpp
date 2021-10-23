@@ -10,9 +10,11 @@
 #include <iostream>
 
 MessageGenerator::MessageGenerator(const int argc,
-                                   char** argv) : javaRequired(false),
-                                                  cppRequired(false),
-                                                  verbose(false) {
+                                   char** argv) {
+    bool javaRequired = false;
+    bool cppRequired = false;
+    bool verbose = false;
+    
     int option;
     int option_index = 0;
     std::string outputFolder = ".";
@@ -93,11 +95,11 @@ MessageGenerator::MessageGenerator(const int argc,
 
     for (const auto& file : filesToParse) {
         if (cppRequired) {
-            parser.parse(file, CPP, outputFolder);
+            parser.parse(file, Language::CPP, outputFolder);
         }
         
         if (javaRequired) {
-            parser.parse(file, JAVA, outputFolder);
+            parser.parse(file, Language::JAVA, outputFolder);
         }
     }
 }

@@ -133,6 +133,9 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
 
     sourceFile << "#include \"" << structure.getName() << ".hxx\"" << std::endl;
     sourceFile << std::endl;
+
+    sourceFile << "#include <string.h>" << std::endl;
+    sourceFile << std::endl;
     
     if (namespaceOptional.present()) {
         sourceFile << "namespace " << namespaceOptional.get() << " {" << std::endl;
@@ -152,7 +155,7 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
         std::string upperName = element.getName();
         upperName[0] = toupper(upperName[0]);
 
-        sourceFile << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() {" << std::endl;
+        sourceFile << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
         sourceFile << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
         sourceFile << insertTabs() << '}' << std::endl;
         sourceFile << std::endl;
@@ -206,13 +209,6 @@ std::string CppGenerator::generateDestructorHxx(const Structure& structure) {
 std::string CppGenerator::generateSerialiseHxx() {
     std::ostringstream os;   
     
-    os << insertTabs(2) << "/**" << std::endl;
-    os << insertTabs(2) << " * Serialise this class into a block of data" << std::endl;
-    os << insertTabs(2) << " *" << std::endl;
-    os << insertTabs(2) << " * @param data The data to serialise to (Ensure it is large enough!)" << std::endl;
-    os << insertTabs(2) << " * @param offset The offset into the data to start serialising to. Will be updated with the new offset on return" << std::endl;
-    os << insertTabs(2) << " * @return True if the operation was successful or false if not" << std::endl;
-    os << insertTabs(2) << " */" << std::endl;
     os << insertTabs(2) << "void serialise(char* data," << std::endl;
     os << insertTabs(2) << "               uint64_t& offset) const;" << std::endl;
     
@@ -222,13 +218,6 @@ std::string CppGenerator::generateSerialiseHxx() {
 std::string CppGenerator::generateDeserialiseHxx() {
     std::ostringstream os;   
     
-    os << insertTabs(2) << "/**" << std::endl;
-    os << insertTabs(2) << " * Deserialise a block of data into this class" << std::endl;
-    os << insertTabs(2) << " *" << std::endl;
-    os << insertTabs(2) << " * @param data The data to deserialise from" << std::endl;
-    os << insertTabs(2) << " * @param offset The offset into the data to start deserialising from. Will be updated with the new offset on return" << std::endl;
-    os << insertTabs(2) << " * @return True if the operation was successful or false if not" << std::endl;
-    os << insertTabs(2) << " */" << std::endl;
     os << insertTabs(2) << "void deserialise(const char* data," << std::endl;
     os << insertTabs(2) << "                 uint64_t& offset);" << std::endl;
     
@@ -358,11 +347,10 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
     os << std::endl;
     
     os << "#include \"BaseMessage.hpp\"" << std::endl;
-    os << "#include \"Serialiser.hpp\"" << std::endl;
     
-//    for (const auto& include : getListOfStructIncludes(structure)) {
-//	os << "#include \"" << include << ".hxx\"" << std::endl;
-//    }
+    for (const auto& enumeration : structure.getEnumeration()) {
+	os << "#include \"" << enumeration.getType() << ".hxx\"" << std::endl;
+    }
     
     return os.str();
 }
@@ -371,7 +359,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     std::ostringstream os;   
     uint64_t size = 0;
     
-    os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() {" << std::endl;
+    os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() const {" << std::endl;
     
     for (const auto& element : structure.getPrimitiveElement()) {
         size += sizeOfPrimitiveElement(element);

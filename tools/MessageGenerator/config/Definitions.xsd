@@ -240,7 +240,13 @@
         <xs:sequence>
             <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
-                    <xs:documentation>Documentation for this element. Will be added to generated source files></xs:documentation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="dimension" type="xs:unsignedLong" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Dimensions of this array</xs:documentation>
                 </xs:annotation>
             </xs:element>
         
@@ -262,24 +268,12 @@
                         <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                     </xs:annotation>
                 </xs:element>
-
-                <xs:element name="arrayType" type="array">
-                    <xs:annotation>
-                        <xs:documentation>Array which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
             </xs:choice>
         </xs:sequence>
             
-        <xs:attribute name="name" type="xs:string" use="optional">
+        <xs:attribute name="name" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>The name of this array</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-            
-        <xs:attribute name="length" type="xs:unsignedLong" use="required">
-            <xs:annotation>
-                <xs:documentation>The length of this array (In items)</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>

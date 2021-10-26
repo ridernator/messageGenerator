@@ -24,34 +24,28 @@
 
         <subStructure name="TSS" type="TestSubStruct" />
         
-        <array name="testArray" length="5">
-            <arrayType length="4">
-                <arrayType length="3">
-                    <arrayType length="2">
-                        <primitiveType>unsigned_int_8</primitiveType>
-                    </arrayType>
-                </arrayType>
-            </arrayType>
+        <array name="testArray">
+            <dimension>5</dimension>
+            <dimension>4</dimension>
+            <dimension>3</dimension>
+            <dimension>2</dimension>
+            <primitiveType>unsigned_int_8</primitiveType>
         </array>
         
-        <array name="testArrayStruct" length="5">
-            <arrayType length="4">
-                <arrayType length="3">
-                    <arrayType length="2">
-                        <structureType>TestSubStruct</structureType>
-                    </arrayType>
-                </arrayType>
-            </arrayType>
+        <array name="testArrayStruct">
+            <dimension>5</dimension>
+            <dimension>4</dimension>
+            <dimension>3</dimension>
+            <dimension>2</dimension>
+            <structureType>TestSubStruct</structureType>
         </array>
         
-        <array name="testArrayEnum" length="5">
-            <arrayType length="4">
-                <arrayType length="3">
-                    <arrayType length="2">
-                        <enumerationType>Colour</enumerationType>
-                    </arrayType>
-                </arrayType>
-            </arrayType>
+        <array name="testArrayEnum">
+            <dimension>5</dimension>
+            <dimension>4</dimension>
+            <dimension>3</dimension>
+            <dimension>2</dimension>
+            <enumerationType>Colour</enumerationType>
         </array>
         
         <enumeration name="colour3" type="Colour" />

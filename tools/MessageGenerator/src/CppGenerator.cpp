@@ -171,23 +171,11 @@ std::string CppGenerator::generateGettersCxx(const Structure& structure) {
     std::ostringstream os;
     
     for (const auto& element : structure.getPrimitiveElement()) {
-        std::string upperName = element.getName();
-        upperName[0] = toupper(upperName[0]);
-
-        os << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
-        os << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
-        os << insertTabs() << '}' << std::endl;
-        os << std::endl;
+        os << generateGetterCxx(structure, element) << std::endl;
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        std::string upperName = enumeration.getName();
-        upperName[0] = toupper(upperName[0]);
-
-        os << insertTabs() << enumeration.getType() << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
-        os << insertTabs(1) << "return " << enumeration.getName() << ";" << std::endl;
-        os << insertTabs() << '}' << std::endl;
-        os << std::endl;
+        os << generateGetterCxx(structure, enumeration) << std::endl;
     }
     
     return os.str();
@@ -197,24 +185,68 @@ std::string CppGenerator::generateSettersCxx(const Structure& structure) {
     std::ostringstream os;
     
     for (const auto& element : structure.getPrimitiveElement()) {
-        std::string upperName = element.getName();
-        upperName[0] = toupper(upperName[0]);
-
-        os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveElementToCppType(element) << " value) {" << std::endl;
-        os << insertTabs(1) << element.getName() << " = value;" << std::endl;
-        os << insertTabs() << '}' << std::endl;
-        os << std::endl;
+        os << generateSetterCxx(structure, element) << std::endl;
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        std::string upperName = enumeration.getName();
-        upperName[0] = toupper(upperName[0]);
-
-        os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << enumeration.getType() << " value) {" << std::endl;
-        os << insertTabs(1) << enumeration.getName() << " = value;" << std::endl;
-        os << insertTabs() << '}' << std::endl;
-        os << std::endl;
+        os << generateSetterCxx(structure, enumeration) << std::endl;
     }
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGetterCxx(const Structure& structure,
+                                            const PrimitiveElement& element) {
+    std::ostringstream os;
+    
+    std::string upperName = element.getName();
+    upperName[0] = toupper(upperName[0]);
+
+    os << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+    os << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
+    os << insertTabs() << '}' << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateSetterCxx(const Structure& structure,
+                                            const PrimitiveElement& element) {
+    std::ostringstream os;
+    
+    std::string upperName = element.getName();
+    upperName[0] = toupper(upperName[0]);
+    
+    os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveElementToCppType(element) << " value) {" << std::endl;
+    os << insertTabs(1) << element.getName() << " = value;" << std::endl;
+    os << insertTabs() << '}' << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGetterCxx(const Structure& structure,
+                                            const IncludedEnumeration& enumeration) {
+    std::ostringstream os;
+    
+    std::string upperName = enumeration.getName();
+    upperName[0] = toupper(upperName[0]);
+
+    os << insertTabs() << enumeration.getType() << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+    os << insertTabs(1) << "return " << enumeration.getName() << ";" << std::endl;
+    os << insertTabs() << '}' << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateSetterCxx(const Structure& structure,
+                                            const IncludedEnumeration& enumeration) {
+    std::ostringstream os;
+    
+    std::string upperName = enumeration.getName();
+    upperName[0] = toupper(upperName[0]);
+
+    os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << enumeration.getType() << " value) {" << std::endl;
+    os << insertTabs(1) << enumeration.getName() << " = value;" << std::endl;
+    os << insertTabs() << '}' << std::endl;
     
     return os.str();
 }
@@ -304,6 +336,10 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
         os << generateGetterHxx(enumeration) << std::endl;
     }
     
+    for (const auto& subStructure : structure.getSubStructure()) {
+        os << generateGetterHxx(subStructure) << std::endl;
+    }
+    
     return os.str();
 }
 
@@ -389,6 +425,29 @@ std::string CppGenerator::generateGetterHxx(const IncludedEnumeration& enumerati
     return os.str();
 }
 
+std::string CppGenerator::generateGetterHxx(const IncludedStructure& structure) {
+    std::ostringstream os;
+    std::string name = structure.getName();
+    
+    name[0] = toupper(name[0]);
+        
+    os << insertTabs(2) << "/**" << std::endl;
+    os << insertTabs(2) << " * Getter for " << structure.getName() << std::endl;
+
+    if (structure.getDocumentation().present()) {
+        os << insertTabs(2) << " *" << std::endl;
+        os << insertTabs(2) << " * " << structure.getName() << " defined as : " << structure.getDocumentation().get() << std::endl;
+    }
+
+    os << insertTabs(2) << " *" << std::endl;
+    os << insertTabs(2) << " * @return " << structure.getName() << std::endl;
+    os << insertTabs(2) << " */" << std::endl;
+    
+    os << insertTabs(2) << structure.getType() << "& get" << name << "() const;" << std::endl;
+    
+    return os.str();
+}
+
 std::string CppGenerator::generateSetterHxx(const IncludedEnumeration& enumeration) {
     std::ostringstream os;
     std::string name = enumeration.getName();
@@ -449,6 +508,10 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
     
     for (const auto& enumeration : structure.getEnumeration()) {
 	os << "#include \"" << enumeration.getType() << ".hxx\"" << std::endl;
+    }
+    
+    for (const auto& subStructure : structure.getSubStructure()) {
+	os << "#include \"" << subStructure.getType() << ".hxx\"" << std::endl;
     }
     
     return os.str();

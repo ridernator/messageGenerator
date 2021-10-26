@@ -43,6 +43,8 @@ class CppGenerator : Generator {
 
         std::string generateSetterHxx(const IncludedEnumeration& element);
 
+        std::string generateGetterHxx(const IncludedStructure& structure);
+
         std::string generateMembersHxx(const Structure& structure);
 
         std::string generateIncludesHxx(const Structure& structure);
@@ -68,6 +70,18 @@ class CppGenerator : Generator {
         std::string generateGettersCxx(const Structure& structure);
 
         std::string generateSettersCxx(const Structure& structure);
+
+        std::string generateGetterCxx(const Structure& structure,
+                                      const PrimitiveElement& element);
+
+        std::string generateSetterCxx(const Structure& structure,
+                                      const PrimitiveElement& element);
+
+        std::string generateGetterCxx(const Structure& structure,
+                                      const IncludedEnumeration& enumeration);
+
+        std::string generateSetterCxx(const Structure& structure,
+                                      const IncludedEnumeration& enumeration);
         
         uint64_t sizeOfPrimitiveElement(const PrimitiveElement& element);
         

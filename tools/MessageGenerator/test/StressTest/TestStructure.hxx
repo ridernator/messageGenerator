@@ -6,6 +6,7 @@
 #include "Colour.hxx"
 #include "Colour.hxx"
 #include "Colour.hxx"
+#include "TestSubStruct.hxx"
 
 namespace arse {
     /**
@@ -91,6 +92,13 @@ namespace arse {
              * @return colour3
              */
             Colour getColour3() const;
+
+            /**
+             * Getter for TSS
+             *
+             * @return TSS
+             */
+            TestSubStruct& getTSS() const;
 
             /**
              * Setter for int8Member

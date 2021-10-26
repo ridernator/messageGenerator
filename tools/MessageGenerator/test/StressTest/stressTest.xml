@@ -21,10 +21,16 @@
         <enumeration name="colour2" type="Colour">
             <documentation>Colour 2 is wicked!</documentation>
         </enumeration>
+
+        <subStructure name="TSS" type="TestSubStruct" />
         
         <enumeration name="colour3" type="Colour" />
     </structure>
-    
+
+    <structure name="TestSubStruct">
+        <primitiveElement name="bigUnsigned" type="unsigned_int_64" />
+    </structure>
+     
     <enumeration name="Colour" baseType="signed_int_8">
         <documentation>Enumeration of traffic light colours</documentation>
         

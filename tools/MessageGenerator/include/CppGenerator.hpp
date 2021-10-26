@@ -75,6 +75,10 @@ class CppGenerator : Generator {
 
         std::string generateDeserialiseStructure(const StructureElement& structure);
 
+        std::string generateSerialiseArray(const Array& array);
+
+        std::string generateDeserialiseArray(const Array& array);
+
         std::string generateGettersCxx(const Structure& structure);
 
         std::string generateSettersCxx(const Structure& structure);

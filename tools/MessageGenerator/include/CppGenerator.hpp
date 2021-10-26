@@ -82,6 +82,9 @@ class CppGenerator : Generator {
 
         std::string generateSetterCxx(const Structure& structure,
                                       const IncludedEnumeration& enumeration);
+
+        std::string generateGetterCxx(const Structure& structure,
+                                      const IncludedStructure& subStructure);
         
         uint64_t sizeOfPrimitiveElement(const PrimitiveElement& element);
         

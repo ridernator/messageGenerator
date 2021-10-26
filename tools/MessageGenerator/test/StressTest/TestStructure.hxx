@@ -98,7 +98,7 @@ namespace arse {
              *
              * @return TSS
              */
-            TestSubStruct& getTSS() const;
+            TestSubStruct& getTSS();
 
             /**
              * Setter for int8Member
@@ -178,5 +178,7 @@ namespace arse {
             Colour colour2;
 
             Colour colour3;
+
+            TestSubStruct TSS;
     };
 }

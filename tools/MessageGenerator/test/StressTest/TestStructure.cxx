@@ -75,6 +75,9 @@ namespace arse {
         // Size of primitive types in this structure
         uint64_t size = 18;
 
+        // Add on size of TSS;
+        size += TSS.getSizeInBytes();
+
         return size;
     }
 
@@ -104,6 +107,10 @@ namespace arse {
 
     Colour TestStructure::getColour3() const {
         return colour3;
+    }
+
+    TestSubStruct& TestStructure::getTSS() {
+        return TSS;
     }
 
     void TestStructure::setInt8Member(const int8_t value) {

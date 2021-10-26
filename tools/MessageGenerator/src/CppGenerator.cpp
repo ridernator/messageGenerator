@@ -178,6 +178,10 @@ std::string CppGenerator::generateGettersCxx(const Structure& structure) {
         os << generateGetterCxx(structure, enumeration) << std::endl;
     }
     
+    for (const auto& subStructure : structure.getSubStructure()) {
+        os << generateGetterCxx(structure, subStructure) << std::endl;
+    }
+    
     return os.str();
 }
 
@@ -204,6 +208,20 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
 
     os << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
     os << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
+    os << insertTabs() << '}' << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGetterCxx(const Structure& structure,
+                                            const IncludedStructure& subStructure) {
+    std::ostringstream os;
+    
+    std::string upperName = subStructure.getName();
+    upperName[0] = toupper(upperName[0]);
+
+    os << insertTabs() << subStructure.getType() << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    os << insertTabs(1) << "return " << subStructure.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
     return os.str();
@@ -443,7 +461,7 @@ std::string CppGenerator::generateGetterHxx(const IncludedStructure& structure) 
     os << insertTabs(2) << " * @return " << structure.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << structure.getType() << "& get" << name << "() const;" << std::endl;
+    os << insertTabs(2) << structure.getType() << "& get" << name << "();" << std::endl;
     
     return os.str();
 }
@@ -494,6 +512,17 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
         os << insertTabs(2) << enumeration.getType() << ' ' << enumeration.getName() << ';' << std::endl;
         os << std::endl;
     }
+
+    for (const auto& subStructure : structure.getSubStructure()) {
+        if (subStructure.getDocumentation().present()) {
+            os << insertTabs(2) << "/**" << std::endl;
+            os << insertTabs(2) << " * " << subStructure.getDocumentation().get() << std::endl;
+            os << insertTabs(2) << " */" << std::endl;
+        }
+
+        os << insertTabs(2) << subStructure.getType() << ' ' << subStructure.getName() << ';' << std::endl;
+        os << std::endl;
+    }
     
     return os.str();
 }
@@ -533,7 +562,14 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     
     os << insertTabs(1) << "// Size of primitive types in this structure" << std::endl;
     os << insertTabs(1) << "uint64_t size = " << size << ';' << std::endl;
-    os << std::endl;    
+    os << std::endl;
+       
+    for (const auto& subStructure : structure.getSubStructure()) {
+        os << insertTabs(1) << "// Add on size of " << subStructure.getName() << ';' << std::endl;
+        os << insertTabs(1) << "size += " << subStructure.getName() << ".getSizeInBytes();" << std::endl;
+        os << std::endl;
+    }
+    
     os << insertTabs(1) << "return size;" << std::endl;
     os << insertTabs() << '}' << std::endl;
     

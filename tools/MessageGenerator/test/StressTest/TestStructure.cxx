@@ -81,8 +81,25 @@ namespace arse {
         // Size of primitive types in this structure
         uint64_t size = 18;
 
-        // Add on size of TSS;
+        // Add on size of TSS
         size += TSS.getSizeInBytes();
+
+        // Add on size of testArray
+        size += 240;
+
+        // Add on size of testArrayStruct
+        for (const auto& e1 : testArrayStruct) {
+            for (const auto& e2 : e1) {
+                for (const auto& e3 : e2) {
+                    for (const auto& e4 : e3) {
+                        size += e4.getSizeInBytes();
+                    }
+                }
+            }
+        }
+
+        // Add on size of testArrayEnum
+        size += 120;
 
         return size;
     }
@@ -119,7 +136,7 @@ namespace arse {
         return TSS;
     }
 
-    std::array<std::array<std::array<std::array<uint8_t, 2>, 3>, 4>, 5>& TestStructure::getTestArray() {
+    std::array<std::array<std::array<std::array<uint16_t, 2>, 3>, 4>, 5>& TestStructure::getTestArray() {
         return testArray;
     }
 

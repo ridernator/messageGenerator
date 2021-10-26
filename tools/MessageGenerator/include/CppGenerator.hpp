@@ -99,7 +99,7 @@ class CppGenerator : Generator {
         
         uint64_t sizeOfPrimitiveType(const PrimitiveElement::TypeType& type);
         
-        uint64_t sizeOfEnumeration(const EnumerationElement& includedEnumeration);
+        uint64_t sizeOfEnumeration(const std::string& enumString);
         
         std::string getArrayType(const Array& array);
         

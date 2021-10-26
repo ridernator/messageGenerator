@@ -106,7 +106,7 @@ namespace arse {
              *
              * @return testArray
              */
-            std::array<std::array<std::array<std::array<uint8_t, 2>, 3>, 4>, 5>& getTestArray();
+            std::array<std::array<std::array<std::array<uint16_t, 2>, 3>, 4>, 5>& getTestArray();
 
             /**
              * Getter for testArrayStruct
@@ -203,7 +203,7 @@ namespace arse {
 
             TestSubStruct TSS;
 
-            std::array<std::array<std::array<std::array<uint8_t, 2>, 3>, 4>, 5> testArray;
+            std::array<std::array<std::array<std::array<uint16_t, 2>, 3>, 4>, 5> testArray;
 
             std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5> testArrayStruct;
 

@@ -29,7 +29,7 @@
             <dimension>4</dimension>
             <dimension>3</dimension>
             <dimension>2</dimension>
-            <primitiveType>unsigned_int_8</primitiveType>
+            <primitiveType>unsigned_int_16</primitiveType>
         </array>
         
         <array name="testArrayStruct">

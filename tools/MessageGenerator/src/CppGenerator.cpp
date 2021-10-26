@@ -630,7 +630,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        size += sizeOfEnumeration(enumeration);
+        size += sizeOfEnumeration(enumeration.getType());
     }
     
     os << insertTabs(1) << "// Size of primitive types in this structure" << std::endl;
@@ -638,8 +638,44 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     os << std::endl;
        
     for (const auto& subStructure : structure.getSubStructure()) {
-        os << insertTabs(1) << "// Add on size of " << subStructure.getName() << ';' << std::endl;
+        os << insertTabs(1) << "// Add on size of " << subStructure.getName() << std::endl;
         os << insertTabs(1) << "size += " << subStructure.getName() << ".getSizeInBytes();" << std::endl;
+        os << std::endl;
+    }
+       
+    for (const auto& array : structure.getArray()) {
+        os << insertTabs(1) << "// Add on size of " << array.getName() << std::endl;
+        
+        if (array.getPrimitiveType().present()) {
+            size = sizeOfPrimitiveType(array.getPrimitiveType().get());
+
+            for (const auto& dimension : array.getDimension()) {
+                size *= dimension;
+            }
+
+            os << insertTabs(1) << "size += " << size << ';' << std::endl;
+        } else if (array.getEnumerationType().present()) {
+            size = sizeOfEnumeration(array.getEnumerationType().get());
+
+            for (const auto& dimension : array.getDimension()) {
+                size *= dimension;
+            }
+
+            os << insertTabs(1) << "size += " << size << ';' << std::endl;
+        } else if (array.getStructureType().present()) {
+            os << insertTabs(1) << "for (const auto& e1 : " << array.getName() << ") {" << std::endl;
+            
+            for (decltype(array.getDimension().size()) index = 1; index < array.getDimension().size(); ++index) {
+                os << insertTabs(index + 1) << "for (const auto& e" << (index + 1) << " : e" << index << ") {" << std::endl;
+            }
+            
+            os << insertTabs(array.getDimension().size() + 1) << "size += e" << array.getDimension().size() << ".getSizeInBytes();" << std::endl;
+            
+            for (decltype(array.getDimension().size()) index = array.getDimension().size(); index != 0; --index) {
+                os << insertTabs(index) << '}' << std::endl;
+            }
+        }
+        
         os << std::endl;
     }
     
@@ -809,11 +845,11 @@ uint64_t CppGenerator::sizeOfPrimitiveType(const PrimitiveElement::TypeType& typ
     return size;
 }
 
-uint64_t CppGenerator::sizeOfEnumeration(const EnumerationElement& includedEnumeration) {
+uint64_t CppGenerator::sizeOfEnumeration(const std::string& enumString) {
     uint64_t size = 0;
     
     for (const auto& enumeration : definitions.getEnumeration()) {
-        if (includedEnumeration.getType().compare(enumeration.getName()) == 0) {
+        if (enumString.compare(enumeration.getName()) == 0) {
             if ((enumeration.getBaseType() == "signed_int_8") || (enumeration.getBaseType() == "unsigned_int_8")) {
                 size = 1;
             } else if ((enumeration.getBaseType() == "signed_int_16") || (enumeration.getBaseType() == "unsigned_int_16")) {
@@ -832,7 +868,7 @@ uint64_t CppGenerator::sizeOfEnumeration(const EnumerationElement& includedEnume
     }
     
     if (size == 0) {
-        std::cerr << "Error : Enumeration (" << includedEnumeration.getName() << ") has an invalid type (" << includedEnumeration.getType() << ')' << std::endl;
+        std::cerr << "Error : Enumeration has an invalid type (" << enumString << ')' << std::endl;
         std::exit(EXIT_FAILURE);
     }
     

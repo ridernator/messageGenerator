@@ -119,6 +119,18 @@ namespace arse {
         return TSS;
     }
 
+    std::array<std::array<std::array<std::array<uint8_t, 2>, 3>, 4>, 5>& TestStructure::getTestArray() {
+        return testArray;
+    }
+
+    std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5>& TestStructure::getTestArrayStruct() {
+        return testArrayStruct;
+    }
+
+    std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5>& TestStructure::getTestArrayEnum() {
+        return testArrayEnum;
+    }
+
     void TestStructure::setInt8Member(const int8_t value) {
         int8Member = value;
     }

@@ -8,7 +8,9 @@ class CppGenerator : Generator {
         
         bool generate(const std::string& outputFolder);
 
-    private:        
+    private:     
+        void sanityCheck();
+        
         bool generateHeaderFile(const Structure& structure,
                                 const std::string& outputFolder,
                                 const Definitions::NamespaceOptional& namespaceOptional);
@@ -39,11 +41,13 @@ class CppGenerator : Generator {
 
         std::string generateSetterHxx(const PrimitiveElement& element);
 
-        std::string generateGetterHxx(const IncludedEnumeration& element);
+        std::string generateGetterHxx(const EnumerationElement& element);
 
-        std::string generateSetterHxx(const IncludedEnumeration& element);
+        std::string generateSetterHxx(const EnumerationElement& element);
 
-        std::string generateGetterHxx(const IncludedStructure& structure);
+        std::string generateGetterHxx(const StructureElement& structure);
+
+        std::string generateGetterHxx(const Array& array);
 
         std::string generateMembersHxx(const Structure& structure);
 
@@ -63,13 +67,13 @@ class CppGenerator : Generator {
 
         std::string generateDeserialisePrimitiveElement(const PrimitiveElement& element);
 
-        std::string generateSerialiseEnumeration(const IncludedEnumeration& enumeration);
+        std::string generateSerialiseEnumeration(const EnumerationElement& enumeration);
 
-        std::string generateDeserialiseEnumeration(const IncludedEnumeration& enumeration);
+        std::string generateDeserialiseEnumeration(const EnumerationElement& enumeration);
 
-        std::string generateSerialiseStructure(const IncludedStructure& structure);
+        std::string generateSerialiseStructure(const StructureElement& structure);
 
-        std::string generateDeserialiseStructure(const IncludedStructure& structure);
+        std::string generateDeserialiseStructure(const StructureElement& structure);
 
         std::string generateGettersCxx(const Structure& structure);
 
@@ -82,19 +86,24 @@ class CppGenerator : Generator {
                                       const PrimitiveElement& element);
 
         std::string generateGetterCxx(const Structure& structure,
-                                      const IncludedEnumeration& enumeration);
+                                      const EnumerationElement& enumeration);
 
         std::string generateSetterCxx(const Structure& structure,
-                                      const IncludedEnumeration& enumeration);
+                                      const EnumerationElement& enumeration);
 
         std::string generateGetterCxx(const Structure& structure,
-                                      const IncludedStructure& subStructure);
-        
-        uint64_t sizeOfPrimitiveElement(const PrimitiveElement& element);
-        
-        uint64_t sizeOfEnumeration(const IncludedEnumeration& includedEnumeration);
-        
-        std::string convertEnumToCppBaseType(const Enumeration& enumeration);
+                                      const StructureElement& subStructure);
 
-        std::string convertPrimitiveElementToCppType(const PrimitiveElement& element);
+        std::string generateGetterCxx(const Structure& structure,
+                                      const Array& array);
+        
+        uint64_t sizeOfPrimitiveType(const PrimitiveElement::TypeType& type);
+        
+        uint64_t sizeOfEnumeration(const EnumerationElement& includedEnumeration);
+        
+        std::string getArrayType(const Array& array);
+        
+        std::string convertEnumBaseTypeToCppType(const Enumeration::BaseTypeType& enumeration);
+
+        std::string convertPrimitiveTypeToCppType(const PrimitiveElement::TypeType& element);
 };

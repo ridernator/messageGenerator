@@ -13,16 +13,6 @@ CppGenerator::CppGenerator(const Definitions& definitions) : Generator(definitio
 void CppGenerator::sanityCheck() {
     bool error = false;
     
-    for (const auto& structure : definitions.getStructure()) {
-        for (const auto& array : structure.getArray()) {
-            if (!array.getName().present()) {
-                std::cerr << "Error : An array in the structure \"" << structure.getName() << "\" does not have a name" << std::endl;
-                
-                error = true;
-            }
-        }
-    }
-    
     if (error) {
         std::exit(EXIT_FAILURE);
     }
@@ -253,7 +243,7 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
                                             const Array& array) {
     std::ostringstream os;
     
-    std::string upperName = array.getName().get();
+    std::string upperName = array.getName();
     upperName[0] = toupper(upperName[0]);
 
     os << insertTabs() << getArrayType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
@@ -510,7 +500,7 @@ std::string CppGenerator::generateGetterHxx(const StructureElement& structure) {
 
 std::string CppGenerator::generateGetterHxx(const Array& array) {
     std::ostringstream os;
-    std::string name = array.getName().get();
+    std::string name = array.getName();
     
     name[0] = toupper(name[0]);
         
@@ -780,7 +770,9 @@ std::string CppGenerator::generateDeserialiseStructure(const StructureElement& s
 std::string CppGenerator::getArrayType(const Array& array) {
     std::ostringstream os;
     
-    os << "std::array<";
+    for (decltype(array.getDimension().size()) index = 0; index < array.getDimension().size(); ++index) {
+        os << "std::array<";
+    }
     
     if (array.getPrimitiveType().present()) {
         os << convertPrimitiveTypeToCppType(array.getPrimitiveType().get());
@@ -788,11 +780,11 @@ std::string CppGenerator::getArrayType(const Array& array) {
         os << array.getEnumerationType().get();
     } else if (array.getStructureType().present()) {
         os << array.getStructureType().get();
-    } else if (array.getArrayType().present()) {
-        os << getArrayType(array.getArrayType().get());
     }
     
-    os << ", " << array.getLength() << ">";
+    for (const auto& dimension : array.getDimension() | std::views::reverse) {
+        os << ", " << dimension << '>';
+    }
     
     return os.str();
 }

@@ -616,6 +616,14 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
 	os << "#include \"" << subStructure.getType() << ".hxx\"" << std::endl;
     }
     
+    for (const auto& array : structure.getArray()) {
+        if (array.getEnumerationType().present()) {
+            os << "#include \"" << array.getEnumerationType().get() << ".hxx\"" << std::endl;
+        } else if (array.getStructureType().present()) {
+            os << "#include \"" << array.getStructureType().get() << ".hxx\"" << std::endl;
+        }
+    }
+    
     return os.str();
 }
 

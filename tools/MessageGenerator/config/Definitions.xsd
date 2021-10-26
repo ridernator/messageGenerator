@@ -154,7 +154,7 @@
         </xs:attribute>
     </xs:complexType>
     
-    <xs:complexType name="includedEnumeration">
+    <xs:complexType name="enumerationElement">
         <xs:annotation>
             <xs:documentation>An enumeration which is part of a structure</xs:documentation>
         </xs:annotation>   
@@ -180,7 +180,7 @@
         </xs:attribute>
     </xs:complexType>
     
-    <xs:complexType name="includedStructure">
+    <xs:complexType name="structureElement">
         <xs:annotation>
             <xs:documentation>A structure which is part of another structure</xs:documentation>
         </xs:annotation>   
@@ -232,6 +232,52 @@
         </xs:attribute>
     </xs:complexType>
     
+    <xs:complexType name="array">
+        <xs:annotation>
+            <xs:documentation>Definition of a structure and all its elements</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+            <xs:element name="dimension" type="xs:unsignedLong" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Dimensions of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:element name="primitiveType" type="primitiveType">
+                    <xs:annotation>
+                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="enumerationType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="structureType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+            
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of this array</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
     <xs:complexType name="structure">
         <xs:annotation>
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
@@ -251,15 +297,21 @@
                     </xs:annotation>
                 </xs:element>
 
-                <xs:element name="enumeration" type="includedEnumeration">
+                <xs:element name="enumeration" type="enumerationElement">
                     <xs:annotation>
                         <xs:documentation>Enumeration which makes up part of this structure</xs:documentation>
                     </xs:annotation>
                 </xs:element>
 
-                <xs:element name="subStructure" type="includedStructure">
+                <xs:element name="subStructure" type="structureElement">
                     <xs:annotation>
-                        <xs:documentation>Enumeration which makes up part of this structure</xs:documentation>
+                        <xs:documentation>Structure which makes up part of this structure</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                    
+                <xs:element name="array" type="array">
+                    <xs:annotation>
+                        <xs:documentation>Definition of an array</xs:documentation>
                     </xs:annotation>
                 </xs:element>
             </xs:choice>

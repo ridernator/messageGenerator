@@ -13,14 +13,14 @@ namespace arse {
 
     void TestSubStruct::serialise(char* data, uint64_t& offset) const {
         // Serialise bigUnsigned
-        memcpy(data + offset, &bigUnsigned, sizeof (uint64_t));
-        offset += sizeof (uint64_t);
+        memcpy(data + offset, &bigUnsigned, sizeof(uint64_t));
+        offset += sizeof(uint64_t);
     }
 
     void TestSubStruct::deserialise(const char* data, uint64_t& offset) {
         // Deserialise bigUnsigned
-        memcpy(&bigUnsigned, data + offset, sizeof (uint64_t));
-        offset += sizeof (uint64_t);
+        memcpy(&bigUnsigned, data + offset, sizeof(uint64_t));
+        offset += sizeof(uint64_t);
     }
 
     uint64_t TestSubStruct::getSizeInBytes() const {

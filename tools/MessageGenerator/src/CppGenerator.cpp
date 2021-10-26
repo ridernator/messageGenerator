@@ -7,7 +7,15 @@
 #include <filesystem>
 
 CppGenerator::CppGenerator(const Definitions& definitions) : Generator(definitions) {
+    sanityCheck();
+}
+
+void CppGenerator::sanityCheck() {
+    bool error = false;
     
+    if (error) {
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 bool CppGenerator::generate(const std::string& outputFolder) {
@@ -99,7 +107,7 @@ bool CppGenerator::generateHeaderFile(const Enumeration& enumeration,
         headerFile << "namespace " << namespaceOptional.get() << " {" << std::endl;
     }
     
-    headerFile << insertTabs() << "enum class " << enumeration.getName() << " : " << convertEnumToCppBaseType(enumeration) << " {" << std::endl;
+    headerFile << insertTabs() << "enum class " << enumeration.getName() << " : " << convertEnumBaseTypeToCppType(enumeration.getBaseType()) << " {" << std::endl;
     
     for (const auto& member : enumeration.getMember()) {
         if (member.getDocumentation().present()) {
@@ -182,6 +190,10 @@ std::string CppGenerator::generateGettersCxx(const Structure& structure) {
         os << generateGetterCxx(structure, subStructure) << std::endl;
     }
     
+    for (const auto& array : structure.getArray()) {
+        os << generateGetterCxx(structure, array) << std::endl;
+    }
+    
     return os.str();
 }
 
@@ -206,7 +218,7 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
     std::string upperName = element.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << convertPrimitiveElementToCppType(element) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+    os << insertTabs() << convertPrimitiveTypeToCppType(element.getType()) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
     os << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -214,7 +226,7 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
 }
 
 std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const IncludedStructure& subStructure) {
+                                            const StructureElement& subStructure) {
     std::ostringstream os;
     
     std::string upperName = subStructure.getName();
@@ -227,6 +239,20 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
     return os.str();
 }
 
+std::string CppGenerator::generateGetterCxx(const Structure& structure,
+                                            const Array& array) {
+    std::ostringstream os;
+    
+    std::string upperName = array.getName();
+    upperName[0] = toupper(upperName[0]);
+
+    os << insertTabs() << getArrayType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    os << insertTabs(1) << "return " << array.getName() << ";" << std::endl;
+    os << insertTabs() << '}' << std::endl;
+    
+    return os.str();
+}
+
 std::string CppGenerator::generateSetterCxx(const Structure& structure,
                                             const PrimitiveElement& element) {
     std::ostringstream os;
@@ -234,7 +260,7 @@ std::string CppGenerator::generateSetterCxx(const Structure& structure,
     std::string upperName = element.getName();
     upperName[0] = toupper(upperName[0]);
     
-    os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveElementToCppType(element) << " value) {" << std::endl;
+    os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveTypeToCppType(element.getType()) << " value) {" << std::endl;
     os << insertTabs(1) << element.getName() << " = value;" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -242,7 +268,7 @@ std::string CppGenerator::generateSetterCxx(const Structure& structure,
 }
 
 std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const IncludedEnumeration& enumeration) {
+                                            const EnumerationElement& enumeration) {
     std::ostringstream os;
     
     std::string upperName = enumeration.getName();
@@ -256,7 +282,7 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
 }
 
 std::string CppGenerator::generateSetterCxx(const Structure& structure,
-                                            const IncludedEnumeration& enumeration) {
+                                            const EnumerationElement& enumeration) {
     std::ostringstream os;
     
     std::string upperName = enumeration.getName();
@@ -358,6 +384,10 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
         os << generateGetterHxx(subStructure) << std::endl;
     }
     
+    for (const auto& array : structure.getArray()) {
+        os << generateGetterHxx(array) << std::endl;
+    }
+    
     // TODO Should we also do setters?
     
     return os.str();
@@ -395,7 +425,7 @@ std::string CppGenerator::generateGetterHxx(const PrimitiveElement& element) {
     os << insertTabs(2) << " * @return " << element.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << convertPrimitiveElementToCppType(element) << " get" << name << "() const;" << std::endl;
+    os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << " get" << name << "() const;" << std::endl;
     
     return os.str();
 }
@@ -417,12 +447,12 @@ std::string CppGenerator::generateSetterHxx(const PrimitiveElement& element) {
     os << insertTabs(2) << " *" << std::endl;
     os << insertTabs(2) << " * @param value The new value to set" << std::endl;
     os << insertTabs(2) << " */" << std::endl;
-    os << insertTabs(2) << "void set" << name << "(const " << convertPrimitiveElementToCppType(element) << " value);" << std::endl;
+    os << insertTabs(2) << "void set" << name << "(const " << convertPrimitiveTypeToCppType(element.getType()) << " value);" << std::endl;
     
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const IncludedEnumeration& enumeration) {
+std::string CppGenerator::generateGetterHxx(const EnumerationElement& enumeration) {
     std::ostringstream os;
     std::string name = enumeration.getName();
     
@@ -445,7 +475,7 @@ std::string CppGenerator::generateGetterHxx(const IncludedEnumeration& enumerati
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const IncludedStructure& structure) {
+std::string CppGenerator::generateGetterHxx(const StructureElement& structure) {
     std::ostringstream os;
     std::string name = structure.getName();
     
@@ -468,7 +498,30 @@ std::string CppGenerator::generateGetterHxx(const IncludedStructure& structure) 
     return os.str();
 }
 
-std::string CppGenerator::generateSetterHxx(const IncludedEnumeration& enumeration) {
+std::string CppGenerator::generateGetterHxx(const Array& array) {
+    std::ostringstream os;
+    std::string name = array.getName();
+    
+    name[0] = toupper(name[0]);
+        
+    os << insertTabs(2) << "/**" << std::endl;
+    os << insertTabs(2) << " * Getter for " << array.getName() << std::endl;
+
+    if (array.getDocumentation().present()) {
+        os << insertTabs(2) << " *" << std::endl;
+        os << insertTabs(2) << " * " << array.getName() << " defined as : " << array.getDocumentation().get() << std::endl;
+    }
+
+    os << insertTabs(2) << " *" << std::endl;
+    os << insertTabs(2) << " * @return " << array.getName() << std::endl;
+    os << insertTabs(2) << " */" << std::endl;
+    
+    os << insertTabs(2) << getArrayType(array) << "& get" << name << "();" << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateSetterHxx(const EnumerationElement& enumeration) {
     std::ostringstream os;
     std::string name = enumeration.getName();
 
@@ -500,7 +553,7 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << convertPrimitiveElementToCppType(element) << ' ' << element.getName() << ';' << std::endl;
+        os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << ' ' << element.getName() << ';' << std::endl;
         os << std::endl;
     }
 
@@ -525,6 +578,17 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
         os << insertTabs(2) << subStructure.getType() << ' ' << subStructure.getName() << ';' << std::endl;
         os << std::endl;
     }
+
+    for (const auto& array : structure.getArray()) {
+        if (array.getDocumentation().present()) {
+            os << insertTabs(2) << "/**" << std::endl;
+            os << insertTabs(2) << " * " << array.getDocumentation().get() << std::endl;
+            os << insertTabs(2) << " */" << std::endl;
+        }
+
+        os << insertTabs(2) << getArrayType(array) << ' ' << array.getName() << ';' << std::endl;
+        os << std::endl;
+    }
     
     return os.str();
 }
@@ -532,7 +596,14 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
 std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
     std::ostringstream os;
     
-    os << "#include <cstdint>" << std::endl;
+    if (!structure.getPrimitiveElement().empty()) {
+        os << "#include <cstdint>" << std::endl;
+    }
+    
+    if (!structure.getArray().empty()) {
+        os << "#include <array>" << std::endl;
+    }
+    
     os << std::endl;
     
     os << "#include \"BaseMessage.hpp\"" << std::endl;
@@ -555,11 +626,11 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() const {" << std::endl;
     
     for (const auto& element : structure.getPrimitiveElement()) {
-        size += sizeOfPrimitiveElement(element);
+        size += sizeOfPrimitiveType(element.getType());
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        size += sizeOfEnumeration(enumeration);
+        size += sizeOfEnumeration(enumeration.getType());
     }
     
     os << insertTabs(1) << "// Size of primitive types in this structure" << std::endl;
@@ -567,8 +638,44 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     os << std::endl;
        
     for (const auto& subStructure : structure.getSubStructure()) {
-        os << insertTabs(1) << "// Add on size of " << subStructure.getName() << ';' << std::endl;
+        os << insertTabs(1) << "// Add on size of " << subStructure.getName() << std::endl;
         os << insertTabs(1) << "size += " << subStructure.getName() << ".getSizeInBytes();" << std::endl;
+        os << std::endl;
+    }
+       
+    for (const auto& array : structure.getArray()) {
+        os << insertTabs(1) << "// Add on size of " << array.getName() << std::endl;
+        
+        if (array.getPrimitiveType().present()) {
+            size = sizeOfPrimitiveType(array.getPrimitiveType().get());
+
+            for (const auto& dimension : array.getDimension()) {
+                size *= dimension;
+            }
+
+            os << insertTabs(1) << "size += " << size << ';' << std::endl;
+        } else if (array.getEnumerationType().present()) {
+            size = sizeOfEnumeration(array.getEnumerationType().get());
+
+            for (const auto& dimension : array.getDimension()) {
+                size *= dimension;
+            }
+
+            os << insertTabs(1) << "size += " << size << ';' << std::endl;
+        } else if (array.getStructureType().present()) {
+            os << insertTabs(1) << "for (const auto& e1 : " << array.getName() << ") {" << std::endl;
+            
+            for (uint64_t index = 1; index < array.getDimension().size(); ++index) {
+                os << insertTabs(index + 1) << "for (const auto& e" << (index + 1) << " : e" << index << ") {" << std::endl;
+            }
+            
+            os << insertTabs(array.getDimension().size() + 1) << "size += e" << array.getDimension().size() << ".getSizeInBytes();" << std::endl;
+            
+            for (uint64_t index = array.getDimension().size(); index != 0; --index) {
+                os << insertTabs(index) << '}' << std::endl;
+            }
+        }
+        
         os << std::endl;
     }
     
@@ -597,6 +704,10 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
         for (const auto& subStructure : structure.getSubStructure()) {
             os << generateSerialiseStructure(subStructure);
         }
+        
+        for (const auto& array : structure.getArray()) {
+            os << generateSerialiseArray(array);
+        }
     }
     
     os.seekp(-1, os.cur);
@@ -624,6 +735,10 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
         for (const auto& subStructure : structure.getSubStructure()) {
             os << generateDeserialiseStructure(subStructure);
         }
+        
+        for (const auto& array : structure.getArray()) {
+            os << generateDeserialiseArray(array);
+        }
     }
     
     os.seekp(-1, os.cur);
@@ -636,8 +751,8 @@ std::string CppGenerator::generateSerialisePrimitiveElement(const PrimitiveEleme
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
-    os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
+    os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << ");" << std::endl;
     os << std::endl;
 
     return os.str();
@@ -647,80 +762,164 @@ std::string CppGenerator::generateDeserialisePrimitiveElement(const PrimitiveEle
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
-    os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof (" << convertPrimitiveElementToCppType(element) << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof (" << convertPrimitiveElementToCppType(element) << ");" << std::endl;
+    os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << ");" << std::endl;
     os << std::endl;
 
     return os.str();
 }
 
-std::string CppGenerator::generateSerialiseEnumeration(const IncludedEnumeration& enumeration) {
+std::string CppGenerator::generateSerialiseEnumeration(const EnumerationElement& enumeration) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << enumeration.getName() << std::endl;
-    os << insertTabs(1) << "memcpy(data + offset, &" << enumeration.getName() << ", sizeof (" << enumeration.getType() << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof (" << enumeration.getType() << ");" << std::endl;
+    os << insertTabs(1) << "memcpy(data + offset, &" << enumeration.getName() << ", sizeof(" << enumeration.getType() << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof(" << enumeration.getType() << ");" << std::endl;
     os << std::endl;
 
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialiseEnumeration(const IncludedEnumeration& enumeration) {
+std::string CppGenerator::generateDeserialiseEnumeration(const EnumerationElement& enumeration) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
-    os << insertTabs(1) << "memcpy(&" << enumeration.getName() << ", data + offset, sizeof (" << enumeration.getType() << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof (" << enumeration.getType() << ");" << std::endl;
+    os << insertTabs(1) << "memcpy(&" << enumeration.getName() << ", data + offset, sizeof(" << enumeration.getType() << "));" << std::endl;
+    os << insertTabs(1) << "offset += sizeof(" << enumeration.getType() << ");" << std::endl;
     os << std::endl;
 
     return os.str();
 }
 
-std::string CppGenerator::generateSerialiseStructure(const IncludedStructure& structure) {
+std::string CppGenerator::generateSerialiseStructure(const StructureElement& structure) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << structure.getName() << std::endl;
-    os << insertTabs(1) << structure.getName() << ".serialise(data, offset);" << std::endl;
+    os << insertTabs(1) << structure.getName() << ".serialise(data + offset, offset);" << std::endl;
     os << std::endl;
 
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialiseStructure(const IncludedStructure& structure) {
+std::string CppGenerator::generateDeserialiseStructure(const StructureElement& structure) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << structure.getName() << std::endl;
-    os << insertTabs(1) << structure.getName() << ".deserialise(data, offset);" << std::endl;
+    os << insertTabs(1) << structure.getName() << ".deserialise(data + offset, offset);" << std::endl;
     os << std::endl;
 
     return os.str();
 }
 
-uint64_t CppGenerator::sizeOfPrimitiveElement(const PrimitiveElement& element) {
+std::string CppGenerator::generateSerialiseArray(const Array& array) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Serialise " << array.getName() << std::endl;
+    os << insertTabs(1) << "for (const auto& e1 : " << array.getName() << ") {" << std::endl;
+            
+    for (uint64_t index = 1; index < array.getDimension().size() - 1; ++index) {
+        os << insertTabs(index + 1) << "for (const auto& e" << (index + 1) << " : e" << index << ") {" << std::endl;
+    }
+    
+    if (array.getPrimitiveType().present()) {
+        os << insertTabs(array.getDimension().size()) << "memcpy(data + offset, e" << (array.getDimension().size() - 1) << ".data(), sizeof(" << convertPrimitiveTypeToCppType(array.getPrimitiveType().get()) << ") * e" << (array.getDimension().size() - 1) << ".size());" << std::endl;
+        os << insertTabs(array.getDimension().size()) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getPrimitiveType().get()) << ") * e" << (array.getDimension().size() - 1) << ".size();" << std::endl;
+    } else if (array.getEnumerationType().present()) {
+        os << insertTabs(array.getDimension().size()) << "memcpy(data + offset, e" << (array.getDimension().size() - 1) << ".data(), sizeof(" << array.getEnumerationType().get() << ") * e" << (array.getDimension().size() - 1) << ".size());" << std::endl;
+        os << insertTabs(array.getDimension().size()) << "offset += sizeof(" << array.getEnumerationType().get() << ") * e" << (array.getDimension().size() - 1) << ".size();" << std::endl;
+    } else if (array.getStructureType().present()) {
+        os << insertTabs(array.getDimension().size()) << "for (const auto& e" << array.getDimension().size() << " : e" << (array.getDimension().size() - 1) << ") {" << std::endl;
+        os << insertTabs(array.getDimension().size() + 1) << 'e' << array.getDimension().size() << ".serialise(data + offset, offset);" << std::endl;
+        os << insertTabs(array.getDimension().size()) << '}' << std::endl;
+    }
+    
+    for (uint64_t index = array.getDimension().size() - 1; index != 0; --index) {
+        os << insertTabs(index) << '}' << std::endl;
+    }
+    
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialiseArray(const Array& array) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Deserialise " << array.getName() << std::endl;
+    os << insertTabs(1) << "for (auto& e1 : " << array.getName() << ") {" << std::endl;
+            
+    for (uint64_t index = 1; index < array.getDimension().size() - 1; ++index) {
+        os << insertTabs(index + 1) << "for (auto& e" << (index + 1) << " : e" << index << ") {" << std::endl;
+    }
+    
+    if (array.getPrimitiveType().present()) {
+        os << insertTabs(array.getDimension().size()) << "memcpy(e" << (array.getDimension().size() - 1) << ".data(), " << "data + offset, sizeof(" << convertPrimitiveTypeToCppType(array.getPrimitiveType().get()) << ") * e" << (array.getDimension().size() - 1) << ".size());" << std::endl;
+        os << insertTabs(array.getDimension().size()) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getPrimitiveType().get()) << ") * e" << (array.getDimension().size() - 1) << ".size();" << std::endl;
+    } else if (array.getEnumerationType().present()) {
+        os << insertTabs(array.getDimension().size()) << "memcpy(e" << (array.getDimension().size() - 1) << ".data(), " << "data + offset, sizeof(" << array.getEnumerationType().get() << ") * e" << (array.getDimension().size() - 1) << ".size());" << std::endl;
+        os << insertTabs(array.getDimension().size()) << "offset += sizeof(" << array.getEnumerationType().get() << ") * e" << (array.getDimension().size() - 1) << ".size();" << std::endl;
+    } else if (array.getStructureType().present()) {
+        os << insertTabs(array.getDimension().size()) << "for (auto& e" << array.getDimension().size() << " : e" << (array.getDimension().size() - 1) << ") {" << std::endl;
+        os << insertTabs(array.getDimension().size() + 1) << 'e' << array.getDimension().size() << ".deserialise(data + offset, offset);" << std::endl;
+        os << insertTabs(array.getDimension().size()) << '}' << std::endl;
+    }
+    
+    for (uint64_t index = array.getDimension().size() - 1; index != 0; --index) {
+        os << insertTabs(index) << '}' << std::endl;
+    }
+    
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::getArrayType(const Array& array) {
+    std::ostringstream os;
+    
+    for (uint64_t index = 0; index < array.getDimension().size(); ++index) {
+        os << "std::array<";
+    }
+    
+    if (array.getPrimitiveType().present()) {
+        os << convertPrimitiveTypeToCppType(array.getPrimitiveType().get());
+    } else if (array.getEnumerationType().present()) {
+        os << array.getEnumerationType().get();
+    } else if (array.getStructureType().present()) {
+        os << array.getStructureType().get();
+    }
+    
+    for (const auto& dimension : array.getDimension() | std::views::reverse) {
+        os << ", " << dimension << '>';
+    }
+    
+    return os.str();
+}
+
+uint64_t CppGenerator::sizeOfPrimitiveType(const PrimitiveElement::TypeType& type) {
     uint64_t size = 0;
 
-    if ((element.getType() == "signed_int_8") || (element.getType() == "unsigned_int_8")) {
+    if ((type == "signed_int_8") || (type == "unsigned_int_8")) {
         size = 1;
-    } else if ((element.getType() == "signed_int_16") || (element.getType() == "unsigned_int_16")) {
+    } else if ((type == "signed_int_16") || (type == "unsigned_int_16")) {
         size = 2;
-    } else if ((element.getType() == "signed_int_32") || (element.getType() == "unsigned_int_32")) {
+    } else if ((type == "signed_int_32") || (type == "unsigned_int_32")) {
         size = 4;
-    } else if ((element.getType() == "signed_int_64") || (element.getType() == "unsigned_int_64")) {
+    } else if ((type == "signed_int_64") || (type == "unsigned_int_64")) {
         size = 8;
-    } else if (element.getType() == "float_32") {
+    } else if (type == "float_32") {
         size = 4;
-    } else if (element.getType() == "float_64") {
+    } else if (type == "float_64") {
         size = 8;
     }
 
     return size;
 }
 
-uint64_t CppGenerator::sizeOfEnumeration(const IncludedEnumeration& includedEnumeration) {
+uint64_t CppGenerator::sizeOfEnumeration(const std::string& enumString) {
     uint64_t size = 0;
     
     for (const auto& enumeration : definitions.getEnumeration()) {
-        if (includedEnumeration.getType().compare(enumeration.getName()) == 0) {
+        if (enumString.compare(enumeration.getName()) == 0) {
             if ((enumeration.getBaseType() == "signed_int_8") || (enumeration.getBaseType() == "unsigned_int_8")) {
                 size = 1;
             } else if ((enumeration.getBaseType() == "signed_int_16") || (enumeration.getBaseType() == "unsigned_int_16")) {
@@ -739,65 +938,65 @@ uint64_t CppGenerator::sizeOfEnumeration(const IncludedEnumeration& includedEnum
     }
     
     if (size == 0) {
-        std::cerr << "Error : Enumeration (" << includedEnumeration.getName() << ") has an invalid type (" << includedEnumeration.getType() << ')' << std::endl;
+        std::cerr << "Error : Enumeration has an invalid type (" << enumString << ')' << std::endl;
         std::exit(EXIT_FAILURE);
     }
     
     return size;
 }
     
-std::string CppGenerator::convertEnumToCppBaseType(const Enumeration& enumeration) {
+std::string CppGenerator::convertEnumBaseTypeToCppType(const Enumeration::BaseTypeType& type) {
     std::ostringstream os;
 
-    if (enumeration.getBaseType() == "unsigned_int_8") {
+    if (type == "unsigned_int_8") {
         os << "uint8_t";
-    } else if (enumeration.getBaseType() == "unsigned_int_16") {
+    } else if (type == "unsigned_int_16") {
         os << "uint16_t";
-    } else if (enumeration.getBaseType() == "unsigned_int_32") {
+    } else if (type == "unsigned_int_32") {
         os << "uint32_t";
-    } else if (enumeration.getBaseType() == "unsigned_int_64") {
+    } else if (type == "unsigned_int_64") {
         os << "uint64_t";
-    } else if (enumeration.getBaseType() == "signed_int_8") {
+    } else if (type == "signed_int_8") {
         os << "int8_t";
-    } else if (enumeration.getBaseType() == "signed_int_16") {
+    } else if (type == "signed_int_16") {
         os << "int16_t";
-    } else if (enumeration.getBaseType() == "signed_int_32") {
+    } else if (type == "signed_int_32") {
         os << "int32_t";
-    } else if (enumeration.getBaseType() == "signed_int_64") {
+    } else if (type == "signed_int_64") {
         os << "int64_t";
     } else {
-        std::cerr << "Error : Enumeration (" << enumeration.getName() << ") has an invalid base type (" << enumeration.getBaseType() << ')' << std::endl;
+        std::cerr << "Error : Invalid enumeration base type (" << type << ')' << std::endl;
         std::exit(EXIT_FAILURE);
     }
 
     return os.str();
 }
     
-std::string CppGenerator::convertPrimitiveElementToCppType(const PrimitiveElement& element) {
+std::string CppGenerator::convertPrimitiveTypeToCppType(const PrimitiveElement::TypeType& type) {
     std::ostringstream os;
 
-    if (element.getType() == "unsigned_int_8") {
+    if (type == "unsigned_int_8") {
         os << "uint8_t";
-    } else if (element.getType() == "unsigned_int_16") {
+    } else if (type == "unsigned_int_16") {
         os << "uint16_t";
-    } else if (element.getType() == "unsigned_int_32") {
+    } else if (type == "unsigned_int_32") {
         os << "uint32_t";
-    } else if (element.getType() == "unsigned_int_64") {
+    } else if (type == "unsigned_int_64") {
         os << "uint64_t";
-    } else if (element.getType() == "signed_int_8") {
+    } else if (type == "signed_int_8") {
         os << "int8_t";
-    } else if (element.getType() == "signed_int_16") {
+    } else if (type == "signed_int_16") {
         os << "int16_t";
-    } else if (element.getType() == "signed_int_32") {
+    } else if (type == "signed_int_32") {
         os << "int32_t";
-    } else if (element.getType() == "signed_int_64") {
+    } else if (type == "signed_int_64") {
         os << "int64_t";
-    } else if (element.getType() == "float_32") {
+    } else if (type == "float_32") {
         os << "float";
-    } else if (element.getType() == "float_64") {
+    } else if (type == "float_64") {
         os << "double";
     } else {
-        std::cerr << "Error : Element (" << element.getName() << ") has an invalid type (" << element.getType() << ')' << std::endl;
+        std::cerr << "Error : PrimitiveType is invalid (" << type << ')' << std::endl;
         std::exit(EXIT_FAILURE);
     }
 

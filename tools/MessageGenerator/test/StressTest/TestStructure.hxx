@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
 
 #include "BaseMessage.hpp"
 #include "Colour.hxx"
@@ -101,6 +102,27 @@ namespace arse {
             TestSubStruct& getTSS();
 
             /**
+             * Getter for testArray
+             *
+             * @return testArray
+             */
+            std::array<std::array<std::array<std::array<uint16_t, 2>, 3>, 4>, 5>& getTestArray();
+
+            /**
+             * Getter for testArrayStruct
+             *
+             * @return testArrayStruct
+             */
+            std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5>& getTestArrayStruct();
+
+            /**
+             * Getter for testArrayEnum
+             *
+             * @return testArrayEnum
+             */
+            std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5>& getTestArrayEnum();
+
+            /**
              * Setter for int8Member
              *
              * @param value The new value to set
@@ -180,5 +202,11 @@ namespace arse {
             Colour colour3;
 
             TestSubStruct TSS;
+
+            std::array<std::array<std::array<std::array<uint16_t, 2>, 3>, 4>, 5> testArray;
+
+            std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5> testArrayStruct;
+
+            std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5> testArrayEnum;
     };
 }

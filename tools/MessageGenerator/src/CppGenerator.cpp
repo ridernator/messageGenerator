@@ -358,6 +358,8 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
         os << generateGetterHxx(subStructure) << std::endl;
     }
     
+    // TODO Should we also do setters?
+    
     return os.str();
 }
 
@@ -591,6 +593,10 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
         for (const auto& enumeration : structure.getEnumeration()) {
             os << generateSerialiseEnumeration(enumeration);
         }
+        
+        for (const auto& subStructure : structure.getSubStructure()) {
+            os << generateSerialiseStructure(subStructure);
+        }
     }
     
     os.seekp(-1, os.cur);
@@ -613,6 +619,10 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
         
         for (const auto& enumeration : structure.getEnumeration()) {
             os << generateDeserialiseEnumeration(enumeration);
+        }
+        
+        for (const auto& subStructure : structure.getSubStructure()) {
+            os << generateDeserialiseStructure(subStructure);
         }
     }
     
@@ -661,6 +671,26 @@ std::string CppGenerator::generateDeserialiseEnumeration(const IncludedEnumerati
     os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
     os << insertTabs(1) << "memcpy(&" << enumeration.getName() << ", data + offset, sizeof (" << enumeration.getType() << "));" << std::endl;
     os << insertTabs(1) << "offset += sizeof (" << enumeration.getType() << ");" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateSerialiseStructure(const IncludedStructure& structure) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Serialise " << structure.getName() << std::endl;
+    os << insertTabs(1) << structure.getName() << ".serialise(data, offset);" << std::endl;
+    os << std::endl;
+
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialiseStructure(const IncludedStructure& structure) {
+    std::ostringstream os;   
+    
+    os << insertTabs(1) << "// Deserialise " << structure.getName() << std::endl;
+    os << insertTabs(1) << structure.getName() << ".deserialise(data, offset);" << std::endl;
     os << std::endl;
 
     return os.str();

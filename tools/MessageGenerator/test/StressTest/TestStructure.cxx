@@ -39,6 +39,9 @@ namespace arse {
         // Serialise colour3
         memcpy(data + offset, &colour3, sizeof (Colour));
         offset += sizeof (Colour);
+
+        // Serialise TSS
+        TSS.serialise(data, offset);
     }
 
     void TestStructure::deserialise(const char* data, uint64_t& offset) {
@@ -69,6 +72,9 @@ namespace arse {
         // Deserialise colour3
         memcpy(&colour3, data + offset, sizeof (Colour));
         offset += sizeof (Colour);
+
+        // Deserialise TSS
+        TSS.deserialise(data, offset);
     }
 
     uint64_t TestStructure::getSizeInBytes() const {

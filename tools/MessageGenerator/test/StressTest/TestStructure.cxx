@@ -156,6 +156,13 @@ namespace arse {
     }
 
     uint64_t TestStructure::getSizeInBytes() const {
+        // int8Member = 1 bytes (int8_t)
+        // int16Member = 2 bytes (int16_t)
+        // int32Member = 4 bytes (int32_t)
+        // int64Member = 8 bytes (int64_t)
+        // colour1 = 1 bytes (Colour)
+        // colour2 = 1 bytes (Colour)
+        // colour3 = 1 bytes (Colour)
         // Size of primitive types in this structure
         uint64_t size = 18;
 
@@ -163,6 +170,7 @@ namespace arse {
         size += TSS.getSizeInBytes();
 
         // Add on size of testArray
+        // 2 bytes (uint16_t) * 5 * 4 * 3 * 2 = 240 bytes
         size += 240;
 
         // Add on size of testArrayStruct
@@ -170,6 +178,7 @@ namespace arse {
             for (const auto& e2 : e1) {
                 for (const auto& e3 : e2) {
                     for (const auto& e4 : e3) {
+                        // Add on size of each individual TestSubStruct
                         size += e4.getSizeInBytes();
                     }
                 }
@@ -177,9 +186,42 @@ namespace arse {
         }
 
         // Add on size of testArrayEnum
+        // 1 bytes (Colour) * 5 * 4 * 3 * 2 = 120 bytes
         size += 120;
 
         // Add on size of testArraySeq
+        for (const auto& e1 : testArraySeq) {
+            for (const auto& e2 : e1) {
+                for (const auto& e3 : e2) {
+                    for (const auto& e4 : e3) {
+                        size += sizeof(Colour) * e4.size();
+                    }
+                }
+            }
+        }
+
+        // Add on size of primitiveSequence
+        size += sizeof(float) * primitiveSequence.size();
+
+        // Add on size of enumerationSequence
+        size += sizeof(Colour) * enumerationSequence.size();
+
+        // Add on size of structureSequence
+        for (const auto& e1 : structureSequence) {
+            // Add on size of each individual TestSubStruct
+            size += e1.getSizeInBytes();
+        }
+
+        // Add on size of arraySequence
+        for (const auto& e1 : arraySequence) {
+            // 1 bytes (uint8_t) * 3 * 4 = 12 bytes
+            size += 12;
+        }
+
+        // Add on size of sequenceSequence
+        for (const auto& e1 : sequenceSequence) {
+            size += sizeof(double) * e1.size();
+        }
 
         return size;
     }

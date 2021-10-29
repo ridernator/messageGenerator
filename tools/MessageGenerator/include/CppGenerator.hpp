@@ -114,6 +114,14 @@ class CppGenerator : Generator {
         
         std::string getSequenceType(const Sequence& sequence);
         
+        std::string generateSizeOfArray(const Array& array,
+                                        const uint8_t numTabs,
+                                        const std::string parentName);
+        
+        std::string generateSizeOfSequence(const Sequence& sequence,
+                                           const uint8_t numTabs,
+                                           const std::string parentName);
+        
         std::string convertEnumBaseTypeToCppType(const Enumeration::BaseTypeType& enumeration);
 
         std::string convertPrimitiveTypeToCppType(const PrimitiveElement::TypeType& element);

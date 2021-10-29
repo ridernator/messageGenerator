@@ -268,6 +268,12 @@
                         <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                     </xs:annotation>
                 </xs:element>
+
+                <xs:element name="sequence" type="sequence">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
@@ -278,6 +284,64 @@
                 <xs:attribute name="name" type="xs:string" use="required">
                     <xs:annotation>
                         <xs:documentation>The name of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>            
+    </xs:complexType>
+    
+    <xs:complexType name="sequence">
+        <xs:annotation>
+            <xs:documentation>Definition of a structure and all its elements</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:element name="primitiveType" type="primitiveType">
+                    <xs:annotation>
+                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="enumerationType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="structureType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="sequence" type="sequence">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="array" type="array">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="namedSequence">
+        <xs:complexContent>
+            <xs:extension base="sequence">
+                <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The name of this sequence</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
             </xs:extension>
@@ -318,6 +382,12 @@
                 <xs:element name="array" type="namedArray">
                     <xs:annotation>
                         <xs:documentation>Definition of an array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                    
+                <xs:element name="sequence" type="namedSequence">
+                    <xs:annotation>
+                        <xs:documentation>Definition of a sequence</xs:documentation>
                     </xs:annotation>
                 </xs:element>
             </xs:choice>

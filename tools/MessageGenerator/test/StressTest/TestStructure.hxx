@@ -123,6 +123,13 @@ namespace arse {
             std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5>& getTestArrayEnum();
 
             /**
+             * Getter for testArraySeq
+             *
+             * @return testArraySeq
+             */
+            std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5>& getTestArraySeq();
+
+            /**
              * Setter for int8Member
              *
              * @param value The new value to set
@@ -208,6 +215,8 @@ namespace arse {
             std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5> testArrayStruct;
 
             std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5> testArrayEnum;
+
+            std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5> testArraySeq;
 
             std::vector<float> primitiveSequence;
 

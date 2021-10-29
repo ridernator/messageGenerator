@@ -73,6 +73,14 @@ namespace arse {
                 }
             }
         }
+
+        // Serialise testArraySeq
+        for (const auto& e1 : testArraySeq) {
+            for (const auto& e2 : e1) {
+                for (const auto& e3 : e2) {
+                }
+            }
+        }
     }
 
     void TestStructure::deserialise(const char* data, uint64_t& offset) {
@@ -137,6 +145,14 @@ namespace arse {
                 }
             }
         }
+
+        // Deserialise testArraySeq
+        for (auto& e1 : testArraySeq) {
+            for (auto& e2 : e1) {
+                for (auto& e3 : e2) {
+                }
+            }
+        }
     }
 
     uint64_t TestStructure::getSizeInBytes() const {
@@ -162,6 +178,8 @@ namespace arse {
 
         // Add on size of testArrayEnum
         size += 120;
+
+        // Add on size of testArraySeq
 
         return size;
     }
@@ -208,6 +226,10 @@ namespace arse {
 
     std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5>& TestStructure::getTestArrayEnum() {
         return testArrayEnum;
+    }
+
+    std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5>& TestStructure::getTestArraySeq() {
+        return testArraySeq;
     }
 
     void TestStructure::setInt8Member(const int8_t value) {

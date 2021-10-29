@@ -48,6 +48,16 @@
             <enumerationType>Colour</enumerationType>
         </array>
         
+        <array name="testArraySeq">
+            <dimension>5</dimension>
+            <dimension>4</dimension>
+            <dimension>3</dimension>
+            <dimension>2</dimension>
+            <sequence>
+                <enumerationType>Colour</enumerationType>
+            </sequence>
+        </array>
+        
         <enumeration name="colour3" type="Colour" />
         
         <sequence name="primitiveSequence">

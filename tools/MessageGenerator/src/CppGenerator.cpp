@@ -915,6 +915,8 @@ std::string CppGenerator::getArrayType(const Array& array) {
         os << array.getEnumerationType().get();
     } else if (array.getStructureType().present()) {
         os << array.getStructureType().get();
+    } else if (array.getSequence().present()) {
+        os << getSequenceType(array.getSequence().get());
     }
     
     for (const auto& dimension : array.getDimension() | std::views::reverse) {

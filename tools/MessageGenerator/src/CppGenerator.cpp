@@ -187,7 +187,7 @@ std::string CppGenerator::generateGettersCxx(const Structure& structure) {
         os << generateGetterCxx(structure, enumeration) << std::endl;
     }
     
-    for (const auto& subStructure : structure.getSubStructure()) {
+    for (const auto& subStructure : structure.getStructure1()) {
         os << generateGetterCxx(structure, subStructure) << std::endl;
     }
     
@@ -381,7 +381,7 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
         os << generateGetterHxx(enumeration) << std::endl;
     }
     
-    for (const auto& subStructure : structure.getSubStructure()) {
+    for (const auto& subStructure : structure.getStructure1()) {
         os << generateGetterHxx(subStructure) << std::endl;
     }
     
@@ -569,7 +569,7 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
         os << std::endl;
     }
 
-    for (const auto& subStructure : structure.getSubStructure()) {
+    for (const auto& subStructure : structure.getStructure1()) {
         if (subStructure.getDocumentation().present()) {
             os << insertTabs(2) << "/**" << std::endl;
             os << insertTabs(2) << " * " << subStructure.getDocumentation().get() << std::endl;
@@ -590,6 +590,17 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
         os << insertTabs(2) << getArrayType(array) << ' ' << array.getName() << ';' << std::endl;
         os << std::endl;
     }
+
+    for (const auto& sequence : structure.getSequence()) {
+        if (sequence.getDocumentation().present()) {
+            os << insertTabs(2) << "/**" << std::endl;
+            os << insertTabs(2) << " * " << sequence.getDocumentation().get() << std::endl;
+            os << insertTabs(2) << " */" << std::endl;
+        }
+
+        os << insertTabs(2) << getSequenceType(sequence) << ' ' << sequence.getName() << ';' << std::endl;
+        os << std::endl;
+    }
     
     return os.str();
 }
@@ -603,6 +614,10 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
         os << "#include <array>" << std::endl;
     }
     
+    if (!structure.getSequence().empty()) {
+        os << "#include <vector>" << std::endl;
+    }
+    
     os << std::endl;
     
     os << "#include \"BaseMessage.hpp\"" << std::endl;    
@@ -614,7 +629,7 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
         uniqueHeaders.insert(enumeration.getType());
     }
     
-    for (const auto& subStructure : structure.getSubStructure()) {
+    for (const auto& subStructure : structure.getStructure1()) {
         uniqueHeaders.insert(subStructure.getType());
     }
     
@@ -651,7 +666,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     os << insertTabs(1) << "uint64_t size = " << size << ';' << std::endl;
     os << std::endl;
        
-    for (const auto& subStructure : structure.getSubStructure()) {
+    for (const auto& subStructure : structure.getStructure1()) {
         os << insertTabs(1) << "// Add on size of " << subStructure.getName() << std::endl;
         os << insertTabs(1) << "size += " << subStructure.getName() << ".getSizeInBytes();" << std::endl;
         os << std::endl;
@@ -715,7 +730,7 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
             os << generateSerialiseEnumeration(enumeration);
         }
         
-        for (const auto& subStructure : structure.getSubStructure()) {
+        for (const auto& subStructure : structure.getStructure1()) {
             os << generateSerialiseStructure(subStructure);
         }
         
@@ -746,7 +761,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
             os << generateDeserialiseEnumeration(enumeration);
         }
         
-        for (const auto& subStructure : structure.getSubStructure()) {
+        for (const auto& subStructure : structure.getStructure1()) {
             os << generateDeserialiseStructure(subStructure);
         }
         
@@ -905,6 +920,28 @@ std::string CppGenerator::getArrayType(const Array& array) {
     for (const auto& dimension : array.getDimension() | std::views::reverse) {
         os << ", " << dimension << '>';
     }
+    
+    return os.str();
+}
+
+std::string CppGenerator::getSequenceType(const Sequence& sequence) {
+    std::ostringstream os;
+    
+    os << "std::vector<";
+    
+    if (sequence.getPrimitiveType().present()) {
+        os << convertPrimitiveTypeToCppType(sequence.getPrimitiveType().get());
+    } else if (sequence.getEnumerationType().present()) {
+        os << sequence.getEnumerationType().get();
+    } else if (sequence.getStructureType().present()) {
+        os << sequence.getStructureType().get();
+    } else if (sequence.getArray().present()) {
+        os << getArrayType(sequence.getArray().get());
+    } else if (sequence.getSequence1().present()) {
+        os << getSequenceType(sequence.getSequence1().get());
+    }
+    
+    os << '>';
     
     return os.str();
 }

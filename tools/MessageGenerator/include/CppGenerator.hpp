@@ -107,6 +107,8 @@ class CppGenerator : Generator {
         
         std::string getArrayType(const Array& array);
         
+        std::string getSequenceType(const Sequence& sequence);
+        
         std::string convertEnumBaseTypeToCppType(const Enumeration::BaseTypeType& enumeration);
 
         std::string convertPrimitiveTypeToCppType(const PrimitiveElement::TypeType& element);

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <array>
+#include <vector>
 
 #include "BaseMessage.hpp"
 
@@ -207,5 +208,15 @@ namespace arse {
             std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5> testArrayStruct;
 
             std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5> testArrayEnum;
+
+            std::vector<float> primitiveSequence;
+
+            std::vector<Colour> enumerationSequence;
+
+            std::vector<TestSubStruct> structureSequence;
+
+            std::vector<std::array<std::array<uint8_t, 4>, 3>> arraySequence;
+
+            std::vector<std::vector<double>> sequenceSequence;
     };
 }

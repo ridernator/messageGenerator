@@ -373,7 +373,7 @@
                     </xs:annotation>
                 </xs:element>
 
-                <xs:element name="subStructure" type="structureElement">
+                <xs:element name="structure" type="structureElement">
                     <xs:annotation>
                         <xs:documentation>Structure which makes up part of this structure</xs:documentation>
                     </xs:annotation>

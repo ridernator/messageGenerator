@@ -130,6 +130,41 @@ namespace arse {
             std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5>& getTestArraySeq();
 
             /**
+             * Getter for primitiveSequence
+             *
+             * @return primitiveSequence
+             */
+            std::vector<float>& getPrimitiveSequence();
+
+            /**
+             * Getter for enumerationSequence
+             *
+             * @return enumerationSequence
+             */
+            std::vector<Colour>& getEnumerationSequence();
+
+            /**
+             * Getter for structureSequence
+             *
+             * @return structureSequence
+             */
+            std::vector<TestSubStruct>& getStructureSequence();
+
+            /**
+             * Getter for arraySequence
+             *
+             * @return arraySequence
+             */
+            std::vector<std::array<std::array<uint8_t, 4>, 3>>& getArraySequence();
+
+            /**
+             * Getter for sequenceSequence
+             *
+             * @return sequenceSequence
+             */
+            std::vector<std::vector<double>>& getSequenceSequence();
+
+            /**
              * Setter for int8Member
              *
              * @param value The new value to set

@@ -47,6 +47,8 @@ class CppGenerator : Generator {
 
         std::string generateGetterHxx(const StructureElement& structure);
 
+        std::string generateGetterHxx(const NamedSequence& sequence);
+
         std::string generateGetterHxx(const NamedArray& array);
 
         std::string generateMembersHxx(const Structure& structure);
@@ -100,6 +102,9 @@ class CppGenerator : Generator {
 
         std::string generateGetterCxx(const Structure& structure,
                                       const NamedArray& array);
+
+        std::string generateGetterCxx(const Structure& structure,
+                                      const NamedSequence& sequence);
         
         uint64_t sizeOfPrimitiveType(const PrimitiveElement::TypeType& type);
         

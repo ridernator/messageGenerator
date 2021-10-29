@@ -232,6 +232,26 @@ namespace arse {
         return testArraySeq;
     }
 
+    std::vector<float>& TestStructure::getPrimitiveSequence() {
+        return primitiveSequence;
+    }
+
+    std::vector<Colour>& TestStructure::getEnumerationSequence() {
+        return enumerationSequence;
+    }
+
+    std::vector<TestSubStruct>& TestStructure::getStructureSequence() {
+        return structureSequence;
+    }
+
+    std::vector<std::array<std::array<uint8_t, 4>, 3>>& TestStructure::getArraySequence() {
+        return arraySequence;
+    }
+
+    std::vector<std::vector<double>>& TestStructure::getSequenceSequence() {
+        return sequenceSequence;
+    }
+
     void TestStructure::setInt8Member(const int8_t value) {
         int8Member = value;
     }

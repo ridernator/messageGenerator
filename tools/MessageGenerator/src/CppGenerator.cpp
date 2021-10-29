@@ -195,6 +195,10 @@ std::string CppGenerator::generateGettersCxx(const Structure& structure) {
         os << generateGetterCxx(structure, array) << std::endl;
     }
     
+    for (const auto& sequence : structure.getSequence()) {
+        os << generateGetterCxx(structure, sequence) << std::endl;
+    }
+    
     return os.str();
 }
 
@@ -249,6 +253,20 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
 
     os << insertTabs() << getArrayType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     os << insertTabs(1) << "return " << array.getName() << ";" << std::endl;
+    os << insertTabs() << '}' << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGetterCxx(const Structure& structure,
+                                            const NamedSequence& sequence) {
+    std::ostringstream os;
+    
+    std::string upperName = sequence.getName();
+    upperName[0] = toupper(upperName[0]);
+
+    os << insertTabs() << getSequenceType(sequence) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    os << insertTabs(1) << "return " << sequence.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
     return os.str();
@@ -389,6 +407,10 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
         os << generateGetterHxx(array) << std::endl;
     }
     
+    for (const auto& sequence : structure.getSequence()) {
+        os << generateGetterHxx(sequence) << std::endl;
+    }
+    
     // TODO Should we also do setters?
     
     return os.str();
@@ -518,6 +540,29 @@ std::string CppGenerator::generateGetterHxx(const NamedArray& array) {
     os << insertTabs(2) << " */" << std::endl;
     
     os << insertTabs(2) << getArrayType(array) << "& get" << name << "();" << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGetterHxx(const NamedSequence& sequence) {
+    std::ostringstream os;
+    std::string name = sequence.getName();
+    
+    name[0] = toupper(name[0]);
+        
+    os << insertTabs(2) << "/**" << std::endl;
+    os << insertTabs(2) << " * Getter for " << sequence.getName() << std::endl;
+
+    if (sequence.getDocumentation().present()) {
+        os << insertTabs(2) << " *" << std::endl;
+        os << insertTabs(2) << " * " << sequence.getName() << " defined as : " << sequence.getDocumentation().get() << std::endl;
+    }
+
+    os << insertTabs(2) << " *" << std::endl;
+    os << insertTabs(2) << " * @return " << sequence.getName() << std::endl;
+    os << insertTabs(2) << " */" << std::endl;
+    
+    os << insertTabs(2) << getSequenceType(sequence) << "& get" << name << "();" << std::endl;
     
     return os.str();
 }

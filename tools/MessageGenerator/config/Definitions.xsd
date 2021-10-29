@@ -270,12 +270,18 @@
                 </xs:element>
             </xs:choice>
         </xs:sequence>
-            
-        <xs:attribute name="name" type="xs:string" use="required">
-            <xs:annotation>
-                <xs:documentation>The name of this array</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:complexType name="namedArray">
+        <xs:complexContent>
+            <xs:extension base="array">
+                <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The name of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>            
     </xs:complexType>
     
     <xs:complexType name="structure">
@@ -309,7 +315,7 @@
                     </xs:annotation>
                 </xs:element>
                     
-                <xs:element name="array" type="array">
+                <xs:element name="array" type="namedArray">
                     <xs:annotation>
                         <xs:documentation>Definition of an array</xs:documentation>
                     </xs:annotation>

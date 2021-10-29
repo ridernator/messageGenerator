@@ -241,7 +241,7 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
 }
 
 std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const Array& array) {
+                                            const NamedArray& array) {
     std::ostringstream os;
     
     std::string upperName = array.getName();
@@ -499,7 +499,7 @@ std::string CppGenerator::generateGetterHxx(const StructureElement& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const Array& array) {
+std::string CppGenerator::generateGetterHxx(const NamedArray& array) {
     std::ostringstream os;
     std::string name = array.getName();
     
@@ -825,7 +825,7 @@ std::string CppGenerator::generateDeserialiseStructure(const StructureElement& s
     return os.str();
 }
 
-std::string CppGenerator::generateSerialiseArray(const Array& array) {
+std::string CppGenerator::generateSerialiseArray(const NamedArray& array) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << array.getName() << std::endl;
@@ -856,7 +856,7 @@ std::string CppGenerator::generateSerialiseArray(const Array& array) {
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialiseArray(const Array& array) {
+std::string CppGenerator::generateDeserialiseArray(const NamedArray& array) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << array.getName() << std::endl;

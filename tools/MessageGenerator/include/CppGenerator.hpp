@@ -47,7 +47,7 @@ class CppGenerator : Generator {
 
         std::string generateGetterHxx(const StructureElement& structure);
 
-        std::string generateGetterHxx(const Array& array);
+        std::string generateGetterHxx(const NamedArray& array);
 
         std::string generateMembersHxx(const Structure& structure);
 
@@ -75,9 +75,9 @@ class CppGenerator : Generator {
 
         std::string generateDeserialiseStructure(const StructureElement& structure);
 
-        std::string generateSerialiseArray(const Array& array);
+        std::string generateSerialiseArray(const NamedArray& array);
 
-        std::string generateDeserialiseArray(const Array& array);
+        std::string generateDeserialiseArray(const NamedArray& array);
 
         std::string generateGettersCxx(const Structure& structure);
 
@@ -99,7 +99,7 @@ class CppGenerator : Generator {
                                       const StructureElement& subStructure);
 
         std::string generateGetterCxx(const Structure& structure,
-                                      const Array& array);
+                                      const NamedArray& array);
         
         uint64_t sizeOfPrimitiveType(const PrimitiveElement::TypeType& type);
         

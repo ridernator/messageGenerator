@@ -4,6 +4,7 @@
 #include <array>
 
 #include "BaseMessage.hpp"
+
 #include "Colour.hxx"
 #include "TestSubStruct.hxx"
 

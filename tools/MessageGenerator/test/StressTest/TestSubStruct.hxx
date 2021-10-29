@@ -4,6 +4,7 @@
 
 #include "BaseMessage.hpp"
 
+
 namespace arse {
     class TestSubStruct : public Messaging::BaseMessage {
         public :

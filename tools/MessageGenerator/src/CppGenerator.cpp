@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cctype>
 #include <filesystem>
+#include <set>
 
 CppGenerator::CppGenerator(const Definitions& definitions) : Generator(definitions) {
     sanityCheck();
@@ -596,9 +597,7 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
 std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
     std::ostringstream os;
     
-    if (!structure.getPrimitiveElement().empty()) {
-        os << "#include <cstdint>" << std::endl;
-    }
+    os << "#include <cstdint>" << std::endl;
     
     if (!structure.getArray().empty()) {
         os << "#include <array>" << std::endl;
@@ -606,22 +605,29 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
     
     os << std::endl;
     
-    os << "#include \"BaseMessage.hpp\"" << std::endl;
+    os << "#include \"BaseMessage.hpp\"" << std::endl;    
+    os << std::endl;
+    
+    std::set<std::string> uniqueHeaders;
     
     for (const auto& enumeration : structure.getEnumeration()) {
-	os << "#include \"" << enumeration.getType() << ".hxx\"" << std::endl;
+        uniqueHeaders.insert(enumeration.getType());
     }
     
     for (const auto& subStructure : structure.getSubStructure()) {
-	os << "#include \"" << subStructure.getType() << ".hxx\"" << std::endl;
+        uniqueHeaders.insert(subStructure.getType());
     }
     
     for (const auto& array : structure.getArray()) {
         if (array.getEnumerationType().present()) {
-            os << "#include \"" << array.getEnumerationType().get() << ".hxx\"" << std::endl;
+            uniqueHeaders.insert(array.getEnumerationType().get());
         } else if (array.getStructureType().present()) {
-            os << "#include \"" << array.getStructureType().get() << ".hxx\"" << std::endl;
+            uniqueHeaders.insert(array.getStructureType().get());
         }
+    }
+    
+    for (const auto& header : uniqueHeaders) {
+	os << "#include \"" << header << ".hxx\"" << std::endl;
     }
     
     return os.str();
@@ -760,7 +766,7 @@ std::string CppGenerator::generateSerialisePrimitiveElement(const PrimitiveEleme
     
     os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
     os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << ");" << std::endl;
+    os << insertTabs(1) << "offset += sizeof(" << element.getName() << ");" << std::endl;
     os << std::endl;
 
     return os.str();
@@ -771,7 +777,7 @@ std::string CppGenerator::generateDeserialisePrimitiveElement(const PrimitiveEle
     
     os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
     os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << ");" << std::endl;
+    os << insertTabs(1) << "offset += sizeof(" << element.getName() << ");" << std::endl;
     os << std::endl;
 
     return os.str();

@@ -5,11 +5,7 @@
 
 #include "BaseMessage.hpp"
 #include "Colour.hxx"
-#include "Colour.hxx"
-#include "Colour.hxx"
 #include "TestSubStruct.hxx"
-#include "TestSubStruct.hxx"
-#include "Colour.hxx"
 
 namespace arse {
     /**

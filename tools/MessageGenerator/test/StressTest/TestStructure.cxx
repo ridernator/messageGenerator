@@ -14,19 +14,19 @@ namespace arse {
     void TestStructure::serialise(char* data, uint64_t& offset) const {
         // Serialise int8Member
         memcpy(data + offset, &int8Member, sizeof(int8_t));
-        offset += sizeof(int8_t);
+        offset += sizeof(int8Member);
 
         // Serialise int16Member
         memcpy(data + offset, &int16Member, sizeof(int16_t));
-        offset += sizeof(int16_t);
+        offset += sizeof(int16Member);
 
         // Serialise int32Member
         memcpy(data + offset, &int32Member, sizeof(int32_t));
-        offset += sizeof(int32_t);
+        offset += sizeof(int32Member);
 
         // Serialise int64Member
         memcpy(data + offset, &int64Member, sizeof(int64_t));
-        offset += sizeof(int64_t);
+        offset += sizeof(int64Member);
 
         // Serialise colour1
         memcpy(data + offset, &colour1, sizeof(Colour));
@@ -78,19 +78,19 @@ namespace arse {
     void TestStructure::deserialise(const char* data, uint64_t& offset) {
         // Deserialise int8Member
         memcpy(&int8Member, data + offset, sizeof(int8_t));
-        offset += sizeof(int8_t);
+        offset += sizeof(int8Member);
 
         // Deserialise int16Member
         memcpy(&int16Member, data + offset, sizeof(int16_t));
-        offset += sizeof(int16_t);
+        offset += sizeof(int16Member);
 
         // Deserialise int32Member
         memcpy(&int32Member, data + offset, sizeof(int32_t));
-        offset += sizeof(int32_t);
+        offset += sizeof(int32Member);
 
         // Deserialise int64Member
         memcpy(&int64Member, data + offset, sizeof(int64_t));
-        offset += sizeof(int64_t);
+        offset += sizeof(int64Member);
 
         // Deserialise colour1
         memcpy(&colour1, data + offset, sizeof(Colour));

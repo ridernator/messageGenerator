@@ -20,7 +20,7 @@ bool FileParser::parse(const std::string& file,
     
     try {
         xml_schema::Properties properties;
-        auto definitions(parseDefinitions(file, 0, properties));
+        auto definitions(Messaging::parseDefinitions(file, 0, properties));
     
         switch (language) {
             case Language::CPP : {

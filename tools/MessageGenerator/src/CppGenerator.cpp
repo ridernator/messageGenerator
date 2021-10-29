@@ -7,7 +7,7 @@
 #include <filesystem>
 #include <set>
 
-CppGenerator::CppGenerator(const Definitions& definitions) : Generator(definitions) {
+CppGenerator::CppGenerator(const Messaging::Definitions& definitions) : Generator(definitions) {
     sanityCheck();
 }
 
@@ -36,9 +36,9 @@ bool CppGenerator::generate(const std::string& outputFolder) {
     return returnVal;
 }
 
-bool CppGenerator::generateHeaderFile(const Structure& structure,
+bool CppGenerator::generateHeaderFile(const Messaging::Structure& structure,
                                       const std::string& outputFolder,
-                                      const Definitions::NamespaceOptional& namespaceOptional) {
+                                      const Messaging::Definitions::NamespaceOptional& namespaceOptional) {
     bool returnVal = true;
     
     std::ofstream headerFile(outputFolder + std::filesystem::path::preferred_separator + structure.getName() + ".hxx");
@@ -91,9 +91,9 @@ bool CppGenerator::generateHeaderFile(const Structure& structure,
     return returnVal;
 }
 
-bool CppGenerator::generateHeaderFile(const Enumeration& enumeration,
+bool CppGenerator::generateHeaderFile(const Messaging::Enumeration& enumeration,
                                       const std::string& outputFolder,
-                                      const Definitions::NamespaceOptional& namespaceOptional) {
+                                      const Messaging::Definitions::NamespaceOptional& namespaceOptional) {
     bool returnVal = true;    
     
     std::ofstream headerFile(outputFolder + std::filesystem::path::preferred_separator + enumeration.getName() + ".hxx");
@@ -137,9 +137,9 @@ bool CppGenerator::generateHeaderFile(const Enumeration& enumeration,
     return returnVal;
 }
 
-bool CppGenerator::generateSourceFile(const Structure& structure,
+bool CppGenerator::generateSourceFile(const Messaging::Structure& structure,
                                       const std::string& outputFolder,
-                                      const Definitions::NamespaceOptional& namespaceOptional) {
+                                      const Messaging::Definitions::NamespaceOptional& namespaceOptional) {
     bool returnVal = true;
     std::ofstream sourceFile(outputFolder + std::filesystem::path::preferred_separator + structure.getName() + ".cxx");
 
@@ -176,7 +176,7 @@ bool CppGenerator::generateSourceFile(const Structure& structure,
     return returnVal;
 }
 
-std::string CppGenerator::generateGettersCxx(const Structure& structure) {
+std::string CppGenerator::generateGettersCxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     for (const auto& element : structure.getPrimitiveElement()) {
@@ -202,7 +202,7 @@ std::string CppGenerator::generateGettersCxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateSettersCxx(const Structure& structure) {
+std::string CppGenerator::generateSettersCxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     for (const auto& element : structure.getPrimitiveElement()) {
@@ -216,8 +216,8 @@ std::string CppGenerator::generateSettersCxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const PrimitiveElement& element) {
+std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::PrimitiveElement& element) {
     std::ostringstream os;
     
     std::string upperName = element.getName();
@@ -230,8 +230,8 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
     return os.str();
 }
 
-std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const StructureElement& subStructure) {
+std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::StructureElement& subStructure) {
     std::ostringstream os;
     
     std::string upperName = subStructure.getName();
@@ -244,8 +244,8 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
     return os.str();
 }
 
-std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const NamedArray& array) {
+std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::NamedArray& array) {
     std::ostringstream os;
     
     std::string upperName = array.getName();
@@ -258,8 +258,8 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
     return os.str();
 }
 
-std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const NamedSequence& sequence) {
+std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::NamedSequence& sequence) {
     std::ostringstream os;
     
     std::string upperName = sequence.getName();
@@ -272,8 +272,8 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
     return os.str();
 }
 
-std::string CppGenerator::generateSetterCxx(const Structure& structure,
-                                            const PrimitiveElement& element) {
+std::string CppGenerator::generateSetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::PrimitiveElement& element) {
     std::ostringstream os;
     
     std::string upperName = element.getName();
@@ -286,8 +286,8 @@ std::string CppGenerator::generateSetterCxx(const Structure& structure,
     return os.str();
 }
 
-std::string CppGenerator::generateGetterCxx(const Structure& structure,
-                                            const EnumerationElement& enumeration) {
+std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::EnumerationElement& enumeration) {
     std::ostringstream os;
     
     std::string upperName = enumeration.getName();
@@ -300,8 +300,8 @@ std::string CppGenerator::generateGetterCxx(const Structure& structure,
     return os.str();
 }
 
-std::string CppGenerator::generateSetterCxx(const Structure& structure,
-                                            const EnumerationElement& enumeration) {
+std::string CppGenerator::generateSetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::EnumerationElement& enumeration) {
     std::ostringstream os;
     
     std::string upperName = enumeration.getName();
@@ -314,7 +314,7 @@ std::string CppGenerator::generateSetterCxx(const Structure& structure,
     return os.str();
 }
     
-std::string CppGenerator::generateConstructorHxx(const Structure& structure) {
+std::string CppGenerator::generateConstructorHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     os << insertTabs(2) << "/**" << std::endl;
@@ -325,7 +325,7 @@ std::string CppGenerator::generateConstructorHxx(const Structure& structure) {
     return os.str();
 }
     
-std::string CppGenerator::generateDestructorHxx(const Structure& structure) {
+std::string CppGenerator::generateDestructorHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
         
     os << insertTabs(2) << "/**" << std::endl;
@@ -368,7 +368,7 @@ std::string CppGenerator::generateGetSizeInBytesHxx() {
     return os.str(); 
 }
     
-std::string CppGenerator::generateConstructorCxx(const Structure& structure) {
+std::string CppGenerator::generateConstructorCxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     os << insertTabs() << structure.getName() << "::" << structure.getName() << "() {" << std::endl;
@@ -378,7 +378,7 @@ std::string CppGenerator::generateConstructorCxx(const Structure& structure) {
     return os.str();
 }
     
-std::string CppGenerator::generateDestructorCxx(const Structure& structure) {
+std::string CppGenerator::generateDestructorCxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     os << insertTabs() << structure.getName() << "::~" << structure.getName() << "() {" << std::endl;
@@ -388,7 +388,7 @@ std::string CppGenerator::generateDestructorCxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateGettersHxx(const Structure& structure) {
+std::string CppGenerator::generateGettersHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     for (const auto& element : structure.getPrimitiveElement()) {
@@ -416,7 +416,7 @@ std::string CppGenerator::generateGettersHxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateSettersHxx(const Structure& structure) {
+std::string CppGenerator::generateSettersHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     for (const auto& element : structure.getPrimitiveElement()) {
@@ -430,7 +430,7 @@ std::string CppGenerator::generateSettersHxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const PrimitiveElement& element) {
+std::string CppGenerator::generateGetterHxx(const Messaging::PrimitiveElement& element) {
     std::ostringstream os;
     std::string name = element.getName();
     
@@ -453,7 +453,7 @@ std::string CppGenerator::generateGetterHxx(const PrimitiveElement& element) {
     return os.str();
 }
 
-std::string CppGenerator::generateSetterHxx(const PrimitiveElement& element) {
+std::string CppGenerator::generateSetterHxx(const Messaging::PrimitiveElement& element) {
     std::ostringstream os;
     std::string name = element.getName();
 
@@ -475,7 +475,7 @@ std::string CppGenerator::generateSetterHxx(const PrimitiveElement& element) {
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const EnumerationElement& enumeration) {
+std::string CppGenerator::generateGetterHxx(const Messaging::EnumerationElement& enumeration) {
     std::ostringstream os;
     std::string name = enumeration.getName();
     
@@ -498,7 +498,7 @@ std::string CppGenerator::generateGetterHxx(const EnumerationElement& enumeratio
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const StructureElement& structure) {
+std::string CppGenerator::generateGetterHxx(const Messaging::StructureElement& structure) {
     std::ostringstream os;
     std::string name = structure.getName();
     
@@ -521,7 +521,7 @@ std::string CppGenerator::generateGetterHxx(const StructureElement& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const NamedArray& array) {
+std::string CppGenerator::generateGetterHxx(const Messaging::NamedArray& array) {
     std::ostringstream os;
     std::string name = array.getName();
     
@@ -544,7 +544,7 @@ std::string CppGenerator::generateGetterHxx(const NamedArray& array) {
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const NamedSequence& sequence) {
+std::string CppGenerator::generateGetterHxx(const Messaging::NamedSequence& sequence) {
     std::ostringstream os;
     std::string name = sequence.getName();
     
@@ -567,7 +567,7 @@ std::string CppGenerator::generateGetterHxx(const NamedSequence& sequence) {
     return os.str();
 }
 
-std::string CppGenerator::generateSetterHxx(const EnumerationElement& enumeration) {
+std::string CppGenerator::generateSetterHxx(const Messaging::EnumerationElement& enumeration) {
     std::ostringstream os;
     std::string name = enumeration.getName();
 
@@ -589,7 +589,7 @@ std::string CppGenerator::generateSetterHxx(const EnumerationElement& enumeratio
     return os.str();
 }
 
-std::string CppGenerator::generateMembersHxx(const Structure& structure) {
+std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
 
     for (const auto& element : structure.getPrimitiveElement()) {
@@ -650,7 +650,7 @@ std::string CppGenerator::generateMembersHxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
+std::string CppGenerator::generateIncludesHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
     os << "#include <cstdint>" << std::endl;
@@ -693,7 +693,7 @@ std::string CppGenerator::generateIncludesHxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) {
+std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& structure) {
     std::ostringstream os;   
     uint64_t size = 0;
     
@@ -737,7 +737,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Structure& structure) 
     return os.str(); 
 }
 
-std::string CppGenerator::generateSizeOfArray(const Array& array,
+std::string CppGenerator::generateSizeOfArray(const Messaging::Array& array,
                                               const uint8_t numTabs,
                                               const std::string parentName) {
     std::ostringstream os;
@@ -795,7 +795,7 @@ std::string CppGenerator::generateSizeOfArray(const Array& array,
     return os.str(); 
 }
         
-std::string CppGenerator::generateSizeOfSequence(const Sequence& sequence,
+std::string CppGenerator::generateSizeOfSequence(const Messaging::Sequence& sequence,
                                                  const uint8_t numTabs,
                                                  const std::string parentName) {
     std::ostringstream os;
@@ -822,7 +822,7 @@ std::string CppGenerator::generateSizeOfSequence(const Sequence& sequence,
     return os.str(); 
 }
 
-std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
+std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& structure) {
     std::ostringstream os;   
     
     os << insertTabs() << "void " << structure.getName() << "::serialise(char* data, uint64_t& offset) const {" << std::endl;
@@ -853,7 +853,7 @@ std::string CppGenerator::generateSerialiseCxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
+std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& structure) {
     std::ostringstream os;   
     
     os << insertTabs() << "void " << structure.getName() << "::deserialise(const char* data, uint64_t& offset) {" << std::endl;
@@ -884,7 +884,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Structure& structure) {
     return os.str();
 }
 
-std::string CppGenerator::generateSerialisePrimitiveElement(const PrimitiveElement& element) {
+std::string CppGenerator::generateSerialisePrimitiveElement(const Messaging::PrimitiveElement& element) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
@@ -895,7 +895,7 @@ std::string CppGenerator::generateSerialisePrimitiveElement(const PrimitiveEleme
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialisePrimitiveElement(const PrimitiveElement& element) {
+std::string CppGenerator::generateDeserialisePrimitiveElement(const Messaging::PrimitiveElement& element) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
@@ -906,7 +906,7 @@ std::string CppGenerator::generateDeserialisePrimitiveElement(const PrimitiveEle
     return os.str();
 }
 
-std::string CppGenerator::generateSerialiseEnumeration(const EnumerationElement& enumeration) {
+std::string CppGenerator::generateSerialiseEnumeration(const Messaging::EnumerationElement& enumeration) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << enumeration.getName() << std::endl;
@@ -917,7 +917,7 @@ std::string CppGenerator::generateSerialiseEnumeration(const EnumerationElement&
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialiseEnumeration(const EnumerationElement& enumeration) {
+std::string CppGenerator::generateDeserialiseEnumeration(const Messaging::EnumerationElement& enumeration) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
@@ -928,7 +928,7 @@ std::string CppGenerator::generateDeserialiseEnumeration(const EnumerationElemen
     return os.str();
 }
 
-std::string CppGenerator::generateSerialiseStructure(const StructureElement& structure) {
+std::string CppGenerator::generateSerialiseStructure(const Messaging::StructureElement& structure) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << structure.getName() << std::endl;
@@ -938,7 +938,7 @@ std::string CppGenerator::generateSerialiseStructure(const StructureElement& str
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialiseStructure(const StructureElement& structure) {
+std::string CppGenerator::generateDeserialiseStructure(const Messaging::StructureElement& structure) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << structure.getName() << std::endl;
@@ -948,7 +948,7 @@ std::string CppGenerator::generateDeserialiseStructure(const StructureElement& s
     return os.str();
 }
 
-std::string CppGenerator::generateSerialiseArray(const NamedArray& array) {
+std::string CppGenerator::generateSerialiseArray(const Messaging::NamedArray& array) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Serialise " << array.getName() << std::endl;
@@ -979,7 +979,7 @@ std::string CppGenerator::generateSerialiseArray(const NamedArray& array) {
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialiseArray(const NamedArray& array) {
+std::string CppGenerator::generateDeserialiseArray(const Messaging::NamedArray& array) {
     std::ostringstream os;   
     
     os << insertTabs(1) << "// Deserialise " << array.getName() << std::endl;
@@ -1010,7 +1010,7 @@ std::string CppGenerator::generateDeserialiseArray(const NamedArray& array) {
     return os.str();
 }
 
-std::string CppGenerator::getArrayType(const Array& array) {
+std::string CppGenerator::getArrayType(const Messaging::Array& array) {
     std::ostringstream os;
     
     for (uint64_t index = 0; index < array.getDimension().size(); ++index) {
@@ -1034,7 +1034,7 @@ std::string CppGenerator::getArrayType(const Array& array) {
     return os.str();
 }
 
-std::string CppGenerator::getSequenceType(const Sequence& sequence) {
+std::string CppGenerator::getSequenceType(const Messaging::Sequence& sequence) {
     std::ostringstream os;
     
     os << "std::vector<";
@@ -1056,7 +1056,7 @@ std::string CppGenerator::getSequenceType(const Sequence& sequence) {
     return os.str();
 }
 
-uint64_t CppGenerator::sizeOfPrimitiveType(const PrimitiveElement::TypeType& type) {
+uint64_t CppGenerator::sizeOfPrimitiveType(const Messaging::PrimitiveElement::TypeType& type) {
     uint64_t size = 0;
 
     if ((type == "signed_int_8") || (type == "unsigned_int_8")) {
@@ -1106,7 +1106,7 @@ uint64_t CppGenerator::sizeOfEnumeration(const std::string& enumString) {
     return size;
 }
     
-std::string CppGenerator::convertEnumBaseTypeToCppType(const Enumeration::BaseTypeType& type) {
+std::string CppGenerator::convertEnumBaseTypeToCppType(const Messaging::Enumeration::BaseTypeType& type) {
     std::ostringstream os;
 
     if (type == "unsigned_int_8") {
@@ -1133,7 +1133,7 @@ std::string CppGenerator::convertEnumBaseTypeToCppType(const Enumeration::BaseTy
     return os.str();
 }
     
-std::string CppGenerator::convertPrimitiveTypeToCppType(const PrimitiveElement::TypeType& type) {
+std::string CppGenerator::convertPrimitiveTypeToCppType(const Messaging::PrimitiveElement::TypeType& type) {
     std::ostringstream os;
 
     if (type == "unsigned_int_8") {

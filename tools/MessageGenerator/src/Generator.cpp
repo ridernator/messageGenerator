@@ -2,7 +2,7 @@
 
 const std::string Generator::TAB = "    ";
 
-Generator::Generator(const Definitions& definitions) : definitions(definitions),
+Generator::Generator(const Messaging::Definitions& definitions) : definitions(definitions),
                                                        namespaceOn(false) {
     
 }

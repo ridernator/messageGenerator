@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <array>
+#include <vector>
 
 #include "BaseMessage.hpp"
 
@@ -71,6 +72,13 @@ namespace arse {
             int64_t getInt64Member() const;
 
             /**
+             * Getter for lastElement
+             *
+             * @return lastElement
+             */
+            int64_t getLastElement() const;
+
+            /**
              * Getter for colour1
              *
              * @return colour1
@@ -122,6 +130,48 @@ namespace arse {
             std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5>& getTestArrayEnum();
 
             /**
+             * Getter for testArraySeq
+             *
+             * @return testArraySeq
+             */
+            std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5>& getTestArraySeq();
+
+            /**
+             * Getter for primitiveSequence
+             *
+             * @return primitiveSequence
+             */
+            std::vector<float>& getPrimitiveSequence();
+
+            /**
+             * Getter for enumerationSequence
+             *
+             * @return enumerationSequence
+             */
+            std::vector<Colour>& getEnumerationSequence();
+
+            /**
+             * Getter for structureSequence
+             *
+             * @return structureSequence
+             */
+            std::vector<TestSubStruct>& getStructureSequence();
+
+            /**
+             * Getter for arraySequence
+             *
+             * @return arraySequence
+             */
+            std::vector<std::array<std::array<uint8_t, 4>, 3>>& getArraySequence();
+
+            /**
+             * Getter for sequenceSequence
+             *
+             * @return sequenceSequence
+             */
+            std::vector<std::vector<double>>& getSequenceSequence();
+
+            /**
              * Setter for int8Member
              *
              * @param value The new value to set
@@ -152,6 +202,13 @@ namespace arse {
              * @param value The new value to set
              */
             void setInt64Member(const int64_t value);
+
+            /**
+             * Setter for lastElement
+             *
+             * @param value The new value to set
+             */
+            void setLastElement(const int64_t value);
 
             /**
              * Setter for colour1
@@ -191,6 +248,8 @@ namespace arse {
 
             int64_t int64Member;
 
+            int64_t lastElement;
+
             Colour colour1;
 
             /**
@@ -207,5 +266,17 @@ namespace arse {
             std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5> testArrayStruct;
 
             std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5> testArrayEnum;
+
+            std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5> testArraySeq;
+
+            std::vector<float> primitiveSequence;
+
+            std::vector<Colour> enumerationSequence;
+
+            std::vector<TestSubStruct> structureSequence;
+
+            std::vector<std::array<std::array<uint8_t, 4>, 3>> arraySequence;
+
+            std::vector<std::vector<double>> sequenceSequence;
     };
 }

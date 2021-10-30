@@ -4,28 +4,28 @@
 
 class CppGenerator : Generator {
     public:
-        CppGenerator(const Definitions& definitions);
+        CppGenerator(const Messaging::Definitions& definitions);
         
         bool generate(const std::string& outputFolder);
 
     private:     
         void sanityCheck();
         
-        bool generateHeaderFile(const Structure& structure,
+        bool generateHeaderFile(const Messaging::Structure& structure,
                                 const std::string& outputFolder,
-                                const Definitions::NamespaceOptional& namespaceOptional);
+                                const Messaging::Definitions::NamespaceOptional& namespaceOptional);
         
-        bool generateHeaderFile(const Enumeration& enumeration,
+        bool generateHeaderFile(const Messaging::Enumeration& enumeration,
                                 const std::string& outputFolder,
-                                const Definitions::NamespaceOptional& namespaceOptional);
+                                const Messaging::Definitions::NamespaceOptional& namespaceOptional);
         
-        bool generateSourceFile(const Structure& structure,
+        bool generateSourceFile(const Messaging::Structure& structure,
                                 const std::string& outputFolder,
-                                const Definitions::NamespaceOptional& namespaceOptional);
+                                const Messaging::Definitions::NamespaceOptional& namespaceOptional);
 
-        std::string generateConstructorHxx(const Structure& structure);
+        std::string generateConstructorHxx(const Messaging::Structure& structure);
 
-        std::string generateDestructorHxx(const Structure& structure);
+        std::string generateDestructorHxx(const Messaging::Structure& structure);
 
         std::string generateSerialiseHxx();
 
@@ -33,81 +33,110 @@ class CppGenerator : Generator {
 
         std::string generateGetSizeInBytesHxx();
 
-        std::string generateGettersHxx(const Structure& structure);
+        std::string generateGettersHxx(const Messaging::Structure& structure);
 
-        std::string generateSettersHxx(const Structure& structure);
+        std::string generateSettersHxx(const Messaging::Structure& structure);
 
-        std::string generateGetterHxx(const PrimitiveElement& element);
+        std::string generateGetterHxx(const Messaging::PrimitiveElement& element);
 
-        std::string generateSetterHxx(const PrimitiveElement& element);
+        std::string generateSetterHxx(const Messaging::PrimitiveElement& element);
 
-        std::string generateGetterHxx(const EnumerationElement& element);
+        std::string generateGetterHxx(const Messaging::EnumerationElement& element);
 
-        std::string generateSetterHxx(const EnumerationElement& element);
+        std::string generateSetterHxx(const Messaging::EnumerationElement& element);
 
-        std::string generateGetterHxx(const StructureElement& structure);
+        std::string generateGetterHxx(const Messaging::StructureElement& structure);
 
-        std::string generateGetterHxx(const NamedArray& array);
+        std::string generateGetterHxx(const Messaging::NamedSequence& sequence);
 
-        std::string generateMembersHxx(const Structure& structure);
+        std::string generateGetterHxx(const Messaging::NamedArray& array);
 
-        std::string generateIncludesHxx(const Structure& structure);
+        std::string generateMembersHxx(const Messaging::Structure& structure);
 
-        std::string generateConstructorCxx(const Structure& structure);
+        std::string generateIncludesHxx(const Messaging::Structure& structure);
 
-        std::string generateDestructorCxx(const Structure& structure);
+        std::string generateConstructorCxx(const Messaging::Structure& structure);
 
-        std::string generateGetSizeInBytesCxx(const Structure& structure);
+        std::string generateDestructorCxx(const Messaging::Structure& structure);
 
-        std::string generateSerialiseCxx(const Structure& structure);
+        std::string generateGetSizeInBytesCxx(const Messaging::Structure& structure);
 
-        std::string generateDeserialiseCxx(const Structure& structure);
+        std::string generateSerialiseCxx(const Messaging::Structure& structure);
 
-        std::string generateSerialisePrimitiveElement(const PrimitiveElement& element);
+        std::string generateDeserialiseCxx(const Messaging::Structure& structure);
 
-        std::string generateDeserialisePrimitiveElement(const PrimitiveElement& element);
+        std::string generateSerialisePrimitiveElement(const Messaging::PrimitiveElement& element);
 
-        std::string generateSerialiseEnumeration(const EnumerationElement& enumeration);
+        std::string generateDeserialisePrimitiveElement(const Messaging::PrimitiveElement& element);
 
-        std::string generateDeserialiseEnumeration(const EnumerationElement& enumeration);
+        std::string generateSerialiseEnumeration(const Messaging::EnumerationElement& enumeration);
 
-        std::string generateSerialiseStructure(const StructureElement& structure);
+        std::string generateDeserialiseEnumeration(const Messaging::EnumerationElement& enumeration);
 
-        std::string generateDeserialiseStructure(const StructureElement& structure);
+        std::string generateSerialiseStructure(const Messaging::StructureElement& structure);
 
-        std::string generateSerialiseArray(const NamedArray& array);
+        std::string generateDeserialiseStructure(const Messaging::StructureElement& structure);
 
-        std::string generateDeserialiseArray(const NamedArray& array);
+        std::string generateSerialiseArray(const Messaging::Array& array,
+                                           const uint8_t numTabs,
+                                           const std::string parentName);
 
-        std::string generateGettersCxx(const Structure& structure);
+        std::string generateDeserialiseArray(const Messaging::Array& array,
+                                             const uint8_t numTabs,
+                                             const std::string parentName);
 
-        std::string generateSettersCxx(const Structure& structure);
+        std::string generateSerialiseSequence(const Messaging::Sequence& sequence,
+                                              const uint8_t numTabs,
+                                              const std::string parentName);
 
-        std::string generateGetterCxx(const Structure& structure,
-                                      const PrimitiveElement& element);
+        std::string generateDeserialiseSequence(const Messaging::Sequence& sequence,
+                                                const uint8_t numTabs,
+                                                const std::string parentName);
 
-        std::string generateSetterCxx(const Structure& structure,
-                                      const PrimitiveElement& element);
+        std::string generateGettersCxx(const Messaging::Structure& structure);
 
-        std::string generateGetterCxx(const Structure& structure,
-                                      const EnumerationElement& enumeration);
+        std::string generateSettersCxx(const Messaging::Structure& structure);
 
-        std::string generateSetterCxx(const Structure& structure,
-                                      const EnumerationElement& enumeration);
+        std::string generateGetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::PrimitiveElement& element);
 
-        std::string generateGetterCxx(const Structure& structure,
-                                      const StructureElement& subStructure);
+        std::string generateSetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::PrimitiveElement& element);
 
-        std::string generateGetterCxx(const Structure& structure,
-                                      const NamedArray& array);
+        std::string generateGetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::EnumerationElement& enumeration);
+
+        std::string generateSetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::EnumerationElement& enumeration);
+
+        std::string generateGetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::StructureElement& subStructure);
+
+        std::string generateGetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::NamedArray& array);
+
+        std::string generateGetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::NamedSequence& sequence);
         
-        uint64_t sizeOfPrimitiveType(const PrimitiveElement::TypeType& type);
+        uint64_t sizeOfPrimitiveType(const Messaging::PrimitiveElement::TypeType& type);
         
         uint64_t sizeOfEnumeration(const std::string& enumString);
         
-        std::string getArrayType(const Array& array);
+        std::string getArrayType(const Messaging::Array& array);
         
-        std::string convertEnumBaseTypeToCppType(const Enumeration::BaseTypeType& enumeration);
+        std::string getSequenceType(const Messaging::Sequence& sequence);
+        
+        std::string generateSizeOfArray(const Messaging::Array& array,
+                                        const uint8_t numTabs,
+                                        const std::string parentName);
+        
+        std::string generateSizeOfSequence(const Messaging::Sequence& sequence,
+                                           const uint8_t numTabs,
+                                           const std::string parentName);
+        
+        std::string convertEnumBaseTypeToCppType(const Messaging::Enumeration::BaseTypeType& enumeration);
 
-        std::string convertPrimitiveTypeToCppType(const PrimitiveElement::TypeType& element);
+        std::string convertPrimitiveTypeToCppType(const Messaging::PrimitiveElement::TypeType& element);
+        
+        const static std::string SEQ_SIZE_TYPE;
 };

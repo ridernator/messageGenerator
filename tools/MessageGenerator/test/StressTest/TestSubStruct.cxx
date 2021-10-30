@@ -24,6 +24,7 @@ namespace arse {
     }
 
     uint64_t TestSubStruct::getSizeInBytes() const {
+        // bigUnsigned = 8 bytes (uint64_t)
         // Size of primitive types in this structure
         uint64_t size = 8;
 

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../config/Definitions.xsd" namespace="arse">
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="Messaging"
+             xsi:schemaLocation="Messaging ../../config/Definitions.xsd"
+             namespace="arse">
     <structure name="TestStructure">
         <documentation>Documentation for test structure</documentation>
         
@@ -22,7 +25,7 @@
             <documentation>Colour 2 is wicked!</documentation>
         </enumeration>
 
-        <subStructure name="TSS" type="TestSubStruct" />
+        <structure name="TSS" type="TestSubStruct" />
         
         <array name="testArray">
             <dimension>5</dimension>
@@ -48,7 +51,45 @@
             <enumerationType>Colour</enumerationType>
         </array>
         
+        <array name="testArraySeq">
+            <dimension>5</dimension>
+            <dimension>4</dimension>
+            <dimension>3</dimension>
+            <dimension>2</dimension>
+            <sequence>
+                <enumerationType>Colour</enumerationType>
+            </sequence>
+        </array>
+        
         <enumeration name="colour3" type="Colour" />
+        
+        <sequence name="primitiveSequence">
+            <primitiveType>float_32</primitiveType>
+        </sequence>
+        
+        <sequence name="enumerationSequence">
+            <enumerationType>Colour</enumerationType>                
+        </sequence>
+        
+        <sequence name="structureSequence">
+            <structureType>TestSubStruct</structureType>               
+        </sequence>
+        
+        <sequence name="arraySequence">
+            <array>
+                <dimension>3</dimension>
+                <dimension>4</dimension>
+                <primitiveType>unsigned_int_8</primitiveType>
+            </array>
+        </sequence>
+        
+        <sequence name="sequenceSequence">
+            <sequence>
+                <primitiveType>float_64</primitiveType>
+            </sequence>
+        </sequence>
+        
+        <primitiveElement name="lastElement" type="signed_int_64" />
     </structure>
 
     <structure name="TestSubStruct">

@@ -4,7 +4,7 @@
 
 class Generator {
     public:
-        Generator(const Definitions& definitions);
+        Generator(const Messaging::Definitions& definitions);
         
         virtual bool generate(const std::string& outputFolder) = 0;
         
@@ -13,7 +13,7 @@ class Generator {
         
         std::string insertTabs(const uint8_t numTabs = 0);
         
-        const Definitions& definitions;
+        const Messaging::Definitions& definitions;
         
     private:        
         bool namespaceOn;

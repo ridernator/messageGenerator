@@ -235,6 +235,20 @@
         </xs:attribute>
     </xs:complexType>
     
+    <xs:complexType name="Dimensions">
+        <xs:annotation>
+            <xs:documentation>The dimensions of an array</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="dimension" type="xs:unsignedLong" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>A dimension of an array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
     <xs:complexType name="array">
         <xs:annotation>
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
@@ -247,7 +261,7 @@
                 </xs:annotation>
             </xs:element>
             
-            <xs:element name="dimension" type="xs:unsignedLong" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="dimensions" type="Dimensions" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Dimensions of this array</xs:documentation>
                 </xs:annotation>
@@ -273,6 +287,12 @@
                 </xs:element>
 
                 <xs:element name="sequence" type="sequence">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="map" type="sequence">
                     <xs:annotation>
                         <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                     </xs:annotation>
@@ -335,6 +355,12 @@
                         <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                     </xs:annotation>
                 </xs:element>
+
+                <xs:element name="map" type="map">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
@@ -345,6 +371,90 @@
                 <xs:attribute name="name" type="xs:string" use="required">
                     <xs:annotation>
                         <xs:documentation>The name of this sequence</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>            
+    </xs:complexType>
+    
+    <xs:complexType name="map">
+        <xs:annotation>
+            <xs:documentation>Definition of a structure and all its elements</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:element name="KeyPrimitiveType" type="primitiveType">
+                    <xs:annotation>
+                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="KeyEnumerationType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="KeyStructureType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:element name="ValuePrimitiveType" type="primitiveType">
+                    <xs:annotation>
+                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="ValueEnumerationType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="ValueStructureType" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="ValueSequence" type="sequence">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="ValueArray" type="array">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="ValueMap" type="map">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="namedMap">
+        <xs:complexContent>
+            <xs:extension base="map">
+                <xs:attribute name="name" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation>The name of this map</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
             </xs:extension>
@@ -389,6 +499,12 @@
                 </xs:element>
                     
                 <xs:element name="sequence" type="namedSequence">
+                    <xs:annotation>
+                        <xs:documentation>Definition of a sequence</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                    
+                <xs:element name="map" type="namedMap">
                     <xs:annotation>
                         <xs:documentation>Definition of a sequence</xs:documentation>
                     </xs:annotation>

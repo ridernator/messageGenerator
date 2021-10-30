@@ -28,34 +28,46 @@
         <structure name="TSS" type="TestSubStruct" />
         
         <array name="testArray">
-            <dimension>5</dimension>
-            <dimension>4</dimension>
-            <dimension>3</dimension>
-            <dimension>2</dimension>
+            <dimensions>
+                <dimension>5</dimension>
+                <dimension>4</dimension>
+                <dimension>3</dimension>
+                <dimension>2</dimension>
+            </dimensions>
+            
             <primitiveType>unsigned_int_16</primitiveType>
         </array>
         
         <array name="testArrayStruct">
-            <dimension>5</dimension>
-            <dimension>4</dimension>
-            <dimension>3</dimension>
-            <dimension>2</dimension>
+            <dimensions>
+                <dimension>5</dimension>
+                <dimension>4</dimension>
+                <dimension>3</dimension>
+                <dimension>2</dimension>
+            </dimensions>
+            
             <structureType>TestSubStruct</structureType>
         </array>
         
         <array name="testArrayEnum">
-            <dimension>5</dimension>
-            <dimension>4</dimension>
-            <dimension>3</dimension>
-            <dimension>2</dimension>
+            <dimensions>
+                <dimension>5</dimension>
+                <dimension>4</dimension>
+                <dimension>3</dimension>
+                <dimension>2</dimension>
+            </dimensions>
+            
             <enumerationType>Colour</enumerationType>
         </array>
         
         <array name="testArraySeq">
-            <dimension>5</dimension>
-            <dimension>4</dimension>
-            <dimension>3</dimension>
-            <dimension>2</dimension>
+            <dimensions>
+                <dimension>5</dimension>
+                <dimension>4</dimension>
+                <dimension>3</dimension>
+                <dimension>2</dimension>
+            </dimensions>
+            
             <sequence>
                 <enumerationType>Colour</enumerationType>
             </sequence>
@@ -77,8 +89,11 @@
         
         <sequence name="arraySequence">
             <array>
-                <dimension>3</dimension>
-                <dimension>4</dimension>
+                <dimensions>
+                    <dimension>3</dimension>
+                    <dimension>4</dimension>
+                </dimensions>
+                
                 <primitiveType>unsigned_int_8</primitiveType>
             </array>
         </sequence>
@@ -88,6 +103,11 @@
                 <primitiveType>float_64</primitiveType>
             </sequence>
         </sequence>
+        
+        <map name="mapPrimitive">
+            <KeyPrimitiveType>unsigned_int_16</KeyPrimitiveType>
+            <ValueEnumerationType>Colour</ValueEnumerationType>
+        </map>
         
         <primitiveElement name="lastElement" type="signed_int_64" />
     </structure>

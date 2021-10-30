@@ -122,9 +122,9 @@ class CppGenerator : Generator {
         
         uint64_t sizeOfEnumeration(const std::string& enumString);
         
-        std::string getArrayType(const Messaging::Array& array);
+        std::string getCxxType(const Messaging::Array& array);
         
-        std::string getSequenceType(const Messaging::Sequence& sequence);
+        std::string getCxxType(const Messaging::Sequence& sequence);
         
         std::string generateSizeOfArray(const Messaging::Array& array,
                                         const uint8_t numTabs,

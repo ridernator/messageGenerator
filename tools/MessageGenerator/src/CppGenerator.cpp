@@ -253,7 +253,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = array.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << getArrayType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    os << insertTabs() << getCxxType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     os << insertTabs(1) << "return " << array.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -267,7 +267,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = sequence.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << getSequenceType(sequence) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    os << insertTabs() << getCxxType(sequence) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     os << insertTabs(1) << "return " << sequence.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -541,7 +541,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedArray& array) 
     os << insertTabs(2) << " * @return " << array.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << getArrayType(array) << "& get" << name << "();" << std::endl;
+    os << insertTabs(2) << getCxxType(array) << "& get" << name << "();" << std::endl;
     
     return os.str();
 }
@@ -564,7 +564,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedSequence& sequ
     os << insertTabs(2) << " * @return " << sequence.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << getSequenceType(sequence) << "& get" << name << "();" << std::endl;
+    os << insertTabs(2) << getCxxType(sequence) << "& get" << name << "();" << std::endl;
     
     return os.str();
 }
@@ -634,7 +634,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << getArrayType(array) << ' ' << array.getName() << ';' << std::endl;
+        os << insertTabs(2) << getCxxType(array) << ' ' << array.getName() << ';' << std::endl;
         os << std::endl;
     }
 
@@ -645,7 +645,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << getSequenceType(sequence) << ' ' << sequence.getName() << ';' << std::endl;
+        os << insertTabs(2) << getCxxType(sequence) << ' ' << sequence.getName() << ';' << std::endl;
         os << std::endl;
     }
     
@@ -1117,7 +1117,7 @@ std::string CppGenerator::generateDeserialiseSequence(const Messaging::Sequence&
     return os.str();
 }
 
-std::string CppGenerator::getArrayType(const Messaging::Array& array) {
+std::string CppGenerator::getCxxType(const Messaging::Array& array) {
     std::ostringstream os;
     
     for (uint64_t index = 0; index < array.getDimensions().getDimension().size(); ++index) {
@@ -1131,7 +1131,7 @@ std::string CppGenerator::getArrayType(const Messaging::Array& array) {
     } else if (array.getType().getStructureType().present()) {
         os << array.getType().getStructureType().get();
     } else if (array.getType().getSequence().present()) {
-        os << getSequenceType(array.getType().getSequence().get());
+        os << getCxxType(array.getType().getSequence().get());
     }
     
     for (const auto& dimension : array.getDimensions().getDimension() | std::views::reverse) {
@@ -1141,7 +1141,7 @@ std::string CppGenerator::getArrayType(const Messaging::Array& array) {
     return os.str();
 }
 
-std::string CppGenerator::getSequenceType(const Messaging::Sequence& sequence) {
+std::string CppGenerator::getCxxType(const Messaging::Sequence& sequence) {
     std::ostringstream os;
     
     os << "std::vector<";
@@ -1153,9 +1153,9 @@ std::string CppGenerator::getSequenceType(const Messaging::Sequence& sequence) {
     } else if (sequence.getType().getStructureType().present()) {
         os << sequence.getType().getStructureType().get();
     } else if (sequence.getType().getArray().present()) {
-        os << getArrayType(sequence.getType().getArray().get());
+        os << getCxxType(sequence.getType().getArray().get());
     } else if (sequence.getType().getSequence().present()) {
-        os << getSequenceType(sequence.getType().getSequence().get());
+        os << getCxxType(sequence.getType().getSequence().get());
     }
     
     os << '>';

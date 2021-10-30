@@ -51,6 +51,8 @@ class CppGenerator : Generator {
 
         std::string generateGetterHxx(const Messaging::NamedArray& array);
 
+        std::string generateGetterHxx(const Messaging::NamedMap& map);
+
         std::string generateMembersHxx(const Messaging::Structure& structure);
 
         std::string generateIncludesHxx(const Messaging::Structure& structure);
@@ -117,6 +119,9 @@ class CppGenerator : Generator {
 
         std::string generateGetterCxx(const Messaging::Structure& structure,
                                       const Messaging::NamedSequence& sequence);
+
+        std::string generateGetterCxx(const Messaging::Structure& structure,
+                                      const Messaging::NamedMap& map);
         
         uint64_t sizeOfPrimitiveType(const Messaging::PrimitiveElement::TypeType& type);
         

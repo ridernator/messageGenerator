@@ -488,6 +488,10 @@ namespace arse {
         return sequenceSequence;
     }
 
+    std::map<uint16_t, Colour>& TestStructure::getMapPrimitive() {
+        return mapPrimitive;
+    }
+
     void TestStructure::setInt8Member(const int8_t value) {
         int8Member = value;
     }

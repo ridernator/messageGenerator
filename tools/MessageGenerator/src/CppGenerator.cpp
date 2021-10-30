@@ -201,6 +201,10 @@ std::string CppGenerator::generateGettersCxx(const Messaging::Structure& structu
         os << generateGetterCxx(structure, sequence) << std::endl;
     }
     
+    for (const auto& map : structure.getMap()) {
+        os << generateGetterCxx(structure, map) << std::endl;
+    }
+    
     return os.str();
 }
 
@@ -269,6 +273,20 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
 
     os << insertTabs() << getCxxType(sequence) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     os << insertTabs(1) << "return " << sequence.getName() << ";" << std::endl;
+    os << insertTabs() << '}' << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structure,
+                                            const Messaging::NamedMap& map) {
+    std::ostringstream os;
+    
+    std::string upperName = map.getName();
+    upperName[0] = toupper(upperName[0]);
+
+    os << insertTabs() << getCxxType(map) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    os << insertTabs(1) << "return " << map.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
     return os.str();
@@ -411,6 +429,10 @@ std::string CppGenerator::generateGettersHxx(const Messaging::Structure& structu
     
     for (const auto& sequence : structure.getSequence()) {
         os << generateGetterHxx(sequence) << std::endl;
+    }
+    
+    for (const auto& map : structure.getMap()) {
+        os << generateGetterHxx(map) << std::endl;
     }
     
     // TODO Should we also do setters?
@@ -565,6 +587,29 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedSequence& sequ
     os << insertTabs(2) << " */" << std::endl;
     
     os << insertTabs(2) << getCxxType(sequence) << "& get" << name << "();" << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateGetterHxx(const Messaging::NamedMap& map) {
+    std::ostringstream os;
+    std::string name = map.getName();
+    
+    name[0] = toupper(name[0]);
+        
+    os << insertTabs(2) << "/**" << std::endl;
+    os << insertTabs(2) << " * Getter for " << map.getName() << std::endl;
+
+    if (map.getDocumentation().present()) {
+        os << insertTabs(2) << " *" << std::endl;
+        os << insertTabs(2) << " * " << map.getName() << " defined as : " << map.getDocumentation().get() << std::endl;
+    }
+
+    os << insertTabs(2) << " *" << std::endl;
+    os << insertTabs(2) << " * @return " << map.getName() << std::endl;
+    os << insertTabs(2) << " */" << std::endl;
+    
+    os << insertTabs(2) << getCxxType(map) << "& get" << name << "();" << std::endl;
     
     return os.str();
 }

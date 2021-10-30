@@ -173,6 +173,13 @@ namespace arse {
             std::vector<std::vector<double>>& getSequenceSequence();
 
             /**
+             * Getter for mapPrimitive
+             *
+             * @return mapPrimitive
+             */
+            std::map<uint16_t, Colour>& getMapPrimitive();
+
+            /**
              * Setter for int8Member
              *
              * @param value The new value to set

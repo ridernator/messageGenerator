@@ -126,6 +126,8 @@ class CppGenerator : Generator {
         
         std::string getCxxType(const Messaging::Sequence& sequence);
         
+        std::string getCxxType(const Messaging::Map& map);
+        
         std::string generateSizeOfArray(const Messaging::Array& array,
                                         const uint8_t numTabs,
                                         const std::string& parentName);

@@ -648,6 +648,17 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
         os << insertTabs(2) << getCxxType(sequence) << ' ' << sequence.getName() << ';' << std::endl;
         os << std::endl;
     }
+
+    for (const auto& map : structure.getMap()) {
+        if (map.getDocumentation().present()) {
+            os << insertTabs(2) << "/**" << std::endl;
+            os << insertTabs(2) << " * " << map.getDocumentation().get() << std::endl;
+            os << insertTabs(2) << " */" << std::endl;
+        }
+
+        os << insertTabs(2) << getCxxType(map) << ' ' << map.getName() << ';' << std::endl;
+        os << std::endl;
+    }
     
     return os.str();
 }
@@ -663,6 +674,10 @@ std::string CppGenerator::generateIncludesHxx(const Messaging::Structure& struct
     
     if (!structure.getSequence().empty()) {
         os << "#include <vector>" << std::endl;
+    }
+    
+    if (!structure.getMap().empty()) {
+        os << "#include <map>" << std::endl;
     }
     
     os << std::endl;
@@ -1132,6 +1147,8 @@ std::string CppGenerator::getCxxType(const Messaging::Array& array) {
         os << array.getType().getStructureType().get();
     } else if (array.getType().getSequence().present()) {
         os << getCxxType(array.getType().getSequence().get());
+    } else if (array.getType().getMap().present()) {
+        os << getCxxType(array.getType().getMap().get());
     }
     
     for (const auto& dimension : array.getDimensions().getDimension() | std::views::reverse) {
@@ -1156,9 +1173,45 @@ std::string CppGenerator::getCxxType(const Messaging::Sequence& sequence) {
         os << getCxxType(sequence.getType().getArray().get());
     } else if (sequence.getType().getSequence().present()) {
         os << getCxxType(sequence.getType().getSequence().get());
+    } else if (sequence.getType().getMap().present()) {
+        os << getCxxType(sequence.getType().getMap().get());
     }
     
     os << '>';
+    
+    return os.str();
+}
+
+std::string CppGenerator::getCxxType(const Messaging::Map& map) {
+    std::ostringstream os;
+    
+    os << "std::map<";
+    
+    if (map.getKeyType().getPrimitiveType().present()) {
+        os << convertPrimitiveTypeToCppType(map.getKeyType().getPrimitiveType().get());
+    } else if (map.getKeyType().getEnumerationType().present()) {
+        os << map.getKeyType().getEnumerationType().get();
+    } else if (map.getKeyType().getStructureType().present()) {
+        os << map.getKeyType().getStructureType().get();
+    }
+    
+    os << ", ";
+    
+    if (map.getValueType().getPrimitiveType().present()) {
+        os << convertPrimitiveTypeToCppType(map.getValueType().getPrimitiveType().get());
+    } else if (map.getValueType().getEnumerationType().present()) {
+        os << map.getValueType().getEnumerationType().get();
+    } else if (map.getValueType().getStructureType().present()) {
+        os << map.getValueType().getStructureType().get();
+    } else if (map.getValueType().getArray().present()) {
+        os << getCxxType(map.getValueType().getArray().get());
+    } else if (map.getValueType().getSequence().present()) {
+        os << getCxxType(map.getValueType().getSequence().get());
+    } else if (map.getValueType().getMap().present()) {
+        os << getCxxType(map.getValueType().getMap().get());
+    }
+    
+    os << ">";
     
     return os.str();
 }

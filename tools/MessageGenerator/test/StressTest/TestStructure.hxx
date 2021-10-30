@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <array>
 #include <vector>
+#include <map>
 
 #include "BaseMessage.hpp"
 
@@ -278,5 +279,7 @@ namespace arse {
             std::vector<std::array<std::array<uint8_t, 4>, 3>> arraySequence;
 
             std::vector<std::vector<double>> sequenceSequence;
+
+            std::map<uint16_t, Colour> mapPrimitive;
     };
 }

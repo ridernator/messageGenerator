@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../config/Definitions.xsd" namespace="arse">
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="Messaging"
+             xsi:schemaLocation="Messaging ../../config/Definitions.xsd"
+             namespace="arse">
     <structure name="TestStructure">
         <documentation>Documentation for test structure</documentation>
         
@@ -85,6 +88,8 @@
                 <primitiveType>float_64</primitiveType>
             </sequence>
         </sequence>
+        
+        <primitiveElement name="lastElement" type="signed_int_64" />
     </structure>
 
     <structure name="TestSubStruct">

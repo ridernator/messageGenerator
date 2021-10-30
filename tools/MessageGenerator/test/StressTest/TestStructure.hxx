@@ -72,6 +72,13 @@ namespace arse {
             int64_t getInt64Member() const;
 
             /**
+             * Getter for lastElement
+             *
+             * @return lastElement
+             */
+            int64_t getLastElement() const;
+
+            /**
              * Getter for colour1
              *
              * @return colour1
@@ -197,6 +204,13 @@ namespace arse {
             void setInt64Member(const int64_t value);
 
             /**
+             * Setter for lastElement
+             *
+             * @param value The new value to set
+             */
+            void setLastElement(const int64_t value);
+
+            /**
              * Setter for colour1
              *
              * @param value The new value to set
@@ -233,6 +247,8 @@ namespace arse {
             int32_t int32Member;
 
             int64_t int64Member;
+
+            int64_t lastElement;
 
             Colour colour1;
 

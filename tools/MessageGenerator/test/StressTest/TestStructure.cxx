@@ -28,6 +28,10 @@ namespace arse {
         memcpy(data + offset, &int64Member, sizeof(int64_t));
         offset += sizeof(int64Member);
 
+        // Serialise lastElement
+        memcpy(data + offset, &lastElement, sizeof(int64_t));
+        offset += sizeof(lastElement);
+
         // Serialise colour1
         memcpy(data + offset, &colour1, sizeof(Colour));
         offset += sizeof(Colour);
@@ -78,8 +82,81 @@ namespace arse {
         for (const auto& e1 : testArraySeq) {
             for (const auto& e2 : e1) {
                 for (const auto& e3 : e2) {
+                    for (const auto& e4 : e3) {
+                        // Serialise size of e4
+                        uint64_t e4Size = e4.size();
+                        memcpy(data + offset, &e4Size, sizeof(e4Size));
+                        offset += sizeof(e4Size);
+
+                        // Serialise e4 data
+                        memcpy(data + offset, &e4[0], sizeof(Colour) * e4Size);
+                        offset += sizeof(Colour) * e4Size;
+                    }
                 }
             }
+        }
+
+        // Serialise primitiveSequence
+        // Serialise size of primitiveSequence
+        uint64_t primitiveSequenceSize = primitiveSequence.size();
+        memcpy(data + offset, &primitiveSequenceSize, sizeof(primitiveSequenceSize));
+        offset += sizeof(primitiveSequenceSize);
+
+        // Serialise primitiveSequence data
+        memcpy(data + offset, &primitiveSequence[0], sizeof(float) * primitiveSequenceSize);
+        offset += sizeof(float) * primitiveSequenceSize;
+
+        // Serialise enumerationSequence
+        // Serialise size of enumerationSequence
+        uint64_t enumerationSequenceSize = enumerationSequence.size();
+        memcpy(data + offset, &enumerationSequenceSize, sizeof(enumerationSequenceSize));
+        offset += sizeof(enumerationSequenceSize);
+
+        // Serialise enumerationSequence data
+        memcpy(data + offset, &enumerationSequence[0], sizeof(Colour) * enumerationSequenceSize);
+        offset += sizeof(Colour) * enumerationSequenceSize;
+
+        // Serialise structureSequence
+        // Serialise size of structureSequence
+        uint64_t structureSequenceSize = structureSequence.size();
+        memcpy(data + offset, &structureSequenceSize, sizeof(structureSequenceSize));
+        offset += sizeof(structureSequenceSize);
+
+        // Serialise structureSequence data
+        for (const auto& e1 : structureSequence) {
+            e1.serialise(data + offset, offset);
+        }
+
+        // Serialise arraySequence
+        // Serialise size of arraySequence
+        uint64_t arraySequenceSize = arraySequence.size();
+        memcpy(data + offset, &arraySequenceSize, sizeof(arraySequenceSize));
+        offset += sizeof(arraySequenceSize);
+
+        // Serialise arraySequence data
+        for (const auto& e1 : arraySequence) {
+            for (const auto& e2 : e1) {
+                memcpy(data + offset, e2.data(), sizeof(uint8_t) * e2.size());
+                offset += sizeof(uint8_t) * e2.size();
+            }
+        }
+
+        // Serialise sequenceSequence
+        // Serialise size of sequenceSequence
+        uint64_t sequenceSequenceSize = sequenceSequence.size();
+        memcpy(data + offset, &sequenceSequenceSize, sizeof(sequenceSequenceSize));
+        offset += sizeof(sequenceSequenceSize);
+
+        // Serialise sequenceSequence data
+        for (const auto& e1 : sequenceSequence) {
+            // Serialise size of e1
+            uint64_t e1Size = e1.size();
+            memcpy(data + offset, &e1Size, sizeof(e1Size));
+            offset += sizeof(e1Size);
+
+            // Serialise e1 data
+            memcpy(data + offset, &e1[0], sizeof(double) * e1Size);
+            offset += sizeof(double) * e1Size;
         }
     }
 
@@ -99,6 +176,10 @@ namespace arse {
         // Deserialise int64Member
         memcpy(&int64Member, data + offset, sizeof(int64_t));
         offset += sizeof(int64Member);
+
+        // Deserialise lastElement
+        memcpy(&lastElement, data + offset, sizeof(int64_t));
+        offset += sizeof(lastElement);
 
         // Deserialise colour1
         memcpy(&colour1, data + offset, sizeof(Colour));
@@ -150,8 +231,88 @@ namespace arse {
         for (auto& e1 : testArraySeq) {
             for (auto& e2 : e1) {
                 for (auto& e3 : e2) {
+                    for (auto& e4 : e3) {
+                        // Deserialise size of e4
+                        uint64_t e4Size;
+                        memcpy(&e4Size, data + offset, sizeof(e4Size));
+                        offset += sizeof(e4Size);
+
+                        // Deserialise e4 data
+                        e4.resize(e4Size);
+                        memcpy(&e4[0], data + offset, sizeof(Colour) * e4Size);
+                        offset += sizeof(Colour) * e4Size;
+                    }
                 }
             }
+        }
+
+        // Deserialise primitiveSequence
+        // Deserialise size of primitiveSequence
+        uint64_t primitiveSequenceSize;
+        memcpy(&primitiveSequenceSize, data + offset, sizeof(primitiveSequenceSize));
+        offset += sizeof(primitiveSequenceSize);
+
+        // Deserialise primitiveSequence data
+        primitiveSequence.resize(primitiveSequenceSize);
+        memcpy(&primitiveSequence[0], data + offset, sizeof(float) * primitiveSequenceSize);
+        offset += sizeof(float) * primitiveSequenceSize;
+
+        // Deserialise enumerationSequence
+        // Deserialise size of enumerationSequence
+        uint64_t enumerationSequenceSize;
+        memcpy(&enumerationSequenceSize, data + offset, sizeof(enumerationSequenceSize));
+        offset += sizeof(enumerationSequenceSize);
+
+        // Deserialise enumerationSequence data
+        enumerationSequence.resize(enumerationSequenceSize);
+        memcpy(&enumerationSequence[0], data + offset, sizeof(Colour) * enumerationSequenceSize);
+        offset += sizeof(Colour) * enumerationSequenceSize;
+
+        // Deserialise structureSequence
+        // Deserialise size of structureSequence
+        uint64_t structureSequenceSize;
+        memcpy(&structureSequenceSize, data + offset, sizeof(structureSequenceSize));
+        offset += sizeof(structureSequenceSize);
+
+        // Deserialise structureSequence data
+        structureSequence.resize(structureSequenceSize);
+        for (auto& e1 : structureSequence) {
+            e1.deserialise(data + offset, offset);
+        }
+
+        // Deserialise arraySequence
+        // Deserialise size of arraySequence
+        uint64_t arraySequenceSize;
+        memcpy(&arraySequenceSize, data + offset, sizeof(arraySequenceSize));
+        offset += sizeof(arraySequenceSize);
+
+        // Deserialise arraySequence data
+        arraySequence.resize(arraySequenceSize);
+        for (auto& e1 : arraySequence) {
+            for (auto& e2 : e1) {
+                memcpy(e2.data(), data + offset, sizeof(uint8_t) * e2.size());
+                offset += sizeof(uint8_t) * e2.size();
+            }
+        }
+
+        // Deserialise sequenceSequence
+        // Deserialise size of sequenceSequence
+        uint64_t sequenceSequenceSize;
+        memcpy(&sequenceSequenceSize, data + offset, sizeof(sequenceSequenceSize));
+        offset += sizeof(sequenceSequenceSize);
+
+        // Deserialise sequenceSequence data
+        sequenceSequence.resize(sequenceSequenceSize);
+        for (auto& e1 : sequenceSequence) {
+            // Deserialise size of e1
+            uint64_t e1Size;
+            memcpy(&e1Size, data + offset, sizeof(e1Size));
+            offset += sizeof(e1Size);
+
+            // Deserialise e1 data
+            e1.resize(e1Size);
+            memcpy(&e1[0], data + offset, sizeof(double) * e1Size);
+            offset += sizeof(double) * e1Size;
         }
     }
 
@@ -160,11 +321,12 @@ namespace arse {
         // int16Member = 2 bytes (int16_t)
         // int32Member = 4 bytes (int32_t)
         // int64Member = 8 bytes (int64_t)
+        // lastElement = 8 bytes (int64_t)
         // colour1 = 1 bytes (Colour)
         // colour2 = 1 bytes (Colour)
         // colour3 = 1 bytes (Colour)
         // Size of primitive types in this structure
-        uint64_t size = 18;
+        uint64_t size = 26;
 
         // Add on size of TSS
         size += TSS.getSizeInBytes();
@@ -194,6 +356,10 @@ namespace arse {
             for (const auto& e2 : e1) {
                 for (const auto& e3 : e2) {
                     for (const auto& e4 : e3) {
+                        // Add on size of e4 length field
+                        size += sizeof(uint64_t);
+
+                        // Add on size of e4 data
                         size += sizeof(Colour) * e4.size();
                     }
                 }
@@ -201,25 +367,49 @@ namespace arse {
         }
 
         // Add on size of primitiveSequence
+        // Add on size of primitiveSequence length field
+        size += sizeof(uint64_t);
+
+        // Add on size of primitiveSequence data
         size += sizeof(float) * primitiveSequence.size();
 
         // Add on size of enumerationSequence
+        // Add on size of enumerationSequence length field
+        size += sizeof(uint64_t);
+
+        // Add on size of enumerationSequence data
         size += sizeof(Colour) * enumerationSequence.size();
 
         // Add on size of structureSequence
+        // Add on size of structureSequence length field
+        size += sizeof(uint64_t);
+
+        // Add on size of structureSequence data
         for (const auto& e1 : structureSequence) {
             // Add on size of each individual TestSubStruct
             size += e1.getSizeInBytes();
         }
 
         // Add on size of arraySequence
+        // Add on size of arraySequence length field
+        size += sizeof(uint64_t);
+
+        // Add on size of arraySequence data
         for (const auto& e1 : arraySequence) {
             // 1 bytes (uint8_t) * 3 * 4 = 12 bytes
             size += 12;
         }
 
         // Add on size of sequenceSequence
+        // Add on size of sequenceSequence length field
+        size += sizeof(uint64_t);
+
+        // Add on size of sequenceSequence data
         for (const auto& e1 : sequenceSequence) {
+            // Add on size of e1 length field
+            size += sizeof(uint64_t);
+
+            // Add on size of e1 data
             size += sizeof(double) * e1.size();
         }
 
@@ -240,6 +430,10 @@ namespace arse {
 
     int64_t TestStructure::getInt64Member() const {
         return int64Member;
+    }
+
+    int64_t TestStructure::getLastElement() const {
+        return lastElement;
     }
 
     Colour TestStructure::getColour1() const {
@@ -308,6 +502,10 @@ namespace arse {
 
     void TestStructure::setInt64Member(const int64_t value) {
         int64Member = value;
+    }
+
+    void TestStructure::setLastElement(const int64_t value) {
+        lastElement = value;
     }
 
     void TestStructure::setColour1(const Colour value) {

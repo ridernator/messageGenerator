@@ -4,6 +4,8 @@
 
 int main(int argc, char** argv) {
     arse::TestStructure ts;
+    arse::TestStructure ts2;
+    ts.setLastElement(42);
     
     std::cout << "TestStructure size in bytes : " << ts.getSizeInBytes() << std::endl;
     uint64_t offset = 0;
@@ -12,8 +14,9 @@ int main(int argc, char** argv) {
     std::cout << "Offset after serialise : " << offset << std::endl;
     
     offset = 0;
-    ts.deserialise(bytes, offset);
+    ts2.deserialise(bytes, offset);
     std::cout << "Offset after deserialise : " << offset << std::endl;
+    std::cout << "lastElement is " << ts2.getLastElement();
     
     return 0;
 }

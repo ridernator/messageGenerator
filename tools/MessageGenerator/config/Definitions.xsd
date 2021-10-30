@@ -208,6 +208,136 @@
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
+    
+    <xs:group name="SimpleTypes">
+        <xs:choice>                
+            <xs:element name="primitiveType" type="primitiveType">
+                <xs:annotation>
+                    <xs:documentation>Primitive element which is the type of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="enumerationType" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="structureType" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    
+    <xs:group name="NestedTypes">
+        <xs:choice>
+            <xs:element name="sequence" type="sequence">
+                <xs:annotation>
+                    <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="array" type="array">
+                <xs:annotation>
+                    <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="map" type="map">
+                <xs:annotation>
+                    <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="MapKeyType">
+        <xs:annotation>
+            <xs:documentation>Definition of an element in a structure</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:group ref="SimpleTypes" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MapValueType">
+        <xs:annotation>
+            <xs:documentation>Definition of an element in a structure</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:group ref="SimpleTypes" />              
+                <xs:group ref="NestedTypes" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SequenceType">
+        <xs:annotation>
+            <xs:documentation>Definition of an element in a structure</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:group ref="SimpleTypes" />              
+                <xs:group ref="NestedTypes" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArrayType">
+        <xs:annotation>
+            <xs:documentation>Definition of an element in a structure</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:group ref="SimpleTypes" />   
+                
+                <xs:element name="sequence" type="sequence">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+
+                <xs:element name="map" type="map">
+                    <xs:annotation>
+                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="primitiveElement">
         <xs:annotation>
@@ -254,7 +384,7 @@
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
         </xs:annotation>
         
-        <xs:sequence>
+        <xs:all>
             <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
@@ -267,38 +397,8 @@
                 </xs:annotation>
             </xs:element>
         
-            <xs:choice minOccurs="1" maxOccurs="1">                
-                <xs:element name="primitiveType" type="primitiveType">
-                    <xs:annotation>
-                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="enumerationType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="structureType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="sequence" type="sequence">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="map" type="sequence">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:choice>
-        </xs:sequence>
+            <xs:element name="type" type="ArrayType" minOccurs="1" maxOccurs="1" />
+        </xs:all>
     </xs:complexType>
     
     <xs:complexType name="namedArray">
@@ -318,51 +418,15 @@
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
         </xs:annotation>
         
-        <xs:sequence>
+        <xs:all>
             <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
                 </xs:annotation>
             </xs:element>
         
-            <xs:choice minOccurs="1" maxOccurs="1">                
-                <xs:element name="primitiveType" type="primitiveType">
-                    <xs:annotation>
-                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="enumerationType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="structureType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="sequence" type="sequence">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="array" type="array">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="map" type="map">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:choice>
-        </xs:sequence>
+            <xs:element name="type" type="SequenceType" minOccurs="1" maxOccurs="1" />
+        </xs:all>
     </xs:complexType>
     
     <xs:complexType name="namedSequence">
@@ -382,71 +446,17 @@
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
         </xs:annotation>
         
-        <xs:sequence>
+        <xs:all>
             <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
                 </xs:annotation>
             </xs:element>
         
-            <xs:choice minOccurs="1" maxOccurs="1">                
-                <xs:element name="KeyPrimitiveType" type="primitiveType">
-                    <xs:annotation>
-                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="KeyEnumerationType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="KeyStructureType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:choice>
+            <xs:element name="keyType" type="MapKeyType" minOccurs="1" maxOccurs="1" />
         
-            <xs:choice minOccurs="1" maxOccurs="1">                
-                <xs:element name="ValuePrimitiveType" type="primitiveType">
-                    <xs:annotation>
-                        <xs:documentation>Primitive element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="ValueEnumerationType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="ValueStructureType" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="ValueSequence" type="sequence">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="ValueArray" type="array">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-
-                <xs:element name="ValueMap" type="map">
-                    <xs:annotation>
-                        <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:choice>
-        </xs:sequence>
+            <xs:element name="valueType" type="MapValueType" minOccurs="1" maxOccurs="1" />
+        </xs:all>
     </xs:complexType>
     
     <xs:complexType name="namedMap">
@@ -519,6 +529,24 @@
         </xs:attribute>
     </xs:complexType>
     
+    <xs:complexType name="Definition">
+        <xs:annotation>
+            <xs:documentation>Definition of an element in a structure</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        
+            <xs:choice minOccurs="1" maxOccurs="1">                
+                <xs:group ref="SimpleTypes" />
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    
     <xs:element name="definitions">
         <xs:annotation>
             <xs:documentation>Definitions of structure, enumerations and unions</xs:documentation>
@@ -526,12 +554,6 @@
         
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="documentation" type="xs:string" minOccurs="0" maxOccurs="1">
-                    <xs:annotation>
-                        <xs:documentation>Documentation for this structure. Will be added to generated source files</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:element name="structure" type="structure">
                         <xs:annotation>

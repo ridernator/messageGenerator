@@ -35,7 +35,9 @@
                 <dimension>2</dimension>
             </dimensions>
             
-            <primitiveType>unsigned_int_16</primitiveType>
+            <type>
+                <primitiveType>unsigned_int_16</primitiveType>
+            </type>
         </array>
         
         <array name="testArrayStruct">
@@ -46,7 +48,9 @@
                 <dimension>2</dimension>
             </dimensions>
             
-            <structureType>TestSubStruct</structureType>
+            <type>
+                <structureType>TestSubStruct</structureType>
+            </type>
         </array>
         
         <array name="testArrayEnum">
@@ -57,7 +61,9 @@
                 <dimension>2</dimension>
             </dimensions>
             
-            <enumerationType>Colour</enumerationType>
+            <type>
+                <enumerationType>Colour</enumerationType>
+            </type>
         </array>
         
         <array name="testArraySeq">
@@ -68,45 +74,68 @@
                 <dimension>2</dimension>
             </dimensions>
             
-            <sequence>
-                <enumerationType>Colour</enumerationType>
-            </sequence>
+            <type>
+                <sequence>
+                    <type>
+                        <enumerationType>Colour</enumerationType>
+                    </type>
+                </sequence>
+            </type>
         </array>
         
         <enumeration name="colour3" type="Colour" />
         
         <sequence name="primitiveSequence">
-            <primitiveType>float_32</primitiveType>
+            <type>
+                <primitiveType>float_32</primitiveType>
+            </type>
         </sequence>
         
         <sequence name="enumerationSequence">
-            <enumerationType>Colour</enumerationType>                
+            <type>
+                <enumerationType>Colour</enumerationType>
+            </type>
         </sequence>
         
         <sequence name="structureSequence">
-            <structureType>TestSubStruct</structureType>               
+            <type>
+                <structureType>TestSubStruct</structureType> 
+            </type>              
         </sequence>
         
         <sequence name="arraySequence">
-            <array>
-                <dimensions>
-                    <dimension>3</dimension>
-                    <dimension>4</dimension>
-                </dimensions>
-                
-                <primitiveType>unsigned_int_8</primitiveType>
-            </array>
+            <type>
+                <array>
+                    <dimensions>
+                        <dimension>3</dimension>
+                        <dimension>4</dimension>
+                    </dimensions>
+
+                    <type>
+                        <primitiveType>unsigned_int_8</primitiveType>
+                    </type>
+                </array>
+            </type>
         </sequence>
         
         <sequence name="sequenceSequence">
-            <sequence>
-                <primitiveType>float_64</primitiveType>
-            </sequence>
+            <type>
+                <sequence>
+                    <type>
+                        <primitiveType>float_64</primitiveType>
+                    </type>
+                </sequence>
+            </type>
         </sequence>
         
         <map name="mapPrimitive">
-            <KeyPrimitiveType>unsigned_int_16</KeyPrimitiveType>
-            <ValueEnumerationType>Colour</ValueEnumerationType>
+            <keyType>
+                <primitiveType>unsigned_int_16</primitiveType>                    
+            </keyType>
+            
+            <valueType>
+                <enumerationType>Colour</enumerationType>
+            </valueType>
         </map>
         
         <primitiveElement name="lastElement" type="signed_int_64" />

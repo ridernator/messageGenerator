@@ -44,8 +44,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=--std=c++20 -Wextra
+CXXFLAGS=--std=c++20 -Wextra
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -67,17 +67,17 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/stresstest: ${OBJECTFILES}
 ${OBJECTDIR}/TestStructure.o: TestStructure.cxx
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestStructure.o TestStructure.cxx
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestStructure.o TestStructure.cxx
 
 ${OBJECTDIR}/TestSubStruct.o: TestSubStruct.cxx
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestSubStruct.o TestSubStruct.cxx
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestSubStruct.o TestSubStruct.cxx
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

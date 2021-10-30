@@ -79,19 +79,19 @@ class CppGenerator : Generator {
 
         std::string generateSerialiseArray(const Messaging::Array& array,
                                            const uint8_t numTabs,
-                                           const std::string parentName);
+                                           const std::string& parentName);
 
         std::string generateDeserialiseArray(const Messaging::Array& array,
                                              const uint8_t numTabs,
-                                             const std::string parentName);
+                                             const std::string& parentName);
 
         std::string generateSerialiseSequence(const Messaging::Sequence& sequence,
                                               const uint8_t numTabs,
-                                              const std::string parentName);
+                                              const std::string& parentName);
 
         std::string generateDeserialiseSequence(const Messaging::Sequence& sequence,
                                                 const uint8_t numTabs,
-                                                const std::string parentName);
+                                                const std::string& parentName);
 
         std::string generateGettersCxx(const Messaging::Structure& structure);
 
@@ -128,11 +128,11 @@ class CppGenerator : Generator {
         
         std::string generateSizeOfArray(const Messaging::Array& array,
                                         const uint8_t numTabs,
-                                        const std::string parentName);
+                                        const std::string& parentName);
         
         std::string generateSizeOfSequence(const Messaging::Sequence& sequence,
                                            const uint8_t numTabs,
-                                           const std::string parentName);
+                                           const std::string& parentName);
         
         std::string convertEnumBaseTypeToCppType(const Messaging::Enumeration::BaseTypeType& enumeration);
 

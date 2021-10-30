@@ -741,7 +741,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
 
 std::string CppGenerator::generateSizeOfArray(const Messaging::Array& array,
                                               const uint8_t numTabs,
-                                              const std::string parentName) {
+                                              const std::string& parentName) {
     std::ostringstream os;
     uint64_t size;
     
@@ -799,7 +799,7 @@ std::string CppGenerator::generateSizeOfArray(const Messaging::Array& array,
         
 std::string CppGenerator::generateSizeOfSequence(const Messaging::Sequence& sequence,
                                                  const uint8_t numTabs,
-                                                 const std::string parentName) {
+                                                 const std::string& parentName) {
     std::ostringstream os;
     
     os << insertTabs(numTabs) << "// Add on size of " << parentName << " length field" << std::endl;
@@ -977,7 +977,7 @@ std::string CppGenerator::generateDeserialiseStructure(const Messaging::Structur
 
 std::string CppGenerator::generateSerialiseArray(const Messaging::Array& array,
                                                  const uint8_t numTabs,
-                                                 const std::string parentName) {
+                                                 const std::string& parentName) {
     std::ostringstream os;
     
     os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
@@ -1011,7 +1011,7 @@ std::string CppGenerator::generateSerialiseArray(const Messaging::Array& array,
 
 std::string CppGenerator::generateDeserialiseArray(const Messaging::Array& array,
                                                    const uint8_t numTabs,
-                                                   const std::string parentName) {
+                                                   const std::string& parentName) {
     std::ostringstream os;   
     
     os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
@@ -1045,7 +1045,7 @@ std::string CppGenerator::generateDeserialiseArray(const Messaging::Array& array
 
 std::string CppGenerator::generateSerialiseSequence(const Messaging::Sequence& sequence,
                                                     const uint8_t numTabs,
-                                                    const std::string parentName) {
+                                                    const std::string& parentName) {
     std::ostringstream os;
     
     os << insertTabs(numTabs) << "// Serialise size of " << parentName << std::endl;
@@ -1080,7 +1080,7 @@ std::string CppGenerator::generateSerialiseSequence(const Messaging::Sequence& s
 
 std::string CppGenerator::generateDeserialiseSequence(const Messaging::Sequence& sequence,
                                                       const uint8_t numTabs,
-                                                      const std::string parentName) {
+                                                      const std::string& parentName) {
     std::ostringstream os;
     
     os << insertTabs(numTabs) << "// Deserialise size of " << parentName << std::endl;

@@ -141,6 +141,10 @@ class CppGenerator : Generator {
                                            const uint8_t numTabs,
                                            const std::string& parentName);
         
+        std::string generateSizeOfMap(const Messaging::Map& map,
+                                      const uint8_t numTabs,
+                                      const std::string& parentName);
+        
         std::string convertEnumBaseTypeToCppType(const Messaging::Enumeration::BaseTypeType& enumeration);
 
         std::string convertPrimitiveTypeToCppType(const Messaging::PrimitiveElement::TypeType& element);

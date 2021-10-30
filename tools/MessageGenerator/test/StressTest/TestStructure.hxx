@@ -138,6 +138,13 @@ namespace arse {
             std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5>& getTestArraySeq();
 
             /**
+             * Getter for testArrayMap
+             *
+             * @return testArrayMap
+             */
+            std::array<std::array<std::array<std::array<std::map<float, double>, 2>, 3>, 4>, 5>& getTestArrayMap();
+
+            /**
              * Getter for primitiveSequence
              *
              * @return primitiveSequence
@@ -173,11 +180,53 @@ namespace arse {
             std::vector<std::vector<double>>& getSequenceSequence();
 
             /**
-             * Getter for mapPrimitive
+             * Getter for mapSequence
              *
-             * @return mapPrimitive
+             * @return mapSequence
              */
-            std::map<uint16_t, Colour>& getMapPrimitive();
+            std::vector<std::map<float, double>>& getMapSequence();
+
+            /**
+             * Getter for mapPrimitiveToEnum
+             *
+             * @return mapPrimitiveToEnum
+             */
+            std::map<uint16_t, Colour>& getMapPrimitiveToEnum();
+
+            /**
+             * Getter for mapStructToEnum
+             *
+             * @return mapStructToEnum
+             */
+            std::map<TestSubStruct, Colour>& getMapStructToEnum();
+
+            /**
+             * Getter for mapEnumToEnum
+             *
+             * @return mapEnumToEnum
+             */
+            std::map<Colour, Colour>& getMapEnumToEnum();
+
+            /**
+             * Getter for mapEnumToArray
+             *
+             * @return mapEnumToArray
+             */
+            std::map<Colour, std::array<std::array<Colour, 6>, 3>>& getMapEnumToArray();
+
+            /**
+             * Getter for mapEnumToSequence
+             *
+             * @return mapEnumToSequence
+             */
+            std::map<Colour, std::vector<uint64_t>>& getMapEnumToSequence();
+
+            /**
+             * Getter for mapEnumToMap
+             *
+             * @return mapEnumToMap
+             */
+            std::map<Colour, std::map<uint8_t, int16_t>>& getMapEnumToMap();
 
             /**
              * Setter for int8Member
@@ -277,6 +326,8 @@ namespace arse {
 
             std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5> testArraySeq;
 
+            std::array<std::array<std::array<std::array<std::map<float, double>, 2>, 3>, 4>, 5> testArrayMap;
+
             std::vector<float> primitiveSequence;
 
             std::vector<Colour> enumerationSequence;
@@ -287,6 +338,18 @@ namespace arse {
 
             std::vector<std::vector<double>> sequenceSequence;
 
-            std::map<uint16_t, Colour> mapPrimitive;
+            std::vector<std::map<float, double>> mapSequence;
+
+            std::map<uint16_t, Colour> mapPrimitiveToEnum;
+
+            std::map<TestSubStruct, Colour> mapStructToEnum;
+
+            std::map<Colour, Colour> mapEnumToEnum;
+
+            std::map<Colour, std::array<std::array<Colour, 6>, 3>> mapEnumToArray;
+
+            std::map<Colour, std::vector<uint64_t>> mapEnumToSequence;
+
+            std::map<Colour, std::map<uint8_t, int16_t>> mapEnumToMap;
     };
 }

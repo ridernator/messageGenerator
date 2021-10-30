@@ -96,6 +96,14 @@ namespace arse {
             }
         }
 
+        // Serialise testArrayMap
+        for (const auto& e1 : testArrayMap) {
+            for (const auto& e2 : e1) {
+                for (const auto& e3 : e2) {
+                }
+            }
+        }
+
         // Serialise primitiveSequence
         // Serialise size of primitiveSequence
         uint64_t primitiveSequenceSize = primitiveSequence.size();
@@ -158,6 +166,14 @@ namespace arse {
             memcpy(data + offset, &e1[0], sizeof(double) * e1Size);
             offset += sizeof(double) * e1Size;
         }
+
+        // Serialise mapSequence
+        // Serialise size of mapSequence
+        uint64_t mapSequenceSize = mapSequence.size();
+        memcpy(data + offset, &mapSequenceSize, sizeof(mapSequenceSize));
+        offset += sizeof(mapSequenceSize);
+
+        // Serialise mapSequence data
     }
 
     void TestStructure::deserialise(const char* data, uint64_t& offset) {
@@ -246,6 +262,14 @@ namespace arse {
             }
         }
 
+        // Deserialise testArrayMap
+        for (auto& e1 : testArrayMap) {
+            for (auto& e2 : e1) {
+                for (auto& e3 : e2) {
+                }
+            }
+        }
+
         // Deserialise primitiveSequence
         // Deserialise size of primitiveSequence
         uint64_t primitiveSequenceSize;
@@ -314,6 +338,15 @@ namespace arse {
             memcpy(&e1[0], data + offset, sizeof(double) * e1Size);
             offset += sizeof(double) * e1Size;
         }
+
+        // Deserialise mapSequence
+        // Deserialise size of mapSequence
+        uint64_t mapSequenceSize;
+        memcpy(&mapSequenceSize, data + offset, sizeof(mapSequenceSize));
+        offset += sizeof(mapSequenceSize);
+
+        // Deserialise mapSequence data
+        mapSequence.resize(mapSequenceSize);
     }
 
     uint64_t TestStructure::getSizeInBytes() const {
@@ -366,6 +399,24 @@ namespace arse {
             }
         }
 
+        // Add on size of testArrayMap
+        for (const auto& e1 : testArrayMap) {
+            for (const auto& e2 : e1) {
+                for (const auto& e3 : e2) {
+                    for (const auto& e4 : e3) {
+                        // Add on size of e4 length field
+                        size += sizeof(uint64_t);
+
+                        // Add on size of e4 key data
+                        size += sizeof(float) * e4.size();
+
+                        // Add on size of e4 value data
+                        size += sizeof(double) * e4.size();
+                    }
+                }
+            }
+        }
+
         // Add on size of primitiveSequence
         // Add on size of primitiveSequence length field
         size += sizeof(uint64_t);
@@ -411,6 +462,103 @@ namespace arse {
 
             // Add on size of e1 data
             size += sizeof(double) * e1.size();
+        }
+
+        // Add on size of mapSequence
+        // Add on size of mapSequence length field
+        size += sizeof(uint64_t);
+
+        // Add on size of mapSequence data
+        for (const auto& e1 : mapSequence) {
+            // Add on size of e1 length field
+            size += sizeof(uint64_t);
+
+            // Add on size of e1 key data
+            size += sizeof(float) * e1.size();
+
+            // Add on size of e1 value data
+            size += sizeof(double) * e1.size();
+        }
+
+        // Add on size of mapPrimitiveToEnum
+        // Add on size of mapPrimitiveToEnum length field
+        size += sizeof(uint64_t);
+
+        // Add on size of mapPrimitiveToEnum key data
+        size += sizeof(uint16_t) * mapPrimitiveToEnum.size();
+
+        // Add on size of mapPrimitiveToEnum value data
+        size += sizeof(Colour) * mapPrimitiveToEnum.size();
+
+        // Add on size of mapStructToEnum
+        // Add on size of mapStructToEnum length field
+        size += sizeof(uint64_t);
+
+        // Add on size of mapStructToEnum key data
+        for (const auto& e1 : mapStructToEnum) {
+            // Add on size of each individual TestSubStruct
+            size += e1.first.getSizeInBytes();
+        }
+
+        // Add on size of mapStructToEnum value data
+        size += sizeof(Colour) * mapStructToEnum.size();
+
+        // Add on size of mapEnumToEnum
+        // Add on size of mapEnumToEnum length field
+        size += sizeof(uint64_t);
+
+        // Add on size of mapEnumToEnum key data
+        size += sizeof(Colour) * mapEnumToEnum.size();
+
+        // Add on size of mapEnumToEnum value data
+        size += sizeof(Colour) * mapEnumToEnum.size();
+
+        // Add on size of mapEnumToArray
+        // Add on size of mapEnumToArray length field
+        size += sizeof(uint64_t);
+
+        // Add on size of mapEnumToArray key data
+        size += sizeof(Colour) * mapEnumToArray.size();
+
+        // Add on size of mapEnumToArray value data
+        for (const auto& e1 : mapEnumToArray) {
+            // 1 bytes (Colour) * 3 * 6 = 18 bytes
+            size += 18;
+        }
+
+        // Add on size of mapEnumToSequence
+        // Add on size of mapEnumToSequence length field
+        size += sizeof(uint64_t);
+
+        // Add on size of mapEnumToSequence key data
+        size += sizeof(Colour) * mapEnumToSequence.size();
+
+        // Add on size of mapEnumToSequence value data
+        for (const auto& e1 : mapEnumToSequence) {
+            // Add on size of e1.second length field
+            size += sizeof(uint64_t);
+
+            // Add on size of e1.second data
+            size += sizeof(uint64_t) * e1.second.size();
+        }
+
+        // Add on size of mapEnumToMap
+        // Add on size of mapEnumToMap length field
+        size += sizeof(uint64_t);
+
+        // Add on size of mapEnumToMap key data
+        size += sizeof(Colour) * mapEnumToMap.size();
+
+        // Add on size of mapEnumToMap value data
+        for (const auto& e1 : mapEnumToMap) {
+            // Add on size of e1.second length field
+            size += sizeof(uint64_t);
+
+            // Add on size of e1.second key data
+            size += sizeof(uint8_t) * e1.second.size();
+
+            // Add on size of e1.second value data
+            size += sizeof(int16_t) * e1.second.size();
         }
 
         return size;
@@ -468,6 +616,10 @@ namespace arse {
         return testArraySeq;
     }
 
+    std::array<std::array<std::array<std::array<std::map<float, double>, 2>, 3>, 4>, 5>& TestStructure::getTestArrayMap() {
+        return testArrayMap;
+    }
+
     std::vector<float>& TestStructure::getPrimitiveSequence() {
         return primitiveSequence;
     }
@@ -488,8 +640,32 @@ namespace arse {
         return sequenceSequence;
     }
 
-    std::map<uint16_t, Colour>& TestStructure::getMapPrimitive() {
-        return mapPrimitive;
+    std::vector<std::map<float, double>>& TestStructure::getMapSequence() {
+        return mapSequence;
+    }
+
+    std::map<uint16_t, Colour>& TestStructure::getMapPrimitiveToEnum() {
+        return mapPrimitiveToEnum;
+    }
+
+    std::map<TestSubStruct, Colour>& TestStructure::getMapStructToEnum() {
+        return mapStructToEnum;
+    }
+
+    std::map<Colour, Colour>& TestStructure::getMapEnumToEnum() {
+        return mapEnumToEnum;
+    }
+
+    std::map<Colour, std::array<std::array<Colour, 6>, 3>>& TestStructure::getMapEnumToArray() {
+        return mapEnumToArray;
+    }
+
+    std::map<Colour, std::vector<uint64_t>>& TestStructure::getMapEnumToSequence() {
+        return mapEnumToSequence;
+    }
+
+    std::map<Colour, std::map<uint8_t, int16_t>>& TestStructure::getMapEnumToMap() {
+        return mapEnumToMap;
     }
 
     void TestStructure::setInt8Member(const int8_t value) {

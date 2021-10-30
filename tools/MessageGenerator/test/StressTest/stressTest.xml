@@ -83,6 +83,27 @@
             </type>
         </array>
         
+        <array name="testArrayMap">
+            <dimensions>
+                <dimension>5</dimension>
+                <dimension>4</dimension>
+                <dimension>3</dimension>
+                <dimension>2</dimension>
+            </dimensions>
+            
+            <type>
+                <map>
+                    <keyType>
+                        <primitiveType>float_32</primitiveType>
+                    </keyType>
+                    
+                    <valueType>
+                        <primitiveType>float_64</primitiveType>
+                    </valueType>
+                </map>
+            </type>
+        </array>
+        
         <enumeration name="colour3" type="Colour" />
         
         <sequence name="primitiveSequence">
@@ -128,13 +149,98 @@
             </type>
         </sequence>
         
-        <map name="mapPrimitive">
+        <sequence name="mapSequence">
+            <type>
+                <map>
+                    <keyType>
+                        <primitiveType>float_32</primitiveType>
+                    </keyType>
+                    
+                    <valueType>
+                        <primitiveType>float_64</primitiveType>
+                    </valueType>
+                </map>
+            </type>
+        </sequence>
+        
+        <map name="mapPrimitiveToEnum">
             <keyType>
                 <primitiveType>unsigned_int_16</primitiveType>                    
             </keyType>
             
             <valueType>
                 <enumerationType>Colour</enumerationType>
+            </valueType>
+        </map>
+        
+        <map name="mapStructToEnum">
+            <keyType>
+                <structureType>TestSubStruct</structureType>                    
+            </keyType>
+            
+            <valueType>
+                <enumerationType>Colour</enumerationType>
+            </valueType>
+        </map>
+        
+        <map name="mapEnumToEnum">
+            <keyType>
+                <enumerationType>Colour</enumerationType>                   
+            </keyType>
+            
+            <valueType>
+                <enumerationType>Colour</enumerationType>
+            </valueType>
+        </map>
+        
+        <map name="mapEnumToArray">
+            <keyType>
+                <enumerationType>Colour</enumerationType>                   
+            </keyType>
+            
+            <valueType>
+                <array>
+                    <dimensions>
+                        <dimension>3</dimension>
+                        <dimension>6</dimension>
+                    </dimensions>
+                    
+                    <type>
+                        <enumerationType>Colour</enumerationType>
+                    </type>
+                </array>
+            </valueType>
+        </map>
+        
+        <map name="mapEnumToSequence">
+            <keyType>
+                <enumerationType>Colour</enumerationType>                   
+            </keyType>
+            
+            <valueType>
+                <sequence>
+                    <type>
+                        <primitiveType>unsigned_int_64</primitiveType>
+                    </type>
+                </sequence>
+            </valueType>
+        </map>
+        
+        <map name="mapEnumToMap">
+            <keyType>
+                <enumerationType>Colour</enumerationType>                   
+            </keyType>
+            
+            <valueType>
+                <map>
+                    <keyType>
+                        <primitiveType>unsigned_int_8</primitiveType>
+                    </keyType>
+                    
+                    <valueType>
+                        <primitiveType>signed_int_16</primitiveType>
+                    </valueType>
+                </map>
             </valueType>
         </map>
         

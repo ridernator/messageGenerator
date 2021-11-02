@@ -112,23 +112,23 @@
         </array>
         
         <array name="testArrayMap">
-            <dimensions>
-                <dimension>5</dimension>
-                <dimension>4</dimension>
-                <dimension>3</dimension>
-                <dimension>2</dimension>
-            </dimensions>
-            
+            <size>5</size>
             <type>
-                <map>
-                    <keyType>
-                        <primitiveType>float_32</primitiveType>
-                    </keyType>
-                    
-                    <valueType>
-                        <primitiveType>float_64</primitiveType>
-                    </valueType>
-                </map>
+                <array>
+                    <size>4</size>
+                                
+                    <type>
+                        <map>
+                            <keyType>
+                                <primitiveType>float_32</primitiveType>
+                            </keyType>
+
+                            <valueType>
+                                <primitiveType>float_64</primitiveType>
+                            </valueType>
+                        </map>
+                    </type>
+                </array>
             </type>
         </array>
         
@@ -237,13 +237,16 @@
             
             <valueType>
                 <array>
-                    <dimensions>
-                        <dimension>3</dimension>
-                        <dimension>6</dimension>
-                    </dimensions>
+                    <size>5</size>
                     
                     <type>
-                        <enumerationType>Colour</enumerationType>
+                        <array>
+                            <size>4</size>                      
+                    
+                            <type>
+                                <enumerationType>Colour</enumerationType>
+                            </type>
+                        </array>
                     </type>
                 </array>
             </valueType>

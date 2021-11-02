@@ -142,7 +142,7 @@ namespace arse {
              *
              * @return testArrayMap
              */
-            std::array<std::array<std::array<std::array<std::map<float, double>, 2>, 3>, 4>, 5>& getTestArrayMap();
+            std::array<std::array<std::map<float, double>, 4>, 5>& getTestArrayMap();
 
             /**
              * Getter for primitiveSequence
@@ -212,7 +212,7 @@ namespace arse {
              *
              * @return mapEnumToArray
              */
-            std::map<Colour, std::array<std::array<Colour, 6>, 3>>& getMapEnumToArray();
+            std::map<Colour, std::array<std::array<Colour, 4>, 5>>& getMapEnumToArray();
 
             /**
              * Getter for mapEnumToSequence
@@ -326,7 +326,7 @@ namespace arse {
 
             std::array<std::array<std::array<std::vector<Colour>, 3>, 4>, 5> testArraySeq;
 
-            std::array<std::array<std::array<std::array<std::map<float, double>, 2>, 3>, 4>, 5> testArrayMap;
+            std::array<std::array<std::map<float, double>, 4>, 5> testArrayMap;
 
             std::vector<float> primitiveSequence;
 
@@ -346,7 +346,7 @@ namespace arse {
 
             std::map<Colour, Colour> mapEnumToEnum;
 
-            std::map<Colour, std::array<std::array<Colour, 6>, 3>> mapEnumToArray;
+            std::map<Colour, std::array<std::array<Colour, 4>, 5>> mapEnumToArray;
 
             std::map<Colour, std::vector<uint64_t>> mapEnumToSequence;
 

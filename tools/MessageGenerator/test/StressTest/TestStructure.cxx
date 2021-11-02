@@ -90,10 +90,6 @@ namespace arse {
 
         // Serialise testArrayMap
         for (const auto& e1 : testArrayMap) {
-            for (const auto& e2 : e1) {
-                for (const auto& e3 : e2) {
-                }
-            }
         }
 
         // Serialise primitiveSequence
@@ -250,10 +246,6 @@ namespace arse {
 
         // Deserialise testArrayMap
         for (auto& e1 : testArrayMap) {
-            for (auto& e2 : e1) {
-                for (auto& e3 : e2) {
-                }
-            }
         }
 
         // Deserialise primitiveSequence
@@ -391,20 +383,6 @@ namespace arse {
 
         // Add on size of testArrayMap
         for (const auto& e1 : testArrayMap) {
-            for (const auto& e2 : e1) {
-                for (const auto& e3 : e2) {
-                    for (const auto& e4 : e3) {
-                        // Add on size of e4 length field
-                        size += sizeof(uint64_t);
-
-                        // Add on size of e4 key data
-                        size += sizeof(float) * e4.size();
-
-                        // Add on size of e4 value data
-                        size += sizeof(double) * e4.size();
-                    }
-                }
-            }
         }
 
         // Add on size of primitiveSequence
@@ -515,8 +493,9 @@ namespace arse {
 
         // Add on size of mapEnumToArray value data
         for (const auto& e1 : mapEnumToArray) {
-            // 1 bytes (Colour) * 3 * 6 = 18 bytes
-            size += 18;
+            for (const auto& e2 : e1.second) {
+                size += sizeof(Colour) * e2.size();
+            }
         }
 
         // Add on size of mapEnumToSequence
@@ -609,7 +588,7 @@ namespace arse {
         return testArraySeq;
     }
 
-    std::array<std::array<std::array<std::array<std::map<float, double>, 2>, 3>, 4>, 5>& TestStructure::getTestArrayMap() {
+    std::array<std::array<std::map<float, double>, 4>, 5>& TestStructure::getTestArrayMap() {
         return testArrayMap;
     }
 
@@ -649,7 +628,7 @@ namespace arse {
         return mapEnumToEnum;
     }
 
-    std::map<Colour, std::array<std::array<Colour, 6>, 3>>& TestStructure::getMapEnumToArray() {
+    std::map<Colour, std::array<std::array<Colour, 4>, 5>>& TestStructure::getMapEnumToArray() {
         return mapEnumToArray;
     }
 

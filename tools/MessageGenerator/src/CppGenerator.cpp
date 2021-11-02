@@ -758,56 +758,24 @@ std::string CppGenerator::generateSizeOfArray(const Messaging::Array& array,
                                               const uint8_t numTabs,
                                               const std::string& parentName) {
     std::ostringstream os;
-    uint64_t size;
-    uint64_t numDimensions = array.getDimensions().getDimension().size();
     
     if (array.getType().getPrimitiveType().present()) {
-        size = sizeOfPrimitiveType(array.getType().getPrimitiveType().get());
-        os << insertTabs(numTabs) << "// " << size << " bytes (" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ')';
-
-        for (const auto& dimension : array.getDimensions().getDimension()) {
-            size *= dimension;
-            os << " * " << dimension;
-        }
-
-        os << " = " << size << " bytes" << std::endl;
-        os << insertTabs(numTabs) << "size += " << size << ';' << std::endl;
+        os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getEnumerationType().present()) {
-        size = sizeOfEnumeration(array.getType().getEnumerationType().get());
-        os << insertTabs(numTabs) << "// " << size << " bytes (" << array.getType().getEnumerationType().get() << ')';
-
-        for (const auto& dimension : array.getDimensions().getDimension()) {
-            size *= dimension;
-            os << " * " << dimension;
-        }
-
-        os << " = " << size << " bytes" << std::endl;
-        os << insertTabs(numTabs) << "size += " << size << ';' << std::endl;
+        os << insertTabs(numTabs) << "size += sizeof(" << array.getType().getEnumerationType().get() << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getStructureType().present()) {
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << array.getType().getStructureType() << std::endl;
+        os << insertTabs(numTabs + 1) << "size += e" << +numTabs << ".getSizeInBytes();" << std::endl;
+        os << insertTabs(numTabs) << '}' << std::endl;
+    } else if (array.getType().getArray().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
-
-        for (uint64_t index = 1; index < numDimensions; ++index) {
-            os << insertTabs(index + numTabs) << "for (const auto& e" << +(index + numTabs) << " : e" << +(index + numTabs - 1) << ") {" << std::endl;
-        }
-
-        os << insertTabs(numDimensions + numTabs) << "// Add on size of each individual " << array.getType().getStructureType() << std::endl;
-        os << insertTabs(numDimensions + numTabs) << "size += e" << +(numDimensions + numTabs - 1) << ".getSizeInBytes();" << std::endl;
-
-        for (uint64_t index = numDimensions; index != 0; --index) {
-            os << insertTabs(index + numTabs - 1) << '}' << std::endl;
-        }
+        os << generateSizeOfArray(array.getType().getArray().get(), numTabs + 1, ("e" + std::to_string(numTabs)));
+        os << insertTabs(numTabs) << '}' << std::endl;
     } else if (array.getType().getSequence().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
-
-        for (uint64_t index = 1; index < numDimensions; ++index) {
-            os << insertTabs(index + numTabs) << "for (const auto& e" << +(index + numTabs) << " : e" << +(index + numTabs - 1) << ") {" << std::endl;
-        }
-
-        os << generateSizeOfSequence(array.getType().getSequence().get(), numDimensions + numTabs, ("e" + std::to_string(numDimensions + numTabs - 1)));
-        
-        for (uint64_t index = numDimensions; index != 0; --index) {
-            os << insertTabs(index + numTabs - 1) << '}' << std::endl;
-        }
+        os << generateSizeOfSequence(array.getType().getSequence().get(), numTabs + 1, ("e" + std::to_string(numTabs)));
+        os << insertTabs(numTabs) << '}' << std::endl;
     }
     
     return os.str(); 
@@ -995,32 +963,25 @@ std::string CppGenerator::generateSerialiseArray(const Messaging::Array& array,
                                                  const uint8_t numTabs,
                                                  const std::string& parentName) {
     std::ostringstream os;
-    uint64_t numDimensions = array.getDimensions().getDimension().size();
-    
-    os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
-            
-    for (uint64_t index = 1; index < numDimensions - 1; ++index) {
-        os << insertTabs(index + numTabs) << "for (const auto& e" << +(index + numTabs) << " : e" << +(index + numTabs - 1) << ") {" << std::endl;
-    }
     
     if (array.getType().getPrimitiveType().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "memcpy(data + offset, e" << +(numDimensions + numTabs - 2) << ".data(), sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * e" << +(numDimensions + numTabs - 2) << ".size());" << std::endl;
-        os << insertTabs(numDimensions + numTabs - 1) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * e" << +(numDimensions + numTabs - 2) << ".size();" << std::endl;
+        os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << "[0], sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * " << parentName << ".size());" << std::endl;
+        os << insertTabs(numTabs) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getEnumerationType().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "memcpy(data + offset, e" << +(numDimensions + numTabs - 2) << ".data(), sizeof(" << array.getType().getEnumerationType().get() << ") * e" << +(numDimensions + numTabs - 2) << ".size());" << std::endl;
-        os << insertTabs(numDimensions + numTabs - 1) << "offset += sizeof(" << array.getType().getEnumerationType().get() << ") * e" << +(numDimensions + numTabs - 2) << ".size();" << std::endl;
+        os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << "[0], sizeof(" << array.getType().getEnumerationType().get() << ") * " << parentName << ".size());" << std::endl;
+        os << insertTabs(numTabs) << "offset += sizeof(" << array.getType().getEnumerationType().get() << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getStructureType().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "for (const auto& e" << +(numDimensions + numTabs - 1) << " : e" << +(numDimensions + numTabs - 2) << ") {" << std::endl;
-        os << insertTabs(numDimensions + numTabs) << 'e' << +(numDimensions + numTabs - 1) << ".serialise(data + offset, offset);" << std::endl;
-        os << insertTabs(numDimensions + numTabs - 1) << '}' << std::endl;
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
+        os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".serialise(data + offset, offset);" << std::endl;
+        os << insertTabs(numTabs) << '}' << std::endl;
     } else if (array.getType().getSequence().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "for (const auto& e" << +(numDimensions + numTabs - 1) << " : e" << +(numDimensions + numTabs - 2) << ") {" << std::endl;
-        os << generateSerialiseSequence(array.getType().getSequence().get(), numDimensions + numTabs, ("e" + std::to_string(numDimensions + numTabs - 1)));
-        os << insertTabs(numDimensions + numTabs - 1) << '}' << std::endl;
-    }
-    
-    for (uint64_t index = numDimensions - 1; index != 0; --index) {
-        os << insertTabs(index + numTabs - 1) << '}' << std::endl;
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
+        os << generateSerialiseSequence(array.getType().getSequence().get(), numTabs + 1, ("e" + std::to_string(numTabs)));
+        os << insertTabs(numTabs) << '}' << std::endl;
+    } else if (array.getType().getArray().present()) {
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
+        os << generateSerialiseArray(array.getType().getArray().get(), numTabs + 1, ("e" + std::to_string(numTabs)));
+        os << insertTabs(numTabs) << '}' << std::endl;
     }
 
     return os.str();
@@ -1030,32 +991,25 @@ std::string CppGenerator::generateDeserialiseArray(const Messaging::Array& array
                                                    const uint8_t numTabs,
                                                    const std::string& parentName) {
     std::ostringstream os;
-    uint64_t numDimensions = array.getDimensions().getDimension().size();
-    
-    os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
-            
-    for (uint64_t index = 1; index < numDimensions - 1; ++index) {
-        os << insertTabs(index + numTabs) << "for (auto& e" << +(index + numTabs) << " : e" << +(index + numTabs - 1) << ") {" << std::endl;
-    }
     
     if (array.getType().getPrimitiveType().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "memcpy(e" << +(numDimensions + numTabs - 2) << ".data(), " << "data + offset, sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * e" << +(numDimensions + numTabs - 2) << ".size());" << std::endl;
-        os << insertTabs(numDimensions + numTabs - 1) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * e" << +(numDimensions + numTabs - 2) << ".size();" << std::endl;
+        os << insertTabs(numTabs) << "memcpy(&" << parentName << "[0], data + offset, sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * " << parentName << ".size());" << std::endl;
+        os << insertTabs(numTabs) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getEnumerationType().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "memcpy(e" << +(numDimensions + numTabs - 2) << ".data(), " << "data + offset, sizeof(" << array.getType().getEnumerationType().get() << ") * e" << +(numDimensions + numTabs - 2) << ".size());" << std::endl;
-        os << insertTabs(numDimensions + numTabs - 1) << "offset += sizeof(" << array.getType().getEnumerationType().get() << ") * e" << +(numDimensions + numTabs - 2) << ".size();" << std::endl;
+        os << insertTabs(numTabs) << "memcpy(&" << parentName << "[0], data + offset, sizeof(" << array.getType().getEnumerationType().get() << ") * " << parentName << ".size());" << std::endl;
+        os << insertTabs(numTabs) << "offset += sizeof(" << array.getType().getEnumerationType().get() << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getStructureType().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "for (auto& e" << +(numDimensions + numTabs - 1) << " : e" << +(numDimensions + numTabs - 2) << ") {" << std::endl;
-        os << insertTabs(numDimensions + numTabs) << 'e' << +(numDimensions + numTabs - 1) << ".deserialise(data + offset, offset);" << std::endl;
-        os << insertTabs(numDimensions + numTabs - 1) << '}' << std::endl;
+        os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
+        os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".deserialise(data + offset, offset);" << std::endl;
+        os << insertTabs(numTabs) << '}' << std::endl;
     } else if (array.getType().getSequence().present()) {
-        os << insertTabs(numDimensions + numTabs - 1) << "for (auto& e" << +(numDimensions + numTabs - 1) << " : e" << +(numDimensions + numTabs - 2) << ") {" << std::endl;
-        os << generateDeserialiseSequence(array.getType().getSequence().get(), numDimensions + numTabs, ("e" + std::to_string(numDimensions + numTabs - 1)));
-        os << insertTabs(numDimensions + numTabs - 1) << '}' << std::endl;
-    }
-    
-    for (uint64_t index = numDimensions - 1; index != 0; --index) {
-        os << insertTabs(index + numTabs - 1) << '}' << std::endl;
+        os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
+        os << generateDeserialiseSequence(array.getType().getSequence().get(), numTabs + 1, ("e" + std::to_string(numTabs)));
+        os << insertTabs(numTabs) << '}' << std::endl;
+    } else if (array.getType().getArray().present()) {
+        os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
+        os << generateDeserialiseArray(array.getType().getArray().get(), numTabs + 1, ("e" + std::to_string(numTabs)));
+        os << insertTabs(numTabs) << '}' << std::endl;
     }
 
     return os.str();
@@ -1135,9 +1089,7 @@ std::string CppGenerator::generateDeserialiseSequence(const Messaging::Sequence&
 std::string CppGenerator::getCxxType(const Messaging::Array& array) {
     std::ostringstream os;
     
-    for (uint64_t index = 0; index < array.getDimensions().getDimension().size(); ++index) {
-        os << "std::array<";
-    }
+    os << "std::array<";
     
     if (array.getType().getPrimitiveType().present()) {
         os << convertPrimitiveTypeToCppType(array.getType().getPrimitiveType().get());
@@ -1145,15 +1097,15 @@ std::string CppGenerator::getCxxType(const Messaging::Array& array) {
         os << array.getType().getEnumerationType().get();
     } else if (array.getType().getStructureType().present()) {
         os << array.getType().getStructureType().get();
+    } else if (array.getType().getArray().present()) {
+        os << getCxxType(array.getType().getArray().get());
     } else if (array.getType().getSequence().present()) {
         os << getCxxType(array.getType().getSequence().get());
     } else if (array.getType().getMap().present()) {
         os << getCxxType(array.getType().getMap().get());
     }
     
-    for (const auto& dimension : array.getDimensions().getDimension() | std::views::reverse) {
-        os << ", " << dimension << '>';
-    }
+    os << ", " << array.getSize() << '>';
     
     return os.str();
 }

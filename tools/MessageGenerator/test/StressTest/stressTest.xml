@@ -28,58 +28,86 @@
         <structure name="TSS" type="TestSubStruct" />
         
         <array name="testArray">
-            <dimensions>
-                <dimension>5</dimension>
-                <dimension>4</dimension>
-                <dimension>3</dimension>
-                <dimension>2</dimension>
-            </dimensions>
+            <size>5</size>
             
             <type>
-                <primitiveType>unsigned_int_16</primitiveType>
+                <array>
+                    <size>4</size>
+                    
+                    <type>
+                        <array>
+                            <size>3</size>
+                            
+                            <type>
+                                <primitiveType>unsigned_int_64</primitiveType>
+                            </type>
+                        </array>
+                    </type>
+                </array>
             </type>
         </array>
         
         <array name="testArrayStruct">
-            <dimensions>
-                <dimension>5</dimension>
-                <dimension>4</dimension>
-                <dimension>3</dimension>
-                <dimension>2</dimension>
-            </dimensions>
+            <size>5</size>
             
             <type>
-                <structureType>TestSubStruct</structureType>
+                <array>
+                    <size>4</size>
+                    
+                    <type>
+                        <array>
+                            <size>3</size>
+                            
+                            <type>
+                                <structureType>TestSubStruct</structureType>
+                            </type>
+                        </array>
+                    </type>
+                </array>
             </type>
         </array>
         
         <array name="testArrayEnum">
-            <dimensions>
-                <dimension>5</dimension>
-                <dimension>4</dimension>
-                <dimension>3</dimension>
-                <dimension>2</dimension>
-            </dimensions>
+            <size>5</size>
             
             <type>
-                <enumerationType>Colour</enumerationType>
+                <array>
+                    <size>4</size>
+                    
+                    <type>
+                        <array>
+                            <size>3</size>
+                            
+                            <type>
+                                <enumerationType>Colour</enumerationType>                                   
+                            </type>
+                        </array>
+                    </type>
+                </array>
             </type>
         </array>
         
         <array name="testArraySeq">
-            <dimensions>
-                <dimension>5</dimension>
-                <dimension>4</dimension>
-                <dimension>3</dimension>
-                <dimension>2</dimension>
-            </dimensions>
+            <size>5</size>
             
             <type>
-                <sequence>
+                <array>
+                    <size>4</size>
+                    
                     <type>
-                        <enumerationType>Colour</enumerationType>
+                        <array>
+                            <size>3</size>
+                            
+                            <type>
+                                <sequence>
+                                    <type>
+                                        <enumerationType>Colour</enumerationType>
+                                    </type>
+                                </sequence>
+                            </type>
+                        </array>
                     </type>
-                </sequence>
+                </array>
             </type>
         </array>
         
@@ -106,13 +134,22 @@
         <sequence name="arraySequence">
             <type>
                 <array>
-                    <dimensions>
-                        <dimension>3</dimension>
-                        <dimension>4</dimension>
-                    </dimensions>
+                    <size>5</size>
 
                     <type>
-                        <primitiveType>unsigned_int_8</primitiveType>
+                        <array>
+                            <size>4</size>
+
+                            <type>
+                                <array>
+                                    <size>3</size>
+
+                                    <type>
+                                        <primitiveType>unsigned_int_16</primitiveType>
+                                    </type>
+                                </array>
+                            </type>
+                        </array>
                     </type>
                 </array>
             </type>

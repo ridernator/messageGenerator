@@ -114,28 +114,28 @@ namespace arse {
              *
              * @return testArray
              */
-            std::array<std::array<std::array<std::array<uint16_t, 2>, 3>, 4>, 5>& getTestArray();
+            std::array<std::array<std::array<uint64_t, 3>, 4>, 5>& getTestArray();
 
             /**
              * Getter for testArrayStruct
              *
              * @return testArrayStruct
              */
-            std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5>& getTestArrayStruct();
+            std::array<std::array<std::array<TestSubStruct, 3>, 4>, 5>& getTestArrayStruct();
 
             /**
              * Getter for testArrayEnum
              *
              * @return testArrayEnum
              */
-            std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5>& getTestArrayEnum();
+            std::array<std::array<std::array<Colour, 3>, 4>, 5>& getTestArrayEnum();
 
             /**
              * Getter for testArraySeq
              *
              * @return testArraySeq
              */
-            std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5>& getTestArraySeq();
+            std::array<std::array<std::array<std::vector<Colour>, 3>, 4>, 5>& getTestArraySeq();
 
             /**
              * Getter for testArrayMap
@@ -170,7 +170,7 @@ namespace arse {
              *
              * @return arraySequence
              */
-            std::vector<std::array<std::array<uint8_t, 4>, 3>>& getArraySequence();
+            std::vector<std::array<std::array<std::array<uint16_t, 3>, 4>, 5>>& getArraySequence();
 
             /**
              * Getter for sequenceSequence
@@ -318,13 +318,13 @@ namespace arse {
 
             TestSubStruct TSS;
 
-            std::array<std::array<std::array<std::array<uint16_t, 2>, 3>, 4>, 5> testArray;
+            std::array<std::array<std::array<uint64_t, 3>, 4>, 5> testArray;
 
-            std::array<std::array<std::array<std::array<TestSubStruct, 2>, 3>, 4>, 5> testArrayStruct;
+            std::array<std::array<std::array<TestSubStruct, 3>, 4>, 5> testArrayStruct;
 
-            std::array<std::array<std::array<std::array<Colour, 2>, 3>, 4>, 5> testArrayEnum;
+            std::array<std::array<std::array<Colour, 3>, 4>, 5> testArrayEnum;
 
-            std::array<std::array<std::array<std::array<std::vector<Colour>, 2>, 3>, 4>, 5> testArraySeq;
+            std::array<std::array<std::array<std::vector<Colour>, 3>, 4>, 5> testArraySeq;
 
             std::array<std::array<std::array<std::array<std::map<float, double>, 2>, 3>, 4>, 5> testArrayMap;
 
@@ -334,7 +334,7 @@ namespace arse {
 
             std::vector<TestSubStruct> structureSequence;
 
-            std::vector<std::array<std::array<uint8_t, 4>, 3>> arraySequence;
+            std::vector<std::array<std::array<std::array<uint16_t, 3>, 4>, 5>> arraySequence;
 
             std::vector<std::vector<double>> sequenceSequence;
 

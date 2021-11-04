@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-namespace arse {
+namespace MyNamespace {
     TestSubStruct::TestSubStruct() {
 
     }

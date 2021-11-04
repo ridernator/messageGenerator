@@ -35,7 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/TestStructure.o \
+	${OBJECTDIR}/MapTest.o \
 	${OBJECTDIR}/TestSubStruct.o \
 	${OBJECTDIR}/main.o
 
@@ -64,10 +64,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/stresstest: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/stresstest ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/TestStructure.o: TestStructure.cxx
+${OBJECTDIR}/MapTest.o: MapTest.cxx
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestStructure.o TestStructure.cxx
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MapTest.o MapTest.cxx
 
 ${OBJECTDIR}/TestSubStruct.o: TestSubStruct.cxx
 	${MKDIR} -p ${OBJECTDIR}

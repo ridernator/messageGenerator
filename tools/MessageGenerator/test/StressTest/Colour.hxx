@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace arse {
+namespace MyNamespace {
     enum class Colour : int8_t {
         /**
          * Stop colour

@@ -67,33 +67,41 @@ class CppGenerator : Generator {
 
         std::string generateDeserialiseCxx(const Messaging::Structure& structure);
 
-        std::string generateSerialisePrimitiveElement(const Messaging::PrimitiveElement& element);
+        std::string generateSerialise(const Messaging::PrimitiveElement& element);
 
-        std::string generateDeserialisePrimitiveElement(const Messaging::PrimitiveElement& element);
+        std::string generateDeserialise(const Messaging::PrimitiveElement& element);
 
-        std::string generateSerialiseEnumeration(const Messaging::EnumerationElement& enumeration);
+        std::string generateSerialise(const Messaging::EnumerationElement& enumeration);
 
-        std::string generateDeserialiseEnumeration(const Messaging::EnumerationElement& enumeration);
+        std::string generateDeserialise(const Messaging::EnumerationElement& enumeration);
 
-        std::string generateSerialiseStructure(const Messaging::StructureElement& structure);
+        std::string generateSerialise(const Messaging::StructureElement& structure);
 
-        std::string generateDeserialiseStructure(const Messaging::StructureElement& structure);
+        std::string generateDeserialise(const Messaging::StructureElement& structure);
 
-        std::string generateSerialiseArray(const Messaging::Array& array,
-                                           const uint8_t numTabs,
-                                           const std::string& parentName);
+        std::string generateSerialise(const Messaging::Array& array,
+                                      const uint8_t numTabs,
+                                      const std::string& parentName);
 
-        std::string generateDeserialiseArray(const Messaging::Array& array,
-                                             const uint8_t numTabs,
-                                             const std::string& parentName);
+        std::string generateDeserialise(const Messaging::Array& array,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
 
-        std::string generateSerialiseSequence(const Messaging::Sequence& sequence,
-                                              const uint8_t numTabs,
-                                              const std::string& parentName);
+        std::string generateSerialise(const Messaging::Sequence& sequence,
+                                      const uint8_t numTabs,
+                                      const std::string& parentName);
 
-        std::string generateDeserialiseSequence(const Messaging::Sequence& sequence,
-                                                const uint8_t numTabs,
-                                                const std::string& parentName);
+        std::string generateDeserialise(const Messaging::Sequence& sequence,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
+
+        std::string generateSerialise(const Messaging::Map& map,
+                                      const uint8_t numTabs,
+                                      const std::string& parentName);
+
+        std::string generateDeserialise(const Messaging::Map& map,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
 
         std::string generateGettersCxx(const Messaging::Structure& structure);
 

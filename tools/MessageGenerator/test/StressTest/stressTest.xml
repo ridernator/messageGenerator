@@ -3,8 +3,8 @@
 <definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns="Messaging"
              xsi:schemaLocation="Messaging ../../config/Definitions.xsd"
-             namespace="arse">
-    <structure name="TestStructure">
+             namespace="MyNamespace">
+<!--    <structure name="TestStructure">
         <documentation>Documentation for test structure</documentation>
         
         <primitiveElement type="signed_int_8" name="int8Member" />
@@ -210,16 +210,6 @@
             </valueType>
         </map>
         
-        <map name="mapStructToEnum">
-            <keyType>
-                <structureType>TestSubStruct</structureType>                    
-            </keyType>
-            
-            <valueType>
-                <enumerationType>Colour</enumerationType>
-            </valueType>
-        </map>
-        
         <map name="mapEnumToEnum">
             <keyType>
                 <enumerationType>Colour</enumerationType>                   
@@ -285,7 +275,7 @@
         </map>
         
         <primitiveElement name="lastElement" type="signed_int_64" />
-    </structure>
+    </structure>-->
 
     <structure name="TestSubStruct">
         <primitiveElement name="bigUnsigned" type="unsigned_int_64" />
@@ -304,4 +294,106 @@
             <documentation>Go colour</documentation>
         </member>
     </enumeration>
+    
+    <structure name="MapTest">
+        <map name="primitiveToPrimitive">
+            <keyType>
+                <primitiveType>unsigned_int_8</primitiveType>
+            </keyType>
+            
+            <valueType>
+                <primitiveType>float_32</primitiveType>
+            </valueType>
+        </map>
+        
+        <map name="primitiveToEnum">
+            <keyType>
+                <primitiveType>unsigned_int_8</primitiveType>
+            </keyType>
+            
+            <valueType>
+                <enumerationType>Colour</enumerationType>
+            </valueType>
+        </map>
+        
+        <map name="primitiveToStruct">
+            <keyType>
+                <primitiveType>unsigned_int_8</primitiveType>
+            </keyType>
+            
+            <valueType>
+                <structureType>TestSubStruct</structureType>
+            </valueType>
+        </map>
+        
+        <map name="primitiveToArray">
+            <keyType>
+                <primitiveType>unsigned_int_8</primitiveType>
+            </keyType>
+            
+            <valueType>
+                <array>
+                    <size>2</size>
+                    <type>
+                        <array>
+                            <size>2</size>
+                            <type>
+                                <primitiveType>unsigned_int_8</primitiveType>
+                            </type>
+                        </array>
+                    </type>
+                </array>
+            </valueType>
+        </map>
+        
+        <map name="primitiveToSequence">
+            <keyType>
+                <primitiveType>unsigned_int_8</primitiveType>
+            </keyType>
+            
+            <valueType>
+                <sequence>
+                    <type>                        
+                        <sequence>
+                            <type>
+                                <primitiveType>unsigned_int_8</primitiveType>
+                            </type>
+                        </sequence>
+                    </type>
+                </sequence>
+            </valueType>
+        </map>
+        
+        <map name="primitiveToMap">
+            <keyType>
+                <primitiveType>unsigned_int_8</primitiveType>
+            </keyType>
+            
+            <valueType>
+                <map>
+                    <keyType>
+                        <primitiveType>unsigned_int_16</primitiveType>
+                    </keyType>
+                    
+                    <valueType>
+                        <map>
+                            <keyType>
+                                <primitiveType>unsigned_int_16</primitiveType>
+                            </keyType>
+
+                            <valueType>
+                                <enumerationType>Colour</enumerationType>
+                            </valueType>
+                        </map>
+                    </valueType>
+                </map>
+            </valueType>
+        </map>
+        
+        <structure name="tss" type="TestSubStruct" />
+        
+        <enumeration name="colour" type="Colour" />
+        
+        <primitiveElement name="lastElement" type="unsigned_int_64" />
+    </structure>
 </definitions>

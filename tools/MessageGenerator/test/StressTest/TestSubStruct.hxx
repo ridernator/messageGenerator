@@ -1,11 +1,14 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
+#include <vector>
+#include <map>
 
 #include "BaseMessage.hpp"
 
 
-namespace arse {
+namespace MyNamespace {
     class TestSubStruct : public Messaging::BaseMessage {
         public :
             /**

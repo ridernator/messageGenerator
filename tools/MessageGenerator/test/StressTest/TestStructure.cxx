@@ -90,6 +90,22 @@ namespace arse {
 
         // Serialise testArrayMap
         for (const auto& e1 : testArrayMap) {
+            for (const auto& e2 : e1) {
+                // Serialise size of e2
+                uint64_t e2Size = e2.size();
+                memcpy(data + offset, &e2Size, sizeof(e2Size));
+                offset += sizeof(e2Size);
+
+                for (const auto& e2 : e2) {
+                    // Serialise e2 key data
+                    memcpy(data + offset, &e2.first, sizeof(float));
+                    offset += sizeof(float);
+
+                    // Serialise e2 value data
+                    memcpy(data + offset, &e2.second, sizeof(double));
+                    offset += sizeof(double);
+                }
+            }
         }
 
         // Serialise primitiveSequence
@@ -164,6 +180,122 @@ namespace arse {
         offset += sizeof(mapSequenceSize);
 
         // Serialise mapSequence data
+        for (const auto& e1 : mapSequence) {
+            // Serialise size of e1
+            uint64_t e1Size = e1.size();
+            memcpy(data + offset, &e1Size, sizeof(e1Size));
+            offset += sizeof(e1Size);
+
+            for (const auto& e1 : e1) {
+                // Serialise e1 key data
+                memcpy(data + offset, &e1.first, sizeof(float));
+                offset += sizeof(float);
+
+                // Serialise e1 value data
+                memcpy(data + offset, &e1.second, sizeof(double));
+                offset += sizeof(double);
+            }
+        }
+
+        // Serialise mapPrimitiveToEnum
+        // Serialise size of mapPrimitiveToEnum
+        uint64_t mapPrimitiveToEnumSize = mapPrimitiveToEnum.size();
+        memcpy(data + offset, &mapPrimitiveToEnumSize, sizeof(mapPrimitiveToEnumSize));
+        offset += sizeof(mapPrimitiveToEnumSize);
+
+        for (const auto& e0 : mapPrimitiveToEnum) {
+            // Serialise mapPrimitiveToEnum key data
+            memcpy(data + offset, &e0.first, sizeof(uint16_t));
+            offset += sizeof(uint16_t);
+
+            // Serialise mapPrimitiveToEnum value data
+            memcpy(data + offset, &e0.second, sizeof(Colour));
+            offset += sizeof(Colour);
+        }
+
+        // Serialise mapEnumToEnum
+        // Serialise size of mapEnumToEnum
+        uint64_t mapEnumToEnumSize = mapEnumToEnum.size();
+        memcpy(data + offset, &mapEnumToEnumSize, sizeof(mapEnumToEnumSize));
+        offset += sizeof(mapEnumToEnumSize);
+
+        for (const auto& e0 : mapEnumToEnum) {
+            // Serialise mapEnumToEnum key data
+            memcpy(data + offset, &e0.first, sizeof(Colour));
+            offset += sizeof(Colour);
+
+            // Serialise mapEnumToEnum value data
+            memcpy(data + offset, &e0.second, sizeof(Colour));
+            offset += sizeof(Colour);
+        }
+
+        // Serialise mapEnumToArray
+        // Serialise size of mapEnumToArray
+        uint64_t mapEnumToArraySize = mapEnumToArray.size();
+        memcpy(data + offset, &mapEnumToArraySize, sizeof(mapEnumToArraySize));
+        offset += sizeof(mapEnumToArraySize);
+
+        for (const auto& e0 : mapEnumToArray) {
+            // Serialise mapEnumToArray key data
+            memcpy(data + offset, &e0.first, sizeof(Colour));
+            offset += sizeof(Colour);
+
+            // Serialise mapEnumToArray value data
+            for (const auto& e2 : e0.second) {
+                memcpy(data + offset, &e2[0], sizeof(Colour) * e2.size());
+                offset += sizeof(Colour) * e2.size();
+            }
+        }
+
+        // Serialise mapEnumToSequence
+        // Serialise size of mapEnumToSequence
+        uint64_t mapEnumToSequenceSize = mapEnumToSequence.size();
+        memcpy(data + offset, &mapEnumToSequenceSize, sizeof(mapEnumToSequenceSize));
+        offset += sizeof(mapEnumToSequenceSize);
+
+        for (const auto& e0 : mapEnumToSequence) {
+            // Serialise mapEnumToSequence key data
+            memcpy(data + offset, &e0.first, sizeof(Colour));
+            offset += sizeof(Colour);
+
+            // Serialise mapEnumToSequence value data
+            // Serialise size of e0.second
+            uint64_t e0_secondSize = e0.second.size();
+            memcpy(data + offset, &e0_secondSize, sizeof(e0_secondSize));
+            offset += sizeof(e0_secondSize);
+
+            // Serialise e0.second data
+            memcpy(data + offset, &e0.second[0], sizeof(uint64_t) * e0_secondSize);
+            offset += sizeof(uint64_t) * e0_secondSize;
+        }
+
+        // Serialise mapEnumToMap
+        // Serialise size of mapEnumToMap
+        uint64_t mapEnumToMapSize = mapEnumToMap.size();
+        memcpy(data + offset, &mapEnumToMapSize, sizeof(mapEnumToMapSize));
+        offset += sizeof(mapEnumToMapSize);
+
+        for (const auto& e0 : mapEnumToMap) {
+            // Serialise mapEnumToMap key data
+            memcpy(data + offset, &e0.first, sizeof(Colour));
+            offset += sizeof(Colour);
+
+            // Serialise mapEnumToMap value data
+            // Serialise size of e0.second
+            uint64_t e0_secondSize = e0.second.size();
+            memcpy(data + offset, &e0_secondSize, sizeof(e0_secondSize));
+            offset += sizeof(e0_secondSize);
+
+            for (const auto& e1 : e0.second) {
+                // Serialise e0_second key data
+                memcpy(data + offset, &e1.first, sizeof(uint8_t));
+                offset += sizeof(uint8_t);
+
+                // Serialise e0_second value data
+                memcpy(data + offset, &e1.second, sizeof(int16_t));
+                offset += sizeof(int16_t);
+            }
+        }
     }
 
     void TestStructure::deserialise(const char* data, uint64_t& offset) {
@@ -246,6 +378,27 @@ namespace arse {
 
         // Deserialise testArrayMap
         for (auto& e1 : testArrayMap) {
+            for (auto& e2 : e1) {
+                // Deserialise size of e2
+                uint64_t e2Size;
+                memcpy(&e2Size, data + offset, sizeof(e2Size));
+                offset += sizeof(e2Size);
+
+                // Deserialise e2 data
+                for (uint64_t index = 0; index < e2Size; ++index) {
+                    // Deserialise e2 key data
+                    float first2;
+                    memcpy(&first2, data + offset, sizeof(first2));
+                    offset += sizeof(first2);
+
+                    // Deserialise e2 value data
+                    double second2;
+                    memcpy(&second2, data + offset, sizeof(second2));
+                    offset += sizeof(second2);
+
+                    e2.insert({first2, second2});
+                }
+            }
         }
 
         // Deserialise primitiveSequence
@@ -327,6 +480,158 @@ namespace arse {
 
         // Deserialise mapSequence data
         mapSequence.resize(mapSequenceSize);
+        for (auto& e1 : mapSequence) {
+            // Deserialise size of e1
+            uint64_t e1Size;
+            memcpy(&e1Size, data + offset, sizeof(e1Size));
+            offset += sizeof(e1Size);
+
+            // Deserialise e1 data
+            for (uint64_t index = 0; index < e1Size; ++index) {
+                // Deserialise e1 key data
+                float first1;
+                memcpy(&first1, data + offset, sizeof(first1));
+                offset += sizeof(first1);
+
+                // Deserialise e1 value data
+                double second1;
+                memcpy(&second1, data + offset, sizeof(second1));
+                offset += sizeof(second1);
+
+                e1.insert({first1, second1});
+            }
+        }
+
+        // Deserialise mapPrimitiveToEnum
+        // Deserialise size of mapPrimitiveToEnum
+        uint64_t mapPrimitiveToEnumSize;
+        memcpy(&mapPrimitiveToEnumSize, data + offset, sizeof(mapPrimitiveToEnumSize));
+        offset += sizeof(mapPrimitiveToEnumSize);
+
+        // Deserialise mapPrimitiveToEnum data
+        for (uint64_t index = 0; index < mapPrimitiveToEnumSize; ++index) {
+            // Deserialise mapPrimitiveToEnum key data
+            uint16_t first0;
+            memcpy(&first0, data + offset, sizeof(first0));
+            offset += sizeof(first0);
+
+            // Deserialise mapPrimitiveToEnum value data
+            Colour second0;
+            memcpy(&second0, data + offset, sizeof(second0));
+            offset += sizeof(second0);
+
+            mapPrimitiveToEnum.insert({first0, second0});
+        }
+
+        // Deserialise mapEnumToEnum
+        // Deserialise size of mapEnumToEnum
+        uint64_t mapEnumToEnumSize;
+        memcpy(&mapEnumToEnumSize, data + offset, sizeof(mapEnumToEnumSize));
+        offset += sizeof(mapEnumToEnumSize);
+
+        // Deserialise mapEnumToEnum data
+        for (uint64_t index = 0; index < mapEnumToEnumSize; ++index) {
+            // Deserialise mapEnumToEnum key data
+            Colour first0;
+            memcpy(&first0, data + offset, sizeof(first0));
+            offset += sizeof(first0);
+
+            // Deserialise mapEnumToEnum value data
+            Colour second0;
+            memcpy(&second0, data + offset, sizeof(second0));
+            offset += sizeof(second0);
+
+            mapEnumToEnum.insert({first0, second0});
+        }
+
+        // Deserialise mapEnumToArray
+        // Deserialise size of mapEnumToArray
+        uint64_t mapEnumToArraySize;
+        memcpy(&mapEnumToArraySize, data + offset, sizeof(mapEnumToArraySize));
+        offset += sizeof(mapEnumToArraySize);
+
+        // Deserialise mapEnumToArray data
+        for (uint64_t index = 0; index < mapEnumToArraySize; ++index) {
+            // Deserialise mapEnumToArray key data
+            Colour first0;
+            memcpy(&first0, data + offset, sizeof(first0));
+            offset += sizeof(first0);
+
+            // Deserialise mapEnumToArray value data
+            std::array<std::array<Colour, 4>, 5> second0;
+            for (auto& e2 : second0) {
+                memcpy(&e2[0], data + offset, sizeof(Colour) * e2.size());
+                offset += sizeof(Colour) * e2.size();
+            }
+
+            mapEnumToArray.insert({first0, second0});
+        }
+
+        // Deserialise mapEnumToSequence
+        // Deserialise size of mapEnumToSequence
+        uint64_t mapEnumToSequenceSize;
+        memcpy(&mapEnumToSequenceSize, data + offset, sizeof(mapEnumToSequenceSize));
+        offset += sizeof(mapEnumToSequenceSize);
+
+        // Deserialise mapEnumToSequence data
+        for (uint64_t index = 0; index < mapEnumToSequenceSize; ++index) {
+            // Deserialise mapEnumToSequence key data
+            Colour first0;
+            memcpy(&first0, data + offset, sizeof(first0));
+            offset += sizeof(first0);
+
+            // Deserialise mapEnumToSequence value data
+            std::vector<uint64_t> second0;
+            // Deserialise size of second0
+            uint64_t second0Size;
+            memcpy(&second0Size, data + offset, sizeof(second0Size));
+            offset += sizeof(second0Size);
+
+            // Deserialise second0 data
+            second0.resize(second0Size);
+            memcpy(&second0[0], data + offset, sizeof(uint64_t) * second0Size);
+            offset += sizeof(uint64_t) * second0Size;
+
+            mapEnumToSequence.insert({first0, second0});
+        }
+
+        // Deserialise mapEnumToMap
+        // Deserialise size of mapEnumToMap
+        uint64_t mapEnumToMapSize;
+        memcpy(&mapEnumToMapSize, data + offset, sizeof(mapEnumToMapSize));
+        offset += sizeof(mapEnumToMapSize);
+
+        // Deserialise mapEnumToMap data
+        for (uint64_t index = 0; index < mapEnumToMapSize; ++index) {
+            // Deserialise mapEnumToMap key data
+            Colour first0;
+            memcpy(&first0, data + offset, sizeof(first0));
+            offset += sizeof(first0);
+
+            // Deserialise mapEnumToMap value data
+            std::map<uint8_t, int16_t> second0;
+            // Deserialise size of second0
+            uint64_t second0Size;
+            memcpy(&second0Size, data + offset, sizeof(second0Size));
+            offset += sizeof(second0Size);
+
+            // Deserialise second0 data
+            for (uint64_t index = 0; index < second0Size; ++index) {
+                // Deserialise second0 key data
+                uint8_t first1;
+                memcpy(&first1, data + offset, sizeof(first1));
+                offset += sizeof(first1);
+
+                // Deserialise second0 value data
+                int16_t second1;
+                memcpy(&second1, data + offset, sizeof(second1));
+                offset += sizeof(second1);
+
+                second0.insert({first1, second1});
+            }
+
+            mapEnumToMap.insert({first0, second0});
+        }
     }
 
     uint64_t TestStructure::getSizeInBytes() const {
@@ -460,19 +765,6 @@ namespace arse {
 
         // Add on size of mapPrimitiveToEnum value data
         size += sizeof(Colour) * mapPrimitiveToEnum.size();
-
-        // Add on size of mapStructToEnum
-        // Add on size of mapStructToEnum length field
-        size += sizeof(uint64_t);
-
-        // Add on size of mapStructToEnum key data
-        for (const auto& e1 : mapStructToEnum) {
-            // Add on size of each individual TestSubStruct
-            size += e1.first.getSizeInBytes();
-        }
-
-        // Add on size of mapStructToEnum value data
-        size += sizeof(Colour) * mapStructToEnum.size();
 
         // Add on size of mapEnumToEnum
         // Add on size of mapEnumToEnum length field
@@ -618,10 +910,6 @@ namespace arse {
 
     std::map<uint16_t, Colour>& TestStructure::getMapPrimitiveToEnum() {
         return mapPrimitiveToEnum;
-    }
-
-    std::map<TestSubStruct, Colour>& TestStructure::getMapStructToEnum() {
-        return mapStructToEnum;
     }
 
     std::map<Colour, Colour>& TestStructure::getMapEnumToEnum() {

@@ -194,13 +194,6 @@ namespace arse {
             std::map<uint16_t, Colour>& getMapPrimitiveToEnum();
 
             /**
-             * Getter for mapStructToEnum
-             *
-             * @return mapStructToEnum
-             */
-            std::map<TestSubStruct, Colour>& getMapStructToEnum();
-
-            /**
              * Getter for mapEnumToEnum
              *
              * @return mapEnumToEnum
@@ -341,8 +334,6 @@ namespace arse {
             std::vector<std::map<float, double>> mapSequence;
 
             std::map<uint16_t, Colour> mapPrimitiveToEnum;
-
-            std::map<TestSubStruct, Colour> mapStructToEnum;
 
             std::map<Colour, Colour> mapEnumToEnum;
 

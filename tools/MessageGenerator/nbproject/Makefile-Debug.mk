@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/CppGenerator.o \
 	${OBJECTDIR}/src/Definitions.o \
 	${OBJECTDIR}/src/FileParser.o \
+	${OBJECTDIR}/src/Generator.o \
 	${OBJECTDIR}/src/JavaGenerator.o \
 	${OBJECTDIR}/src/MessageGenerator.o
 
@@ -46,8 +47,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=--std=c++17
-CXXFLAGS=--std=c++17
+CCFLAGS=--std=c++20 -Wextra
+CXXFLAGS=--std=c++20 -Wextra
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -69,27 +70,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/messagegenerator: ${OBJECTFILES}
 ${OBJECTDIR}/src/CppGenerator.o: src/CppGenerator.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/CppGenerator.o src/CppGenerator.cpp
+	$(COMPILE.cc) -g -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/CppGenerator.o src/CppGenerator.cpp
 
 ${OBJECTDIR}/src/Definitions.o: src/Definitions.cxx
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Definitions.o src/Definitions.cxx
+	$(COMPILE.cc) -g -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Definitions.o src/Definitions.cxx
 
 ${OBJECTDIR}/src/FileParser.o: src/FileParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/FileParser.o src/FileParser.cpp
+	$(COMPILE.cc) -g -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/FileParser.o src/FileParser.cpp
+
+${OBJECTDIR}/src/Generator.o: src/Generator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Generator.o src/Generator.cpp
 
 ${OBJECTDIR}/src/JavaGenerator.o: src/JavaGenerator.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/JavaGenerator.o src/JavaGenerator.cpp
+	$(COMPILE.cc) -g -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/JavaGenerator.o src/JavaGenerator.cpp
 
 ${OBJECTDIR}/src/MessageGenerator.o: src/MessageGenerator.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -w -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MessageGenerator.o src/MessageGenerator.cpp
+	$(COMPILE.cc) -g -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/MessageGenerator.o src/MessageGenerator.cpp
 
 # Subprojects
 .build-subprojects:

@@ -35,17 +35,17 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/src/Blob.o \
-	${OBJECTDIR}/src/StressTest.o \
-	${OBJECTDIR}/src/main.o
+	${OBJECTDIR}/MapTest.o \
+	${OBJECTDIR}/TestSubStruct.o \
+	${OBJECTDIR}/main.o
 
 
 # C Compiler Flags
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=--std=c++20 -Wextra
+CXXFLAGS=--std=c++20 -Wextra
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -54,36 +54,33 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../../../../libs/MessagingC++/dist/Release/GNU-Linux/libmessaging.a
+LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/stresstest
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/stresstest: ../../../../libs/MessagingC++/dist/Release/GNU-Linux/libmessaging.a
-
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/stresstest: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/stresstest ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/src/Blob.o: src/Blob.cxx
-	${MKDIR} -p ${OBJECTDIR}/src
+${OBJECTDIR}/MapTest.o: MapTest.cxx
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Iinclude -I../../../../libs/MessagingC++/include -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Blob.o src/Blob.cxx
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MapTest.o MapTest.cxx
 
-${OBJECTDIR}/src/StressTest.o: src/StressTest.cxx
-	${MKDIR} -p ${OBJECTDIR}/src
+${OBJECTDIR}/TestSubStruct.o: TestSubStruct.cxx
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Iinclude -I../../../../libs/MessagingC++/include -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/StressTest.o src/StressTest.cxx
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/TestSubStruct.o TestSubStruct.cxx
 
-${OBJECTDIR}/src/main.o: src/main.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
+${OBJECTDIR}/main.o: main.cpp
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -Iinclude -I../../../../libs/MessagingC++/include -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.cpp
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
-	cd ../../../../libs/MessagingC++ && ${MAKE}  -f Makefile CONF=Release
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -91,7 +88,6 @@ ${OBJECTDIR}/src/main.o: src/main.cpp
 
 # Subprojects
 .clean-subprojects:
-	cd ../../../../libs/MessagingC++ && ${MAKE}  -f Makefile CONF=Release clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

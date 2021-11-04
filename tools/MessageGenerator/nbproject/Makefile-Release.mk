@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/CppGenerator.o \
 	${OBJECTDIR}/src/Definitions.o \
 	${OBJECTDIR}/src/FileParser.o \
+	${OBJECTDIR}/src/Generator.o \
 	${OBJECTDIR}/src/JavaGenerator.o \
 	${OBJECTDIR}/src/MessageGenerator.o
 
@@ -46,8 +47,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-Wall -Wextra --std=c++17
-CXXFLAGS=-Wall -Wextra --std=c++17
+CCFLAGS=--std=c++20 -Wextra
+CXXFLAGS=--std=c++20 -Wextra
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -56,7 +57,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lxerces-c
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -80,6 +81,11 @@ ${OBJECTDIR}/src/FileParser.o: src/FileParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/FileParser.o src/FileParser.cpp
+
+${OBJECTDIR}/src/Generator.o: src/Generator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Wall -Iinclude -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/Generator.o src/Generator.cpp
 
 ${OBJECTDIR}/src/JavaGenerator.o: src/JavaGenerator.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

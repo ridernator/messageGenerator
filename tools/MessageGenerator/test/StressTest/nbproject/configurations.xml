@@ -4,9 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>include/Blob.hxx</itemPath>
-      <itemPath>include/Colour.hxx</itemPath>
-      <itemPath>include/StressTest.hxx</itemPath>
+      <itemPath>Colour.hxx</itemPath>
+      <itemPath>MapTest.hxx</itemPath>
+      <itemPath>TestSubStruct.hxx</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -15,9 +15,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>src/Blob.cxx</itemPath>
-      <itemPath>src/StressTest.cxx</itemPath>
-      <itemPath>src/main.cpp</itemPath>
+      <itemPath>MapTest.cxx</itemPath>
+      <itemPath>TestSubStruct.cxx</itemPath>
+      <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -29,6 +29,7 @@
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
+      <itemPath>stressTest.xml</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -41,40 +42,21 @@
       </toolsSet>
       <compileType>
         <ccTool>
-          <standard>11</standard>
-          <incDir>
-            <pElem>include</pElem>
-            <pElem>../../../../libs/MessagingC++/include</pElem>
-          </incDir>
+          <commandLine>--std=c++20 -Wextra</commandLine>
+          <warningLevel>3</warningLevel>
         </ccTool>
-        <linkerTool>
-          <linkerLibItems>
-            <linkerLibProjectItem>
-              <makeArtifact PL="../../../../libs/MessagingC++"
-                            CT="3"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="../../../../libs/MessagingC++"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmessaging.a">
-              </makeArtifact>
-            </linkerLibProjectItem>
-          </linkerLibItems>
-        </linkerTool>
       </compileType>
-      <item path="include/Blob.hxx" ex="false" tool="3" flavor2="0">
+      <item path="Colour.hxx" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Colour.hxx" ex="false" tool="3" flavor2="0">
+      <item path="MapTest.cxx" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="include/StressTest.hxx" ex="false" tool="3" flavor2="0">
+      <item path="MapTest.hxx" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/Blob.cxx" ex="false" tool="1" flavor2="0">
+      <item path="TestSubStruct.cxx" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/StressTest.cxx" ex="false" tool="1" flavor2="0">
+      <item path="TestSubStruct.hxx" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -89,11 +71,8 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <standard>11</standard>
-          <incDir>
-            <pElem>include</pElem>
-            <pElem>../../../../libs/MessagingC++/include</pElem>
-          </incDir>
+          <commandLine>--std=c++20 -Wextra</commandLine>
+          <warningLevel>3</warningLevel>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -101,34 +80,18 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
-        <linkerTool>
-          <linkerLibItems>
-            <linkerLibProjectItem>
-              <makeArtifact PL="../../../../libs/MessagingC++"
-                            CT="3"
-                            CN="Release"
-                            AC="false"
-                            BL="true"
-                            WD="../../../../libs/MessagingC++"
-                            BC="${MAKE}  -f Makefile CONF=Release"
-                            CC="${MAKE}  -f Makefile CONF=Release clean"
-                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libmessaging.a">
-              </makeArtifact>
-            </linkerLibProjectItem>
-          </linkerLibItems>
-        </linkerTool>
       </compileType>
-      <item path="include/Blob.hxx" ex="false" tool="3" flavor2="0">
+      <item path="Colour.hxx" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Colour.hxx" ex="false" tool="3" flavor2="0">
+      <item path="MapTest.cxx" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="include/StressTest.hxx" ex="false" tool="3" flavor2="0">
+      <item path="MapTest.hxx" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/Blob.cxx" ex="false" tool="1" flavor2="0">
+      <item path="TestSubStruct.cxx" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/StressTest.cxx" ex="false" tool="1" flavor2="0">
+      <item path="TestSubStruct.hxx" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

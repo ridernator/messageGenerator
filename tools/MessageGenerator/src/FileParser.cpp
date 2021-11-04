@@ -7,6 +7,8 @@
 #include <sstream>
 #include <fstream>
 
+#include "CppGenerator.hpp"
+
 FileParser::FileParser() {
 
 }
@@ -14,31 +16,36 @@ FileParser::FileParser() {
 bool FileParser::parse(const std::string& file,
                        const Language language,
                        const std::string& outputFolder) {
+    bool returnVal = false;
+    
     try {
         xml_schema::Properties properties;
-        auto definitions(parseDefinitions(file, 0, properties));
+        auto definitions(Messaging::parseDefinitions(file, 0, properties));
     
         switch (language) {
-            case CPP : {
-                cppGenerator.generate(*definitions, outputFolder);
+            case Language::CPP : {
+                CppGenerator cppGenerator(*definitions);
+                returnVal = cppGenerator.generate(outputFolder);
 
                 break;
             }
 
-            case JAVA : {
+            case Language::JAVA : {
                 //JavaOutputter::generate(definitions, outputFolder);
 
                 break;
             }
 
             default : {
-                std::cerr << "Unknown language enum \"" << language << '\"';
+                std::cerr << "Unknown language enum \"" << static_cast<std::underlying_type<Language>::type>(language) << '\"';
 
                 break;
             }
         }   
-    } catch (const ::xml_schema::Exception &e) {
-        std::cerr << e.what();
+    } catch (const xml_schema::Exception &exception) {
+        std::cerr << exception.what();
     }
+    
+    return returnVal;
 }
 

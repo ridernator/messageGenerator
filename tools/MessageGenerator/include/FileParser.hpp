@@ -3,7 +3,6 @@
 #include <string>
 
 #include "Language.hpp"
-#include "CppGenerator.hpp"
 
 class FileParser {
 public:
@@ -12,6 +11,4 @@ public:
     bool parse(const std::string& file,
                const Language language,
                const std::string& outputFolder);
-    
-    CppGenerator cppGenerator;
 };

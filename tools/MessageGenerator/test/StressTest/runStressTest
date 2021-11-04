@@ -1,0 +1,3 @@
+#!/bin/bash
+
+make -C ../../ CONF=Debug && ../../dist/Debug/GNU-Linux/messagegenerator --cpp stressTest.xml --outputFolder . && make CONF=Debug && ./dist/Debug/GNU-Linux/stresstest

@@ -9,12 +9,12 @@
       </logicalFolder>
       <logicalFolder name="f2" displayName="Generators" projectFiles="true">
         <itemPath>include/CppGenerator.hpp</itemPath>
+        <itemPath>include/Generator.hpp</itemPath>
         <itemPath>include/JavaGenerator.hpp</itemPath>
+        <itemPath>include/Language.hpp</itemPath>
       </logicalFolder>
       <itemPath>include/FileParser.hpp</itemPath>
-      <itemPath>include/Language.hpp</itemPath>
       <itemPath>include/MessageGenerator.hpp</itemPath>
-      <itemPath>include/Type.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -28,6 +28,7 @@
       </logicalFolder>
       <logicalFolder name="f2" displayName="Generators" projectFiles="true">
         <itemPath>src/CppGenerator.cpp</itemPath>
+        <itemPath>src/Generator.cpp</itemPath>
         <itemPath>src/JavaGenerator.cpp</itemPath>
       </logicalFolder>
       <itemPath>src/FileParser.cpp</itemPath>
@@ -45,7 +46,6 @@
       <itemPath>config/Definitions.xsd</itemPath>
       <itemPath>Makefile</itemPath>
       <itemPath>scripts/generateSourceFromXSD</itemPath>
-      <itemPath>config/stressTest.xml</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -58,12 +58,11 @@
       </toolsSet>
       <compileType>
         <ccTool>
-          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>include</pElem>
           </incDir>
-          <commandLine>--std=c++17</commandLine>
-          <warningLevel>0</warningLevel>
+          <commandLine>--std=c++20 -Wextra</commandLine>
+          <warningLevel>2</warningLevel>
         </ccTool>
         <linkerTool>
           <linkerLibItems>
@@ -77,19 +76,21 @@
       </item>
       <item path="include/FileParser.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/Generator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/JavaGenerator.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Language.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/MessageGenerator.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Type.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/CppGenerator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/Definitions.cxx" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/FileParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Generator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/JavaGenerator.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -108,11 +109,10 @@
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
-          <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>include</pElem>
           </incDir>
-          <commandLine>-Wall -Wextra --std=c++17</commandLine>
+          <commandLine>--std=c++20 -Wextra</commandLine>
           <warningLevel>2</warningLevel>
         </ccTool>
         <fortranCompilerTool>
@@ -121,6 +121,11 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibLibItem>xerces-c</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
       <item path="include/CppGenerator.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -128,19 +133,21 @@
       </item>
       <item path="include/FileParser.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="include/Generator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="include/JavaGenerator.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/Language.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="include/MessageGenerator.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="include/Type.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/CppGenerator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/Definitions.cxx" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/FileParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Generator.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/JavaGenerator.cpp" ex="false" tool="1" flavor2="0">
       </item>

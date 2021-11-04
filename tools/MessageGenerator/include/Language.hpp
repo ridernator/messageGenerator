@@ -1,6 +1,8 @@
 #pragma once
 
-typedef enum {
+#include <cstdint>
+
+enum class Language : uint8_t {
     CPP,
     JAVA
-} Language;
+};

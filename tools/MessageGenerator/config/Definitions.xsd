@@ -3,7 +3,7 @@
            targetNamespace="Messaging"
            xmlns="Messaging"
            elementFormDefault="qualified">
-    <xs:simpleType name="signedIntType">
+    <xs:simpleType name="SignedIntType">
         <xs:annotation>
             <xs:documentation>Enumeration of the signed integer types</xs:documentation>
         </xs:annotation>
@@ -35,7 +35,7 @@
         </xs:restriction>
     </xs:simpleType>
     
-    <xs:simpleType name="unsignedIntType">
+    <xs:simpleType name="UnsignedIntType">
         <xs:annotation>
             <xs:documentation>Enumeration of the unsigned integer types</xs:documentation>
         </xs:annotation>
@@ -67,15 +67,15 @@
         </xs:restriction>
     </xs:simpleType>
     
-    <xs:simpleType name="intType">
+    <xs:simpleType name="IntType">
         <xs:annotation>
             <xs:documentation>All types of signed or unsigned integers</xs:documentation>
         </xs:annotation>
         
-        <xs:union memberTypes="unsignedIntType signedIntType"/>
+        <xs:union memberTypes="UnsignedIntType SignedIntType"/>
     </xs:simpleType>
     
-    <xs:simpleType name="floatingPointType">
+    <xs:simpleType name="FloatingPointType">
         <xs:annotation>
             <xs:documentation>Enumeration of the floating point types (float, double)</xs:documentation>
         </xs:annotation>
@@ -95,15 +95,15 @@
         </xs:restriction>
     </xs:simpleType>
     
-    <xs:simpleType name="primitiveType">
+    <xs:simpleType name="PrimitiveType">
         <xs:annotation>
             <xs:documentation>All types (Union of unsigned int, signed int and floating point types)</xs:documentation>
         </xs:annotation>
         
-        <xs:union memberTypes="intType floatingPointType"/>
+        <xs:union memberTypes="IntType FloatingPointType"/>
     </xs:simpleType>
     
-    <xs:complexType name="enumerationMember">
+    <xs:complexType name="EnumerationMember">
         <xs:annotation>
             <xs:documentation>Definition of a member of an enumeration</xs:documentation>
         </xs:annotation>
@@ -129,7 +129,7 @@
         </xs:attribute>
     </xs:complexType>
     
-    <xs:complexType name="enumeration">
+    <xs:complexType name="Enumeration">
         <xs:annotation>
             <xs:documentation>Definition of an enumeration</xs:documentation>
         </xs:annotation>
@@ -141,7 +141,7 @@
                 </xs:annotation>
             </xs:element>
             
-            <xs:element name="member" type="enumerationMember" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="member" type="EnumerationMember" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>     
             
         <xs:attribute name="name" type="xs:string" use="required">
@@ -150,14 +150,14 @@
             </xs:annotation>
         </xs:attribute>
             
-        <xs:attribute name="baseType" type="intType" use="required">
+        <xs:attribute name="baseType" type="IntType" use="required">
             <xs:annotation>
                 <xs:documentation>The base type of this enum (Must be one of the intTypes)</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
     
-    <xs:complexType name="enumerationElement">
+    <xs:complexType name="NamedEnumeration">
         <xs:annotation>
             <xs:documentation>An enumeration which is part of a structure</xs:documentation>
         </xs:annotation>   
@@ -183,7 +183,7 @@
         </xs:attribute>
     </xs:complexType>
     
-    <xs:complexType name="structureElement">
+    <xs:complexType name="NamedStructure">
         <xs:annotation>
             <xs:documentation>A structure which is part of another structure</xs:documentation>
         </xs:annotation>   
@@ -211,13 +211,13 @@
     
     <xs:group name="PrimitiveTypes">
         <xs:choice>                
-            <xs:element name="primitiveType" type="primitiveType">
+            <xs:element name="primitive" type="PrimitiveType">
                 <xs:annotation>
                     <xs:documentation>Primitive element which is the type of this array</xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="enumerationType" type="xs:string">
+            <xs:element name="enumeration" type="xs:string">
                 <xs:annotation>
                     <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                 </xs:annotation>
@@ -239,19 +239,19 @@
     
     <xs:group name="NestedTypes">
         <xs:choice>
-            <xs:element name="sequence" type="sequence">
+            <xs:element name="sequence" type="Sequence">
                 <xs:annotation>
                     <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="array" type="array">
+            <xs:element name="array" type="Array">
                 <xs:annotation>
                     <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="map" type="map">
+            <xs:element name="map" type="Map">
                 <xs:annotation>
                     <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                 </xs:annotation>
@@ -338,7 +338,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="primitiveElement">
+    <xs:complexType name="NamedPrimitive">
         <xs:annotation>
             <xs:documentation>Definition of an element in a structure</xs:documentation>
         </xs:annotation>
@@ -357,14 +357,14 @@
             </xs:annotation>
         </xs:attribute>
         
-        <xs:attribute name="type" type="primitiveType" use="required">
+        <xs:attribute name="type" type="PrimitiveType" use="required">
             <xs:annotation>
                 <xs:documentation>The type of this element</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
     
-    <xs:complexType name="array">
+    <xs:complexType name="Array">
         <xs:annotation>
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
         </xs:annotation>
@@ -386,9 +386,9 @@
         </xs:all>
     </xs:complexType>
     
-    <xs:complexType name="namedArray">
+    <xs:complexType name="NamedArray">
         <xs:complexContent>
-            <xs:extension base="array">
+            <xs:extension base="Array">
                 <xs:attribute name="name" type="xs:string" use="required">
                     <xs:annotation>
                         <xs:documentation>The name of this array</xs:documentation>
@@ -398,7 +398,7 @@
         </xs:complexContent>            
     </xs:complexType>
     
-    <xs:complexType name="sequence">
+    <xs:complexType name="Sequence">
         <xs:annotation>
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
         </xs:annotation>
@@ -414,9 +414,9 @@
         </xs:all>
     </xs:complexType>
     
-    <xs:complexType name="namedSequence">
+    <xs:complexType name="NamedSequence">
         <xs:complexContent>
-            <xs:extension base="sequence">
+            <xs:extension base="Sequence">
                 <xs:attribute name="name" type="xs:string" use="required">
                     <xs:annotation>
                         <xs:documentation>The name of this sequence</xs:documentation>
@@ -426,7 +426,7 @@
         </xs:complexContent>            
     </xs:complexType>
     
-    <xs:complexType name="map">
+    <xs:complexType name="Map">
         <xs:annotation>
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
         </xs:annotation>
@@ -444,9 +444,9 @@
         </xs:all>
     </xs:complexType>
     
-    <xs:complexType name="namedMap">
+    <xs:complexType name="NamedMap">
         <xs:complexContent>
-            <xs:extension base="map">
+            <xs:extension base="Map">
                 <xs:attribute name="name" type="xs:string" use="required">
                     <xs:annotation>
                         <xs:documentation>The name of this map</xs:documentation>
@@ -456,7 +456,7 @@
         </xs:complexContent>            
     </xs:complexType>
     
-    <xs:complexType name="structure">
+    <xs:complexType name="Structure">
         <xs:annotation>
             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
         </xs:annotation>
@@ -469,37 +469,37 @@
             </xs:element>
                 
             <xs:choice minOccurs="0" maxOccurs="unbounded">                
-                <xs:element name="primitiveElement" type="primitiveElement">
+                <xs:element name="primitive" type="NamedPrimitive">
                     <xs:annotation>
                         <xs:documentation>Element which makes up part of this structure</xs:documentation>
                     </xs:annotation>
                 </xs:element>
 
-                <xs:element name="enumeration" type="enumerationElement">
+                <xs:element name="enumeration" type="NamedEnumeration">
                     <xs:annotation>
                         <xs:documentation>Enumeration which makes up part of this structure</xs:documentation>
                     </xs:annotation>
                 </xs:element>
 
-                <xs:element name="structure" type="structureElement">
+                <xs:element name="structure" type="NamedStructure">
                     <xs:annotation>
                         <xs:documentation>Structure which makes up part of this structure</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                     
-                <xs:element name="array" type="namedArray">
+                <xs:element name="array" type="NamedArray">
                     <xs:annotation>
                         <xs:documentation>Definition of an array</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                     
-                <xs:element name="sequence" type="namedSequence">
+                <xs:element name="sequence" type="NamedSequence">
                     <xs:annotation>
                         <xs:documentation>Definition of a sequence</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                     
-                <xs:element name="map" type="namedMap">
+                <xs:element name="map" type="NamedMap">
                     <xs:annotation>
                         <xs:documentation>Definition of a sequence</xs:documentation>
                     </xs:annotation>
@@ -522,13 +522,13 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="structure" type="structure">
+                    <xs:element name="structure" type="Structure">
                         <xs:annotation>
                             <xs:documentation>Definition of a structure and all its elements</xs:documentation>
                         </xs:annotation>
                     </xs:element>
                     
-                    <xs:element name="enumeration" type="enumeration">
+                    <xs:element name="enumeration" type="Enumeration">
                         <xs:annotation>
                             <xs:documentation>Definition of an enumeration</xs:documentation>
                         </xs:annotation>

@@ -123,4 +123,38 @@
         
         <primitive name="lastElement" type="unsigned_int_64" />
     </structure>
+    
+    <structure name="OptionalTest">
+        <primitive name="primitive" type="unsigned_int_64" optional="true" />
+        
+        <enumeration name="enumeration" type="Colour" optional="true" />
+               
+        <structure name="structure" type="TestSubStruct" optional="true" />
+    
+        <array name="array" optional="true">
+            <size>3</size>
+        
+            <type>
+                <primitive>unsigned_int_16</primitive>
+            </type>
+        </array>
+        
+        <sequence name="sequence" optional="true">
+            <type>
+                <enumeration>Colour</enumeration>
+            </type>
+        </sequence>
+        
+        <map name="map" optional="true">
+            <keyType>
+                <primitive>unsigned_int_8</primitive>
+            </keyType>
+            
+            <valueType>
+                <enumeration>Colour</enumeration>
+            </valueType>
+        </map>
+        
+        <primitive name="lastElement" type="unsigned_int_64" />
+    </structure>
 </definitions>

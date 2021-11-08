@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>Colour.hxx</itemPath>
       <itemPath>MapTest.hxx</itemPath>
+      <itemPath>OptionalTest.hxx</itemPath>
       <itemPath>TestSubStruct.hxx</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -16,6 +17,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>MapTest.cxx</itemPath>
+      <itemPath>OptionalTest.cxx</itemPath>
       <itemPath>TestSubStruct.cxx</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -52,6 +54,10 @@
       </item>
       <item path="MapTest.hxx" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="OptionalTest.cxx" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OptionalTest.hxx" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="TestSubStruct.cxx" ex="false" tool="1" flavor2="0">
       </item>
       <item path="TestSubStruct.hxx" ex="false" tool="3" flavor2="0">
@@ -86,6 +92,10 @@
       <item path="MapTest.cxx" ex="false" tool="1" flavor2="0">
       </item>
       <item path="MapTest.hxx" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="OptionalTest.cxx" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="OptionalTest.hxx" ex="false" tool="3" flavor2="0">
       </item>
       <item path="TestSubStruct.cxx" ex="false" tool="1" flavor2="0">
       </item>

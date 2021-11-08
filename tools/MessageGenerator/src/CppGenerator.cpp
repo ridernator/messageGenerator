@@ -998,7 +998,8 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         (structure.getEnumeration().empty()) &&
         (structure.getStructure().empty()) &&
         (structure.getArray().empty()) &&
-        (structure.getSequence().empty())) {
+        (structure.getSequence().empty()) &&
+        (structure.getMap().empty())) {
         os << insertTabs(1) << "// Nothing to serialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitive()) {
@@ -1044,7 +1045,8 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         (structure.getEnumeration().empty()) &&
         (structure.getStructure().empty()) &&
         (structure.getArray().empty()) &&
-        (structure.getSequence().empty())) {
+        (structure.getSequence().empty()) &&
+        (structure.getMap().empty())) {
         os << insertTabs(1) << "// Nothing to deserialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitive()) {

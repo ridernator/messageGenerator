@@ -229,7 +229,11 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = element.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << convertPrimitiveTypeToCppType(element.getType()) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+    if ((element.getOptional().present()) && (element.getOptional().get())) {
+        os << insertTabs() << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    } else {
+        os << insertTabs() << convertPrimitiveTypeToCppType(element.getType()) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+    }
     os << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -243,7 +247,11 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = subStructure.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << subStructure.getType() << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+        os << insertTabs() << "std::optional<" << subStructure.getType() << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    } else {
+        os << insertTabs() << subStructure.getType() << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    }
     os << insertTabs(1) << "return " << subStructure.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -257,7 +265,11 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = array.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << getCxxType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    if ((array.getOptional().present()) && (array.getOptional().get())) {
+        os << insertTabs() << "std::optional<" << getCxxType(array) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    } else {
+        os << insertTabs() << getCxxType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    }
     os << insertTabs(1) << "return " << array.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -271,7 +283,11 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = sequence.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << getCxxType(sequence) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+        os << insertTabs() << "std::optional<" << getCxxType(sequence) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    } else {
+        os << insertTabs() << getCxxType(sequence) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    }
     os << insertTabs(1) << "return " << sequence.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -285,7 +301,11 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = map.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << getCxxType(map) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    if ((map.getOptional().present()) && (map.getOptional().get())) {
+        os << insertTabs() << "std::optional<" << getCxxType(map) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    } else {
+        os << insertTabs() << getCxxType(map) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    }
     os << insertTabs(1) << "return " << map.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -313,7 +333,11 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = enumeration.getName();
     upperName[0] = toupper(upperName[0]);
 
-    os << insertTabs() << enumeration.getType() << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+    if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+        os << insertTabs() << "std::optional<" << enumeration.getType() << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    } else {
+        os << insertTabs() << enumeration.getType() << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+    }
     os << insertTabs(1) << "return " << enumeration.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -472,7 +496,11 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedPrimitive& ele
     os << insertTabs(2) << " * @return " << element.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << " get" << name << "() const;" << std::endl;
+    if ((element.getOptional().present()) && (element.getOptional().get())) {
+        os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << ">& get" << name << "();" << std::endl;
+    } else {
+        os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << " get" << name << "() const;" << std::endl;
+    }
     
     return os.str();
 }
@@ -517,8 +545,12 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedEnumeration& e
     os << insertTabs(2) << " * @return " << enumeration.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << enumeration.getType() << " get" << name << "() const;" << std::endl;
-    
+    if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+        os << insertTabs(2) << "std::optional<" << enumeration.getType() << ">& get" << name << "();" << std::endl;
+    } else {
+        os << insertTabs(2) << enumeration.getType() << " get" << name << "() const;" << std::endl;
+    }
+        
     return os.str();
 }
 
@@ -540,7 +572,11 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedStructure& str
     os << insertTabs(2) << " * @return " << structure.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << structure.getType() << "& get" << name << "();" << std::endl;
+    if ((structure.getOptional().present()) && (structure.getOptional().get())) {
+        os << insertTabs(2) << "std::optional<" << structure.getType() << ">& get" << name << "();" << std::endl;
+    } else {
+        os << insertTabs(2) << structure.getType() << "& get" << name << "();" << std::endl;
+    }
     
     return os.str();
 }
@@ -563,7 +599,11 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedArray& array) 
     os << insertTabs(2) << " * @return " << array.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << getCxxType(array) << "& get" << name << "();" << std::endl;
+    if ((array.getOptional().present()) && (array.getOptional().get())) {
+        os << insertTabs(2) << "std::optional<" << getCxxType(array) << ">& get" << name << "();" << std::endl;
+    } else {
+        os << insertTabs(2) << getCxxType(array) << "& get" << name << "();" << std::endl;
+    }
     
     return os.str();
 }
@@ -586,7 +626,11 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedSequence& sequ
     os << insertTabs(2) << " * @return " << sequence.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << getCxxType(sequence) << "& get" << name << "();" << std::endl;
+    if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+        os << insertTabs(2) << "std::optional<" << getCxxType(sequence) << ">& get" << name << "();" << std::endl;
+    } else {
+        os << insertTabs(2) << getCxxType(sequence) << "& get" << name << "();" << std::endl;
+    }
     
     return os.str();
 }
@@ -609,7 +653,11 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedMap& map) {
     os << insertTabs(2) << " * @return " << map.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    os << insertTabs(2) << getCxxType(map) << "& get" << name << "();" << std::endl;
+    if ((map.getOptional().present()) && (map.getOptional().get())) {
+        os << insertTabs(2) << "std::optional<" << getCxxType(map) << ">& get" << name << "();" << std::endl;
+    } else {
+        os << insertTabs(2) << getCxxType(map) << "& get" << name << "();" << std::endl;
+    }
     
     return os.str();
 }
@@ -646,7 +694,11 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << ' ' << element.getName() << ';' << std::endl;
+        if ((element.getOptional().present()) && (element.getOptional().get())) {
+            os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << "> " << element.getName() << ';' << std::endl;
+        } else {
+            os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << ' ' << element.getName() << ';' << std::endl;
+        }
         os << std::endl;
     }
 
@@ -657,7 +709,11 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << enumeration.getType() << ' ' << enumeration.getName() << ';' << std::endl;
+        if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+            os << insertTabs(2) << "std::optional<" << enumeration.getType() << "> " << enumeration.getName() << ';' << std::endl;
+        } else {
+            os << insertTabs(2) << enumeration.getType() << ' ' << enumeration.getName() << ';' << std::endl;
+        }
         os << std::endl;
     }
 
@@ -668,7 +724,11 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << subStructure.getType() << ' ' << subStructure.getName() << ';' << std::endl;
+        if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+            os << insertTabs(2) << "std::optional<" << subStructure.getType() << "> " << subStructure.getName() << ';' << std::endl;
+        } else {
+            os << insertTabs(2) << subStructure.getType() << ' ' << subStructure.getName() << ';' << std::endl;
+        }
         os << std::endl;
     }
 
@@ -679,7 +739,11 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << getCxxType(array) << ' ' << array.getName() << ';' << std::endl;
+        if ((array.getOptional().present()) && (array.getOptional().get())) {
+            os << insertTabs(2) << "std::optional<" << getCxxType(array) << "> " << array.getName() << ';' << std::endl;
+        } else {
+            os << insertTabs(2) << getCxxType(array) << ' ' << array.getName() << ';' << std::endl;
+        }
         os << std::endl;
     }
 
@@ -690,7 +754,11 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << getCxxType(sequence) << ' ' << sequence.getName() << ';' << std::endl;
+        if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+            os << insertTabs(2) << "std::optional<" << getCxxType(sequence) << "> " << sequence.getName() << ';' << std::endl;
+        } else {
+            os << insertTabs(2) << getCxxType(sequence) << ' ' << sequence.getName() << ';' << std::endl;
+        }
         os << std::endl;
     }
 
@@ -701,7 +769,11 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        os << insertTabs(2) << getCxxType(map) << ' ' << map.getName() << ';' << std::endl;
+        if ((map.getOptional().present()) && (map.getOptional().get())) {
+            os << insertTabs(2) << "std::optional<" << getCxxType(map) << "> " << map.getName() << ';' << std::endl;
+        } else {
+            os << insertTabs(2) << getCxxType(map) << ' ' << map.getName() << ';' << std::endl;
+        }
         os << std::endl;
     }
     

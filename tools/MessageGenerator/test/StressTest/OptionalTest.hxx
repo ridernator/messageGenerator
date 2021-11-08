@@ -42,7 +42,7 @@ namespace MyNamespace {
              *
              * @return primitive
              */
-            uint64_t getPrimitive() const;
+            std::optional<uint64_t>& getPrimitive();
 
             /**
              * Getter for lastElement
@@ -56,35 +56,35 @@ namespace MyNamespace {
              *
              * @return enumeration
              */
-            Colour getEnumeration() const;
+            std::optional<Colour>& getEnumeration();
 
             /**
              * Getter for structure
              *
              * @return structure
              */
-            TestSubStruct& getStructure();
+            std::optional<TestSubStruct>& getStructure();
 
             /**
              * Getter for array
              *
              * @return array
              */
-            std::array<uint16_t, 3>& getArray();
+            std::optional<std::array<uint16_t, 3>>& getArray();
 
             /**
              * Getter for sequence
              *
              * @return sequence
              */
-            std::vector<Colour>& getSequence();
+            std::optional<std::vector<Colour>>& getSequence();
 
             /**
              * Getter for map
              *
              * @return map
              */
-            std::map<uint8_t, Colour>& getMap();
+            std::optional<std::map<uint8_t, Colour>>& getMap();
 
             /**
              * Setter for primitive
@@ -108,18 +108,18 @@ namespace MyNamespace {
             void setEnumeration(const Colour value);
 
         private :
-            uint64_t primitive;
+            std::optional<uint64_t> primitive;
 
             uint64_t lastElement;
 
-            Colour enumeration;
+            std::optional<Colour> enumeration;
 
-            TestSubStruct structure;
+            std::optional<TestSubStruct> structure;
 
-            std::array<uint16_t, 3> array;
+            std::optional<std::array<uint16_t, 3>> array;
 
-            std::vector<Colour> sequence;
+            std::optional<std::vector<Colour>> sequence;
 
-            std::map<uint8_t, Colour> map;
+            std::optional<std::map<uint8_t, Colour>> map;
     };
 }

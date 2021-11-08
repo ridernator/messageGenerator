@@ -144,7 +144,7 @@ namespace MyNamespace {
         return size;
     }
 
-    uint64_t OptionalTest::getPrimitive() const {
+    std::optional<uint64_t>& OptionalTest::getPrimitive() {
         return primitive;
     }
 
@@ -152,23 +152,23 @@ namespace MyNamespace {
         return lastElement;
     }
 
-    Colour OptionalTest::getEnumeration() const {
+    std::optional<Colour>& OptionalTest::getEnumeration() {
         return enumeration;
     }
 
-    TestSubStruct& OptionalTest::getStructure() {
+    std::optional<TestSubStruct>& OptionalTest::getStructure() {
         return structure;
     }
 
-    std::array<uint16_t, 3>& OptionalTest::getArray() {
+    std::optional<std::array<uint16_t, 3>>& OptionalTest::getArray() {
         return array;
     }
 
-    std::vector<Colour>& OptionalTest::getSequence() {
+    std::optional<std::vector<Colour>>& OptionalTest::getSequence() {
         return sequence;
     }
 
-    std::map<uint8_t, Colour>& OptionalTest::getMap() {
+    std::optional<std::map<uint8_t, Colour>>& OptionalTest::getMap() {
         return map;
     }
 

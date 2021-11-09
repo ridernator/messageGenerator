@@ -13,12 +13,12 @@ namespace MyNamespace {
 
     void MapTest::serialise(char* data, uint64_t& offset) const {
         // Serialise lastElement
-        memcpy(data + offset, &lastElement, sizeof(uint64_t));
+        memcpy(data + offset, &lastElement, sizeof(lastElement));
         offset += sizeof(lastElement);
 
         // Serialise colour
-        memcpy(data + offset, &colour, sizeof(Colour));
-        offset += sizeof(Colour);
+        memcpy(data + offset, &colour, sizeof(colour));
+        offset += sizeof(colour);
 
         // Serialise tss
         tss.serialise(data + offset, offset);
@@ -101,9 +101,9 @@ namespace MyNamespace {
 
             // Serialise primitiveToSequence value data
             // Serialise size of e0.second
-            uint64_t e0_secondSize = e0.second.size();
-            memcpy(data + offset, &e0_secondSize, sizeof(e0_secondSize));
-            offset += sizeof(e0_secondSize);
+            uint64_t e0secondSize = e0.second.size();
+            memcpy(data + offset, &e0secondSize, sizeof(e0secondSize));
+            offset += sizeof(e0secondSize);
 
             // Serialise e0.second data
             for (const auto& e2 : e0.second) {
@@ -131,27 +131,27 @@ namespace MyNamespace {
 
             // Serialise primitiveToMap value data
             // Serialise size of e0.second
-            uint64_t e0_secondSize = e0.second.size();
-            memcpy(data + offset, &e0_secondSize, sizeof(e0_secondSize));
-            offset += sizeof(e0_secondSize);
+            uint64_t e0secondSize = e0.second.size();
+            memcpy(data + offset, &e0secondSize, sizeof(e0secondSize));
+            offset += sizeof(e0secondSize);
 
             for (const auto& e1 : e0.second) {
-                // Serialise e0_second key data
+                // Serialise e0second key data
                 memcpy(data + offset, &e1.first, sizeof(uint16_t));
                 offset += sizeof(uint16_t);
 
-                // Serialise e0_second value data
+                // Serialise e0second value data
                 // Serialise size of e1.second
-                uint64_t e1_secondSize = e1.second.size();
-                memcpy(data + offset, &e1_secondSize, sizeof(e1_secondSize));
-                offset += sizeof(e1_secondSize);
+                uint64_t e1secondSize = e1.second.size();
+                memcpy(data + offset, &e1secondSize, sizeof(e1secondSize));
+                offset += sizeof(e1secondSize);
 
                 for (const auto& e2 : e1.second) {
-                    // Serialise e1_second key data
+                    // Serialise e1second key data
                     memcpy(data + offset, &e2.first, sizeof(uint16_t));
                     offset += sizeof(uint16_t);
 
-                    // Serialise e1_second value data
+                    // Serialise e1second value data
                     memcpy(data + offset, &e2.second, sizeof(Colour));
                     offset += sizeof(Colour);
                 }

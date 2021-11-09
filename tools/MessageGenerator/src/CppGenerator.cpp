@@ -1003,30 +1003,105 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         os << insertTabs(1) << "// Nothing to serialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitive()) {
-            os << generateSerialise(element);
+            os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
+            if ((element.getOptional().present()) && (element.getOptional().get())) {
+                os << insertTabs(1) << "// Serialise " << element.getName() << " presence flag" << std::endl;
+                os << insertTabs(1) << "*(data + offset++) = " << element.getName() << ".has_value() ? 1 : 0;" << std::endl;
+                os << std::endl;
+                os << insertTabs(1) << "// Serialise " << element.getName() << " data" << std::endl;
+                os << insertTabs(1) << "if (" << element.getName() << ".has_value()) {" << std::endl;
+                os << generateSerialise(element, 2, element.getName() + ".value()");
+                os << insertTabs(1) << '}' << std::endl;
+            } else {
+                os << generateSerialise(element, 1, element.getName());
+            }
+            
+            os << std::endl;
         }
         
         for (const auto& enumeration : structure.getEnumeration()) {
-            os << generateSerialise(enumeration);
+            os << insertTabs(1) << "// Serialise " << enumeration.getName() << std::endl;
+            if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+                os << insertTabs(1) << "// Serialise " << enumeration.getName() << " presence flag" << std::endl;
+                os << insertTabs(1) << "*(data + offset++) = " << enumeration.getName() << ".has_value() ? 1 : 0;" << std::endl;
+                os << std::endl;
+                os << insertTabs(1) << "// Serialise " << enumeration.getName() << " data" << std::endl;
+                os << insertTabs(1) << "if (" << enumeration.getName() << ".has_value()) {" << std::endl;
+                os << generateSerialise(enumeration, 2, enumeration.getName() + ".value()");
+                os << insertTabs(1) << '}' << std::endl;
+            } else {
+                os << generateSerialise(enumeration, 1, enumeration.getName());
+            }
+            
+            os << std::endl;
         }
         
         for (const auto& subStructure : structure.getStructure()) {
-            os << generateSerialise(subStructure);
+            os << insertTabs(1) << "// Serialise " << subStructure.getName() << std::endl;
+            if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+                os << insertTabs(1) << "// Serialise " << subStructure.getName() << " presence flag" << std::endl;
+                os << insertTabs(1) << "*(data + offset++) = " << subStructure.getName() << ".has_value() ? 1 : 0;" << std::endl;
+                os << std::endl;
+                os << insertTabs(1) << "// Serialise " << subStructure.getName() << " data" << std::endl;
+                os << insertTabs(1) << "if (" << subStructure.getName() << ".has_value()) {" << std::endl;
+                os << generateSerialise(subStructure, 2, subStructure.getName() + ".value()");
+                os << insertTabs(1) << '}' << std::endl;
+            } else {
+                os << generateSerialise(subStructure, 1, subStructure.getName());
+            }
+            
+            os << std::endl;
         }
         
         for (const auto& array : structure.getArray()) {
             os << insertTabs(1) << "// Serialise " << array.getName() << std::endl;
-            os << generateSerialise(array, 1, array.getName()) << std::endl;
+            if ((array.getOptional().present()) && (array.getOptional().get())) {
+                os << insertTabs(1) << "// Serialise " << array.getName() << " presence flag" << std::endl;
+                os << insertTabs(1) << "*(data + offset++) = " << array.getName() << ".has_value() ? 1 : 0;" << std::endl;
+                os << std::endl;
+                os << insertTabs(1) << "// Serialise " << array.getName() << " data" << std::endl;
+                os << insertTabs(1) << "if (" << array.getName() << ".has_value()) {" << std::endl;
+                os << generateSerialise(array, 2, array.getName() + ".value()");
+                os << insertTabs(1) << '}' << std::endl;
+            } else {
+                os << generateSerialise(array, 1, array.getName());
+            }
+            
+            os << std::endl;
         }
         
         for (const auto& sequence : structure.getSequence()) {
             os << insertTabs(1) << "// Serialise " << sequence.getName() << std::endl;
-            os << generateSerialise(sequence, 1, sequence.getName()) << std::endl;
+            if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+                os << insertTabs(1) << "// Serialise " << sequence.getName() << " presence flag" << std::endl;
+                os << insertTabs(1) << "*(data + offset++) = " << sequence.getName() << ".has_value() ? 1 : 0;" << std::endl;
+                os << std::endl;
+                os << insertTabs(1) << "// Serialise " << sequence.getName() << " data" << std::endl;
+                os << insertTabs(1) << "if (" << sequence.getName() << ".has_value()) {" << std::endl;
+                os << generateSerialise(sequence, 2, sequence.getName() + ".value()");
+                os << insertTabs(1) << '}' << std::endl;
+            } else {
+                os << generateSerialise(sequence, 1, sequence.getName());
+            }
+            
+            os << std::endl;
         }
         
         for (const auto& map : structure.getMap()) {
             os << insertTabs(1) << "// Serialise " << map.getName() << std::endl;
-            os << generateSerialise(map, 1, map.getName()) << std::endl;
+            if ((map.getOptional().present()) && (map.getOptional().get())) {
+                os << insertTabs(1) << "// Serialise " << map.getName() << " presence flag" << std::endl;
+                os << insertTabs(1) << "*(data + offset++) = " << map.getName() << ".has_value() ? 1 : 0;" << std::endl;
+                os << std::endl;
+                os << insertTabs(1) << "// Serialise " << map.getName() << " data" << std::endl;
+                os << insertTabs(1) << "if (" << map.getName() << ".has_value()) {" << std::endl;
+                os << generateSerialise(map, 2, map.getName() + ".value()");
+                os << insertTabs(1) << '}' << std::endl;
+            } else {
+                os << generateSerialise(map, 1, map.getName());
+            }
+            
+            os << std::endl;
         }
     }
     
@@ -1050,14 +1125,17 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         os << insertTabs(1) << "// Nothing to deserialise" << std::endl;
     } else {
         for (const auto& element : structure.getPrimitive()) {
+            os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
             os << generateDeserialise(element);
         }
         
         for (const auto& enumeration : structure.getEnumeration()) {
+            os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
             os << generateDeserialise(enumeration);
         }
         
         for (const auto& subStructure : structure.getStructure()) {
+            os << insertTabs(1) << "// Deserialise " << subStructure.getName() << std::endl;
             os << generateDeserialise(subStructure);
         }
         
@@ -1083,13 +1161,13 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
     return os.str();
 }
 
-std::string CppGenerator::generateSerialise(const Messaging::NamedPrimitive& element) {
+std::string CppGenerator::generateSerialise(const Messaging::NamedPrimitive& element,
+                                            const uint8_t numTabs,
+                                            const std::string& parentName) {
     std::ostringstream os;   
     
-    os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
-    os << insertTabs(1) << "memcpy(data + offset, &" << element.getName() << ", sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof(" << element.getName() << ");" << std::endl;
-    os << std::endl;
+    os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << ", sizeof(" << parentName << "));" << std::endl;
+    os << insertTabs(numTabs) << "offset += sizeof(" << parentName << ");" << std::endl;
 
     return os.str();
 }
@@ -1097,7 +1175,6 @@ std::string CppGenerator::generateSerialise(const Messaging::NamedPrimitive& ele
 std::string CppGenerator::generateDeserialise(const Messaging::NamedPrimitive& element) {
     std::ostringstream os;   
     
-    os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
     os << insertTabs(1) << "memcpy(&" << element.getName() << ", data + offset, sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << "));" << std::endl;
     os << insertTabs(1) << "offset += sizeof(" << element.getName() << ");" << std::endl;
     os << std::endl;
@@ -1105,13 +1182,13 @@ std::string CppGenerator::generateDeserialise(const Messaging::NamedPrimitive& e
     return os.str();
 }
 
-std::string CppGenerator::generateSerialise(const Messaging::NamedEnumeration& enumeration) {
+std::string CppGenerator::generateSerialise(const Messaging::NamedEnumeration& enumeration,
+                                            const uint8_t numTabs,
+                                            const std::string& parentName) {
     std::ostringstream os;   
     
-    os << insertTabs(1) << "// Serialise " << enumeration.getName() << std::endl;
-    os << insertTabs(1) << "memcpy(data + offset, &" << enumeration.getName() << ", sizeof(" << enumeration.getType() << "));" << std::endl;
-    os << insertTabs(1) << "offset += sizeof(" << enumeration.getType() << ");" << std::endl;
-    os << std::endl;
+    os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << ", sizeof(" << parentName << "));" << std::endl;
+    os << insertTabs(numTabs) << "offset += sizeof(" << parentName << ");" << std::endl;
 
     return os.str();
 }
@@ -1119,7 +1196,6 @@ std::string CppGenerator::generateSerialise(const Messaging::NamedEnumeration& e
 std::string CppGenerator::generateDeserialise(const Messaging::NamedEnumeration& enumeration) {
     std::ostringstream os;   
     
-    os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
     os << insertTabs(1) << "memcpy(&" << enumeration.getName() << ", data + offset, sizeof(" << enumeration.getType() << "));" << std::endl;
     os << insertTabs(1) << "offset += sizeof(" << enumeration.getType() << ");" << std::endl;
     os << std::endl;
@@ -1127,12 +1203,12 @@ std::string CppGenerator::generateDeserialise(const Messaging::NamedEnumeration&
     return os.str();
 }
 
-std::string CppGenerator::generateSerialise(const Messaging::NamedStructure& structure) {
+std::string CppGenerator::generateSerialise(const Messaging::NamedStructure& structure,
+                                            const uint8_t numTabs,
+                                            const std::string& parentName) {
     std::ostringstream os;   
     
-    os << insertTabs(1) << "// Serialise " << structure.getName() << std::endl;
-    os << insertTabs(1) << structure.getName() << ".serialise(data + offset, offset);" << std::endl;
-    os << std::endl;
+    os << insertTabs(numTabs) << parentName << ".serialise(data + offset, offset);" << std::endl;
 
     return os.str();
 }
@@ -1140,7 +1216,6 @@ std::string CppGenerator::generateSerialise(const Messaging::NamedStructure& str
 std::string CppGenerator::generateDeserialise(const Messaging::NamedStructure& structure) {
     std::ostringstream os;   
     
-    os << insertTabs(1) << "// Deserialise " << structure.getName() << std::endl;
     os << insertTabs(1) << structure.getName() << ".deserialise(data + offset, offset);" << std::endl;
     os << std::endl;
 
@@ -1216,7 +1291,9 @@ std::string CppGenerator::generateSerialise(const Messaging::Sequence& sequence,
                                             const std::string& parentName) {
     std::ostringstream os;
     std::string sensibleName = parentName;
-    std::replace(sensibleName.begin(), sensibleName.end(), '.', '_');
+    std::erase(sensibleName, '.');
+    std::erase(sensibleName, ')');
+    std::erase(sensibleName, '(');
     
     os << insertTabs(numTabs) << "// Serialise size of " << parentName << std::endl;
     os << insertTabs(numTabs) << SEQ_SIZE_TYPE << ' ' << sensibleName << "Size = " << parentName << ".size();" << std::endl;
@@ -1299,7 +1376,9 @@ std::string CppGenerator::generateSerialise(const Messaging::Map& map,
                                             const std::string& parentName) {
     std::ostringstream os;
     std::string sensibleName = parentName;
-    std::replace(sensibleName.begin(), sensibleName.end(), '.', '_');
+    std::erase(sensibleName, '.');
+    std::erase(sensibleName, ')');
+    std::erase(sensibleName, '(');
     
     os << insertTabs(numTabs) << "// Serialise size of " << parentName << std::endl;
     os << insertTabs(numTabs) << SEQ_SIZE_TYPE << ' ' << sensibleName << "Size = " << parentName << ".size();" << std::endl;

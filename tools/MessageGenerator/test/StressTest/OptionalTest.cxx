@@ -13,48 +13,84 @@ namespace MyNamespace {
 
     void OptionalTest::serialise(char* data, uint64_t& offset) const {
         // Serialise primitive
-        memcpy(data + offset, &primitive, sizeof(uint64_t));
-        offset += sizeof(primitive);
+        // Serialise primitive presence flag
+        *(data + offset++) = primitive.has_value() ? 1 : 0;
+
+        // Serialise primitive data
+        if (primitive.has_value()) {
+            memcpy(data + offset, &primitive.value(), sizeof(primitive.value()));
+            offset += sizeof(primitive.value());
+        }
 
         // Serialise lastElement
-        memcpy(data + offset, &lastElement, sizeof(uint64_t));
+        memcpy(data + offset, &lastElement, sizeof(lastElement));
         offset += sizeof(lastElement);
 
         // Serialise enumeration
-        memcpy(data + offset, &enumeration, sizeof(Colour));
-        offset += sizeof(Colour);
+        // Serialise enumeration presence flag
+        *(data + offset++) = enumeration.has_value() ? 1 : 0;
+
+        // Serialise enumeration data
+        if (enumeration.has_value()) {
+            memcpy(data + offset, &enumeration.value(), sizeof(enumeration.value()));
+            offset += sizeof(enumeration.value());
+        }
 
         // Serialise structure
-        structure.serialise(data + offset, offset);
+        // Serialise structure presence flag
+        *(data + offset++) = structure.has_value() ? 1 : 0;
+
+        // Serialise structure data
+        if (structure.has_value()) {
+            structure.value().serialise(data + offset, offset);
+        }
 
         // Serialise array
-        memcpy(data + offset, &array[0], sizeof(uint16_t) * array.size());
-        offset += sizeof(uint16_t) * array.size();
+        // Serialise array presence flag
+        *(data + offset++) = array.has_value() ? 1 : 0;
+
+        // Serialise array data
+        if (array.has_value()) {
+            memcpy(data + offset, &array.value()[0], sizeof(uint16_t) * array.value().size());
+            offset += sizeof(uint16_t) * array.value().size();
+        }
 
         // Serialise sequence
-        // Serialise size of sequence
-        uint64_t sequenceSize = sequence.size();
-        memcpy(data + offset, &sequenceSize, sizeof(sequenceSize));
-        offset += sizeof(sequenceSize);
+        // Serialise sequence presence flag
+        *(data + offset++) = sequence.has_value() ? 1 : 0;
 
         // Serialise sequence data
-        memcpy(data + offset, &sequence[0], sizeof(Colour) * sequenceSize);
-        offset += sizeof(Colour) * sequenceSize;
+        if (sequence.has_value()) {
+            // Serialise size of sequence.value()
+            uint64_t sequencevalueSize = sequence.value().size();
+            memcpy(data + offset, &sequencevalueSize, sizeof(sequencevalueSize));
+            offset += sizeof(sequencevalueSize);
+
+            // Serialise sequence.value() data
+            memcpy(data + offset, &sequence.value()[0], sizeof(Colour) * sequencevalueSize);
+            offset += sizeof(Colour) * sequencevalueSize;
+        }
 
         // Serialise map
-        // Serialise size of map
-        uint64_t mapSize = map.size();
-        memcpy(data + offset, &mapSize, sizeof(mapSize));
-        offset += sizeof(mapSize);
+        // Serialise map presence flag
+        *(data + offset++) = map.has_value() ? 1 : 0;
 
-        for (const auto& e0 : map) {
-            // Serialise map key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+        // Serialise map data
+        if (map.has_value()) {
+            // Serialise size of map.value()
+            uint64_t mapvalueSize = map.value().size();
+            memcpy(data + offset, &mapvalueSize, sizeof(mapvalueSize));
+            offset += sizeof(mapvalueSize);
 
-            // Serialise map value data
-            memcpy(data + offset, &e0.second, sizeof(Colour));
-            offset += sizeof(Colour);
+            for (const auto& e1 : map.value()) {
+                // Serialise mapvalue key data
+                memcpy(data + offset, &e1.first, sizeof(uint8_t));
+                offset += sizeof(uint8_t);
+
+                // Serialise mapvalue value data
+                memcpy(data + offset, &e1.second, sizeof(Colour));
+                offset += sizeof(Colour);
+            }
         }
     }
 

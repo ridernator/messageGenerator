@@ -165,8 +165,8 @@ namespace MyNamespace {
         offset += sizeof(lastElement);
 
         // Deserialise colour
-        memcpy(&colour, data + offset, sizeof(Colour));
-        offset += sizeof(Colour);
+        memcpy(&colour, data + offset, sizeof(colour));
+        offset += sizeof(colour);
 
         // Deserialise tss
         tss.deserialise(data + offset, offset);

@@ -96,54 +96,84 @@ namespace MyNamespace {
 
     void OptionalTest::deserialise(const char* data, uint64_t& offset) {
         // Deserialise primitive
-        memcpy(&primitive, data + offset, sizeof(uint64_t));
-        offset += sizeof(primitive);
+        if (*(data + offset++) == 1) {
+            primitive = typename std::decay_t<decltype(primitive)>::value_type{};
+            memcpy(&primitive.value(), data + offset, sizeof(uint64_t));
+            offset += sizeof(primitive.value());
+        } else {
+            primitive.reset();
+        }
 
         // Deserialise lastElement
         memcpy(&lastElement, data + offset, sizeof(uint64_t));
         offset += sizeof(lastElement);
 
         // Deserialise enumeration
-        memcpy(&enumeration, data + offset, sizeof(Colour));
-        offset += sizeof(Colour);
+        if (*(data + offset++) == 1) {
+            enumeration = typename std::decay_t<decltype(enumeration)>::value_type{};
+            memcpy(&enumeration.value(), data + offset, sizeof(enumeration.value()));
+            offset += sizeof(enumeration.value());
+        } else {
+            enumeration.reset();
+        }
 
         // Deserialise structure
-        structure.deserialise(data + offset, offset);
+        if (*(data + offset++) == 1) {
+            structure = typename std::decay_t<decltype(structure)>::value_type{};
+            structure.value().deserialise(data + offset, offset);
+        } else {
+            structure.reset();
+        }
 
         // Deserialise array
-        memcpy(&array[0], data + offset, sizeof(uint16_t) * array.size());
-        offset += sizeof(uint16_t) * array.size();
+        if (*(data + offset++) == 1) {
+            array = typename std::decay_t<decltype(array)>::value_type{};
+            memcpy(&array.value()[0], data + offset, sizeof(uint16_t) * array.value().size());
+            offset += sizeof(uint16_t) * array.value().size();
+        } else {
+            array.reset();
+        }
 
         // Deserialise sequence
-        // Deserialise size of sequence
-        uint64_t sequenceSize;
-        memcpy(&sequenceSize, data + offset, sizeof(sequenceSize));
-        offset += sizeof(sequenceSize);
+        if (*(data + offset++) == 1) {
+            sequence = typename std::decay_t<decltype(sequence)>::value_type{};
+            // Deserialise size of sequence.value()
+            uint64_t sequencevalueSize;
+            memcpy(&sequencevalueSize, data + offset, sizeof(sequencevalueSize));
+            offset += sizeof(sequencevalueSize);
 
-        // Deserialise sequence data
-        sequence.resize(sequenceSize);
-        memcpy(&sequence[0], data + offset, sizeof(Colour) * sequenceSize);
-        offset += sizeof(Colour) * sequenceSize;
+            // Deserialise sequence.value() data
+            sequence.value().resize(sequencevalueSize);
+            memcpy(&sequence.value()[0], data + offset, sizeof(Colour) * sequencevalueSize);
+            offset += sizeof(Colour) * sequencevalueSize;
+        } else {
+            sequence.reset();
+        }
 
         // Deserialise map
-        // Deserialise size of map
-        uint64_t mapSize;
-        memcpy(&mapSize, data + offset, sizeof(mapSize));
-        offset += sizeof(mapSize);
+        if (*(data + offset++) == 1) {
+            map = typename std::decay_t<decltype(map)>::value_type{};
+            // Deserialise size of map.value()
+            uint64_t mapvalueSize;
+            memcpy(&mapvalueSize, data + offset, sizeof(mapvalueSize));
+            offset += sizeof(mapvalueSize);
 
-        // Deserialise map data
-        for (uint64_t index = 0; index < mapSize; ++index) {
-            // Deserialise map key data
-            uint8_t first0;
-            memcpy(&first0, data + offset, sizeof(first0));
-            offset += sizeof(first0);
+            // Deserialise map.value() data
+            for (uint64_t index = 0; index < mapvalueSize; ++index) {
+                // Deserialise mapvalue key data
+                uint8_t first1;
+                memcpy(&first1, data + offset, sizeof(first1));
+                offset += sizeof(first1);
 
-            // Deserialise map value data
-            Colour second0;
-            memcpy(&second0, data + offset, sizeof(second0));
-            offset += sizeof(second0);
+                // Deserialise mapvalue value data
+                Colour second1;
+                memcpy(&second1, data + offset, sizeof(second1));
+                offset += sizeof(second1);
 
-            map.insert({first0, second0});
+                map.value().insert({first1, second1});
+            }
+        } else {
+            map.reset();
         }
     }
 

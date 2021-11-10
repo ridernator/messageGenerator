@@ -71,19 +71,25 @@ class CppGenerator : Generator {
                                       const uint8_t numTabs,
                                       const std::string& parentName);
 
-        std::string generateDeserialise(const Messaging::NamedPrimitive& element);
+        std::string generateDeserialise(const Messaging::NamedPrimitive& element,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
 
         std::string generateSerialise(const Messaging::NamedEnumeration& enumeration,
                                       const uint8_t numTabs,
                                       const std::string& parentName);
 
-        std::string generateDeserialise(const Messaging::NamedEnumeration& enumeration);
+        std::string generateDeserialise(const Messaging::NamedEnumeration& enumeration,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
 
         std::string generateSerialise(const Messaging::NamedStructure& structure,
                                       const uint8_t numTabs,
                                       const std::string& parentName);
 
-        std::string generateDeserialise(const Messaging::NamedStructure& structure);
+        std::string generateDeserialise(const Messaging::NamedStructure& structure,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
 
         std::string generateSerialise(const Messaging::Array& array,
                                       const uint8_t numTabs,

@@ -834,41 +834,94 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() const {" << std::endl;
     
     for (const auto& element : structure.getPrimitive()) {
-        os << insertTabs(1) << "// " << element.getName() << " = " << sizeOfPrimitiveType(element.getType()) << " bytes (" << convertPrimitiveTypeToCppType(element.getType()) << ')' << std::endl;
-        size += sizeOfPrimitiveType(element.getType());
+        if ((element.getOptional().present()) && (element.getOptional().get())) {
+            os << insertTabs(1) << "// Optionality flag for " << element.getName() << " = 1 byte" << std::endl;
+            ++size;
+        } else {
+            os << insertTabs(1) << "// " << element.getName() << " = " << sizeOfPrimitiveType(element.getType()) << " bytes (" << convertPrimitiveTypeToCppType(element.getType()) << ')' << std::endl;
+            size += sizeOfPrimitiveType(element.getType());
+        }
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        os << insertTabs(1) << "// " << enumeration.getName() << " = " << sizeOfEnumeration(enumeration.getType()) << " bytes (" << enumeration.getType() << ')' << std::endl;
-        size += sizeOfEnumeration(enumeration.getType());
+        if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+            os << insertTabs(1) << "// Optionality flag for " << enumeration.getName() << " = 1 byte" << std::endl;
+            ++size;
+        } else {
+            os << insertTabs(1) << "// " << enumeration.getName() << " = " << sizeOfEnumeration(enumeration.getType()) << " bytes (" << enumeration.getType() << ')' << std::endl;
+            size += sizeOfEnumeration(enumeration.getType());
+        }
     }
     
     os << insertTabs(1) << "// Size of primitive types in this structure" << std::endl;
     os << insertTabs(1) << "uint64_t size = " << size << ';' << std::endl;
     os << std::endl;
+    
+    for (const auto& element : structure.getPrimitive()) {
+        if ((element.getOptional().present()) && (element.getOptional().get())) {
+            os << insertTabs(1) << "// If " << element.getName() << " is present then add on size of it" << std::endl;
+            os << insertTabs(1) << "if (" << element.getName() << ".has_value()) {" << std::endl;
+            os << insertTabs(2) << "size += sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << ");" << std::endl;
+            os << insertTabs(1) << '}' << std::endl;
+        }
+    }
+    
+    for (const auto& enumeration : structure.getEnumeration()) {
+        if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+            os << insertTabs(1) << "// If " << enumeration.getName() << " is present then add on size of it" << std::endl;
+            os << insertTabs(1) << "if (" << enumeration.getName() << ".has_value()) {" << std::endl;
+            os << insertTabs(2) << "size += sizeof(" << enumeration.getType() << ");" << std::endl;
+            os << insertTabs(1) << '}' << std::endl;
+        }
+    }
        
     for (const auto& subStructure : structure.getStructure()) {
         os << insertTabs(1) << "// Add on size of " << subStructure.getName() << std::endl;
-        os << insertTabs(1) << "size += " << subStructure.getName() << ".getSizeInBytes();" << std::endl;
+        if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+            os << insertTabs(1) << "++size;" << std::endl;
+            os << insertTabs(1) << "if (" << subStructure.getName() << ".has_value()) {" << std::endl;
+            os << insertTabs(2) << "size += " << subStructure.getName() << ".value().getSizeInBytes();" << std::endl;
+            os << insertTabs(1) << '}' << std::endl;
+        } else {
+            os << insertTabs(1) << "size += " << subStructure.getName() << ".getSizeInBytes();" << std::endl;
+        }
         os << std::endl;
     }
        
     for (const auto& array : structure.getArray()) {
         os << insertTabs(1) << "// Add on size of " << array.getName() << std::endl;
-        
-        os << generateSizeOfArray(array, 1, array.getName()) << std::endl;
+        if ((array.getOptional().present()) && (array.getOptional().get())) {
+            os << insertTabs(1) << "++size;" << std::endl;
+            os << insertTabs(1) << "if (" << array.getName() << ".has_value()) {" << std::endl;
+            os << generateSizeOfArray(array, 2, array.getName() + ".value()") << std::endl;
+            os << insertTabs(1) << '}' << std::endl;
+        } else {
+            os << generateSizeOfArray(array, 1, array.getName()) << std::endl;
+        }
     }
        
     for (const auto& sequence : structure.getSequence()) {
         os << insertTabs(1) << "// Add on size of " << sequence.getName() << std::endl;
-        
-        os << generateSizeOfSequence(sequence, 1, sequence.getName()) << std::endl;
+        if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+            os << insertTabs(1) << "++size;" << std::endl;
+            os << insertTabs(1) << "if (" << sequence.getName() << ".has_value()) {" << std::endl;
+            os << generateSizeOfSequence(sequence, 2, sequence.getName() + ".value()") << std::endl;
+            os << insertTabs(1) << '}' << std::endl;
+        } else {
+            os << generateSizeOfSequence(sequence, 1, sequence.getName()) << std::endl;
+        }
     }
        
     for (const auto& map : structure.getMap()) {
         os << insertTabs(1) << "// Add on size of " << map.getName() << std::endl;
-        
-        os << generateSizeOfMap(map, 1, map.getName()) << std::endl;
+        if ((map.getOptional().present()) && (map.getOptional().get())) {
+            os << insertTabs(1) << "++size;" << std::endl;
+            os << insertTabs(1) << "if (" << map.getName() << ".has_value()) {" << std::endl;
+            os << generateSizeOfMap(map, 2, map.getName() + ".value()") << std::endl;
+            os << insertTabs(1) << '}' << std::endl;
+        } else {
+            os << generateSizeOfMap(map, 1, map.getName()) << std::endl;
+        }
     }
     
     os << insertTabs(1) << "return size;" << std::endl;
@@ -1276,7 +1329,7 @@ std::string CppGenerator::generateSerialise(const Messaging::NamedStructure& str
                                             const std::string& parentName) {
     std::ostringstream os;   
     
-    os << insertTabs(numTabs) << parentName << ".serialise(data + offset, offset);" << std::endl;
+    os << insertTabs(numTabs) << parentName << ".serialise(data, offset);" << std::endl;
 
     return os.str();
 }
@@ -1286,7 +1339,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::NamedStructure& s
                                               const std::string& parentName) {
     std::ostringstream os;   
     
-    os << insertTabs(numTabs) << parentName << ".deserialise(data + offset, offset);" << std::endl;
+    os << insertTabs(numTabs) << parentName << ".deserialise(data, offset);" << std::endl;
 
     return os.str();
 }

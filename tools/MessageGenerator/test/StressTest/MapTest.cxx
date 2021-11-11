@@ -21,7 +21,7 @@ namespace MyNamespace {
         offset += sizeof(colour);
 
         // Serialise tss
-        tss.serialise(data + offset, offset);
+        tss.serialise(data, offset);
 
         // Serialise primitiveToPrimitive
         // Serialise size of primitiveToPrimitive
@@ -169,7 +169,7 @@ namespace MyNamespace {
         offset += sizeof(colour);
 
         // Deserialise tss
-        tss.deserialise(data + offset, offset);
+        tss.deserialise(data, offset);
 
         // Deserialise primitiveToPrimitive
         // Deserialise size of primitiveToPrimitive

@@ -42,7 +42,7 @@ namespace MyNamespace {
 
         // Serialise structure data
         if (structure.has_value()) {
-            structure.value().serialise(data + offset, offset);
+            structure.value().serialise(data, offset);
         }
 
         // Serialise array
@@ -120,7 +120,7 @@ namespace MyNamespace {
         // Deserialise structure
         if (*(data + offset++) == 1) {
             structure = typename std::decay_t<decltype(structure)>::value_type{};
-            structure.value().deserialise(data + offset, offset);
+            structure.value().deserialise(data, offset);
         } else {
             structure.reset();
         }
@@ -178,35 +178,55 @@ namespace MyNamespace {
     }
 
     uint64_t OptionalTest::getSizeInBytes() const {
-        // primitive = 8 bytes (uint64_t)
+        // Optionality flag for primitive = 1 byte
         // lastElement = 8 bytes (uint64_t)
-        // enumeration = 1 bytes (Colour)
+        // Optionality flag for enumeration = 1 byte
         // Size of primitive types in this structure
-        uint64_t size = 17;
+        uint64_t size = 10;
 
+        // If primitive is present then add on size of it
+        if (primitive.has_value()) {
+            size += sizeof(uint64_t);
+        }
+        // If enumeration is present then add on size of it
+        if (enumeration.has_value()) {
+            size += sizeof(Colour);
+        }
         // Add on size of structure
-        size += structure.getSizeInBytes();
+        ++size;
+        if (structure.has_value()) {
+            size += structure.value().getSizeInBytes();
+        }
 
         // Add on size of array
-        size += sizeof(uint16_t) * array.size();
+        ++size;
+        if (array.has_value()) {
+            size += sizeof(uint16_t) * array.value().size();
 
+        }
         // Add on size of sequence
-        // Add on size of sequence length field
-        size += sizeof(uint64_t);
+        ++size;
+        if (sequence.has_value()) {
+            // Add on size of sequence.value() length field
+            size += sizeof(uint64_t);
 
-        // Add on size of sequence data
-        size += sizeof(Colour) * sequence.size();
+            // Add on size of sequence.value() data
+            size += sizeof(Colour) * sequence.value().size();
 
+        }
         // Add on size of map
-        // Add on size of map length field
-        size += sizeof(uint64_t);
+        ++size;
+        if (map.has_value()) {
+            // Add on size of map.value() length field
+            size += sizeof(uint64_t);
 
-        // Add on size of map key data
-        size += sizeof(uint8_t) * map.size();
+            // Add on size of map.value() key data
+            size += sizeof(uint8_t) * map.value().size();
 
-        // Add on size of map value data
-        size += sizeof(Colour) * map.size();
+            // Add on size of map.value() value data
+            size += sizeof(Colour) * map.value().size();
 
+        }
         return size;
     }
 

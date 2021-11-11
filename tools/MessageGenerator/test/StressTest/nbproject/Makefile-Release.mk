@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/MapTest.o \
+	${OBJECTDIR}/OptionalTest.o \
 	${OBJECTDIR}/TestSubStruct.o \
 	${OBJECTDIR}/main.o
 
@@ -68,6 +69,11 @@ ${OBJECTDIR}/MapTest.o: MapTest.cxx
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MapTest.o MapTest.cxx
+
+${OBJECTDIR}/OptionalTest.o: OptionalTest.cxx
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OptionalTest.o OptionalTest.cxx
 
 ${OBJECTDIR}/TestSubStruct.o: TestSubStruct.cxx
 	${MKDIR} -p ${OBJECTDIR}

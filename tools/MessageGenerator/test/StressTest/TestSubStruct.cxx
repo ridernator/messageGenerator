@@ -13,7 +13,7 @@ namespace MyNamespace {
 
     void TestSubStruct::serialise(char* data, uint64_t& offset) const {
         // Serialise bigUnsigned
-        memcpy(data + offset, &bigUnsigned, sizeof(uint64_t));
+        memcpy(data + offset, &bigUnsigned, sizeof(bigUnsigned));
         offset += sizeof(bigUnsigned);
     }
 

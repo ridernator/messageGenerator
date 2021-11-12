@@ -115,6 +115,9 @@ class CppGenerator : Generator {
                                         const uint8_t numTabs,
                                         const std::string& parentName);
 
+        std::string generateSerialiseElement(const std::string& element,
+                                             const uint8_t numTabs);
+
         std::string generateGettersCxx(const Messaging::Structure& structure);
 
         std::string generateSettersCxx(const Messaging::Structure& structure);

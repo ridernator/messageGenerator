@@ -31,12 +31,12 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToPrimitive) {
             // Serialise primitiveToPrimitive key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToPrimitive value data
-            memcpy(data + offset, &e0.second, sizeof(float));
-            offset += sizeof(float);
+            memcpy(data + offset, &e0.second, sizeof(e0.second));
+            offset += sizeof(e0.second);
         }
 
         // Serialise primitiveToEnum
@@ -47,12 +47,12 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToEnum) {
             // Serialise primitiveToEnum key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToEnum value data
-            memcpy(data + offset, &e0.second, sizeof(Colour));
-            offset += sizeof(Colour);
+            memcpy(data + offset, &e0.second, sizeof(e0.second));
+            offset += sizeof(e0.second);
         }
 
         // Serialise primitiveToStruct
@@ -63,8 +63,8 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToStruct) {
             // Serialise primitiveToStruct key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToStruct value data
             e0.second.serialise(data + offset, offset);
@@ -78,8 +78,8 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToArray) {
             // Serialise primitiveToArray key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToArray value data
             for (const auto& e2 : e0.second) {
@@ -96,8 +96,8 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToSequence) {
             // Serialise primitiveToSequence key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToSequence value data
             // Serialise size of e0.second
@@ -126,8 +126,8 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToMap) {
             // Serialise primitiveToMap key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToMap value data
             // Serialise size of e0.second
@@ -137,8 +137,8 @@ namespace MyNamespace {
 
             for (const auto& e1 : e0.second) {
                 // Serialise e0second key data
-                memcpy(data + offset, &e1.first, sizeof(uint16_t));
-                offset += sizeof(uint16_t);
+                memcpy(data + offset, &e1.first, sizeof(e1.first));
+                offset += sizeof(e1.first);
 
                 // Serialise e0second value data
                 // Serialise size of e1.second
@@ -148,12 +148,12 @@ namespace MyNamespace {
 
                 for (const auto& e2 : e1.second) {
                     // Serialise e1second key data
-                    memcpy(data + offset, &e2.first, sizeof(uint16_t));
-                    offset += sizeof(uint16_t);
+                    memcpy(data + offset, &e2.first, sizeof(e2.first));
+                    offset += sizeof(e2.first);
 
                     // Serialise e1second value data
-                    memcpy(data + offset, &e2.second, sizeof(Colour));
-                    offset += sizeof(Colour);
+                    memcpy(data + offset, &e2.second, sizeof(e2.second));
+                    offset += sizeof(e2.second);
                 }
             }
         }

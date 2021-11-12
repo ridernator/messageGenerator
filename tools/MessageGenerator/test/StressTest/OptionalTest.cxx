@@ -84,12 +84,12 @@ namespace MyNamespace {
 
             for (const auto& e1 : map.value()) {
                 // Serialise mapvalue key data
-                memcpy(data + offset, &e1.first, sizeof(uint8_t));
-                offset += sizeof(uint8_t);
+                memcpy(data + offset, &e1.first, sizeof(e1.first));
+                offset += sizeof(e1.first);
 
                 // Serialise mapvalue value data
-                memcpy(data + offset, &e1.second, sizeof(Colour));
-                offset += sizeof(Colour);
+                memcpy(data + offset, &e1.second, sizeof(e1.second));
+                offset += sizeof(e1.second);
             }
         }
     }

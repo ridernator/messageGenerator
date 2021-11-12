@@ -229,7 +229,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = element.getName();
     upperName[0] = toupper(upperName[0]);
 
-    if ((element.getOptional().present()) && (element.getOptional().get())) {
+    if (isOptional(element)) {
         os << insertTabs() << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     } else {
         os << insertTabs() << convertPrimitiveTypeToCppType(element.getType()) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
@@ -247,7 +247,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = subStructure.getName();
     upperName[0] = toupper(upperName[0]);
 
-    if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+    if (isOptional(subStructure)) {
         os << insertTabs() << "std::optional<" << subStructure.getType() << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     } else {
         os << insertTabs() << subStructure.getType() << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
@@ -265,7 +265,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = array.getName();
     upperName[0] = toupper(upperName[0]);
 
-    if ((array.getOptional().present()) && (array.getOptional().get())) {
+    if (isOptional(array)) {
         os << insertTabs() << "std::optional<" << getCxxType(array) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     } else {
         os << insertTabs() << getCxxType(array) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
@@ -283,7 +283,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = sequence.getName();
     upperName[0] = toupper(upperName[0]);
 
-    if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+    if (isOptional(sequence)) {
         os << insertTabs() << "std::optional<" << getCxxType(sequence) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     } else {
         os << insertTabs() << getCxxType(sequence) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
@@ -301,7 +301,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = map.getName();
     upperName[0] = toupper(upperName[0]);
 
-    if ((map.getOptional().present()) && (map.getOptional().get())) {
+    if (isOptional(map)) {
         os << insertTabs() << "std::optional<" << getCxxType(map) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     } else {
         os << insertTabs() << getCxxType(map) << "& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
@@ -333,7 +333,7 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
     std::string upperName = enumeration.getName();
     upperName[0] = toupper(upperName[0]);
 
-    if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+    if (isOptional(enumeration)) {
         os << insertTabs() << "std::optional<" << enumeration.getType() << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     } else {
         os << insertTabs() << enumeration.getType() << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
@@ -496,7 +496,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedPrimitive& ele
     os << insertTabs(2) << " * @return " << element.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    if ((element.getOptional().present()) && (element.getOptional().get())) {
+    if (isOptional(element)) {
         os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << ">& get" << name << "();" << std::endl;
     } else {
         os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << " get" << name << "() const;" << std::endl;
@@ -545,7 +545,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedEnumeration& e
     os << insertTabs(2) << " * @return " << enumeration.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+    if (isOptional(enumeration)) {
         os << insertTabs(2) << "std::optional<" << enumeration.getType() << ">& get" << name << "();" << std::endl;
     } else {
         os << insertTabs(2) << enumeration.getType() << " get" << name << "() const;" << std::endl;
@@ -572,7 +572,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedStructure& str
     os << insertTabs(2) << " * @return " << structure.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    if ((structure.getOptional().present()) && (structure.getOptional().get())) {
+    if (isOptional(structure)) {
         os << insertTabs(2) << "std::optional<" << structure.getType() << ">& get" << name << "();" << std::endl;
     } else {
         os << insertTabs(2) << structure.getType() << "& get" << name << "();" << std::endl;
@@ -599,7 +599,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedArray& array) 
     os << insertTabs(2) << " * @return " << array.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    if ((array.getOptional().present()) && (array.getOptional().get())) {
+    if (isOptional(array)) {
         os << insertTabs(2) << "std::optional<" << getCxxType(array) << ">& get" << name << "();" << std::endl;
     } else {
         os << insertTabs(2) << getCxxType(array) << "& get" << name << "();" << std::endl;
@@ -626,7 +626,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedSequence& sequ
     os << insertTabs(2) << " * @return " << sequence.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+    if (isOptional(sequence)) {
         os << insertTabs(2) << "std::optional<" << getCxxType(sequence) << ">& get" << name << "();" << std::endl;
     } else {
         os << insertTabs(2) << getCxxType(sequence) << "& get" << name << "();" << std::endl;
@@ -653,7 +653,7 @@ std::string CppGenerator::generateGetterHxx(const Messaging::NamedMap& map) {
     os << insertTabs(2) << " * @return " << map.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    if ((map.getOptional().present()) && (map.getOptional().get())) {
+    if (isOptional(map)) {
         os << insertTabs(2) << "std::optional<" << getCxxType(map) << ">& get" << name << "();" << std::endl;
     } else {
         os << insertTabs(2) << getCxxType(map) << "& get" << name << "();" << std::endl;
@@ -694,7 +694,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        if ((element.getOptional().present()) && (element.getOptional().get())) {
+        if (isOptional(element)) {
             os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << "> " << element.getName() << ';' << std::endl;
         } else {
             os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << ' ' << element.getName() << ';' << std::endl;
@@ -709,7 +709,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+        if (isOptional(enumeration)) {
             os << insertTabs(2) << "std::optional<" << enumeration.getType() << "> " << enumeration.getName() << ';' << std::endl;
         } else {
             os << insertTabs(2) << enumeration.getType() << ' ' << enumeration.getName() << ';' << std::endl;
@@ -724,7 +724,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+        if (isOptional(subStructure)) {
             os << insertTabs(2) << "std::optional<" << subStructure.getType() << "> " << subStructure.getName() << ';' << std::endl;
         } else {
             os << insertTabs(2) << subStructure.getType() << ' ' << subStructure.getName() << ';' << std::endl;
@@ -739,7 +739,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        if ((array.getOptional().present()) && (array.getOptional().get())) {
+        if (isOptional(array)) {
             os << insertTabs(2) << "std::optional<" << getCxxType(array) << "> " << array.getName() << ';' << std::endl;
         } else {
             os << insertTabs(2) << getCxxType(array) << ' ' << array.getName() << ';' << std::endl;
@@ -754,7 +754,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+        if (isOptional(sequence)) {
             os << insertTabs(2) << "std::optional<" << getCxxType(sequence) << "> " << sequence.getName() << ';' << std::endl;
         } else {
             os << insertTabs(2) << getCxxType(sequence) << ' ' << sequence.getName() << ';' << std::endl;
@@ -769,7 +769,7 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        if ((map.getOptional().present()) && (map.getOptional().get())) {
+        if (isOptional(map)) {
             os << insertTabs(2) << "std::optional<" << getCxxType(map) << "> " << map.getName() << ';' << std::endl;
         } else {
             os << insertTabs(2) << getCxxType(map) << ' ' << map.getName() << ';' << std::endl;
@@ -834,7 +834,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() const {" << std::endl;
     
     for (const auto& element : structure.getPrimitive()) {
-        if ((element.getOptional().present()) && (element.getOptional().get())) {
+        if (isOptional(element)) {
             os << insertTabs(1) << "// Optionality flag for " << element.getName() << " = 1 byte" << std::endl;
             ++size;
         } else {
@@ -844,7 +844,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+        if (isOptional(enumeration)) {
             os << insertTabs(1) << "// Optionality flag for " << enumeration.getName() << " = 1 byte" << std::endl;
             ++size;
         } else {
@@ -858,7 +858,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     os << std::endl;
     
     for (const auto& element : structure.getPrimitive()) {
-        if ((element.getOptional().present()) && (element.getOptional().get())) {
+        if (isOptional(element)) {
             os << insertTabs(1) << "// If " << element.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << element.getName() << ".has_value()) {" << std::endl;
             os << insertTabs(2) << "size += sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << ");" << std::endl;
@@ -867,7 +867,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+        if (isOptional(enumeration)) {
             os << insertTabs(1) << "// If " << enumeration.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << enumeration.getName() << ".has_value()) {" << std::endl;
             os << insertTabs(2) << "size += sizeof(" << enumeration.getType() << ");" << std::endl;
@@ -877,7 +877,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
        
     for (const auto& subStructure : structure.getStructure()) {
         os << insertTabs(1) << "// Add on size of " << subStructure.getName() << std::endl;
-        if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+        if (isOptional(subStructure)) {
             os << insertTabs(1) << "++size;" << std::endl;
             os << insertTabs(1) << "if (" << subStructure.getName() << ".has_value()) {" << std::endl;
             os << insertTabs(2) << "size += " << subStructure.getName() << ".value().getSizeInBytes();" << std::endl;
@@ -890,7 +890,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
        
     for (const auto& array : structure.getArray()) {
         os << insertTabs(1) << "// Add on size of " << array.getName() << std::endl;
-        if ((array.getOptional().present()) && (array.getOptional().get())) {
+        if (isOptional(array)) {
             os << insertTabs(1) << "++size;" << std::endl;
             os << insertTabs(1) << "if (" << array.getName() << ".has_value()) {" << std::endl;
             os << generateSizeOfArray(array, 2, array.getName() + ".value()") << std::endl;
@@ -902,7 +902,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
        
     for (const auto& sequence : structure.getSequence()) {
         os << insertTabs(1) << "// Add on size of " << sequence.getName() << std::endl;
-        if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+        if (isOptional(sequence)) {
             os << insertTabs(1) << "++size;" << std::endl;
             os << insertTabs(1) << "if (" << sequence.getName() << ".has_value()) {" << std::endl;
             os << generateSizeOfSequence(sequence, 2, sequence.getName() + ".value()") << std::endl;
@@ -914,7 +914,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
        
     for (const auto& map : structure.getMap()) {
         os << insertTabs(1) << "// Add on size of " << map.getName() << std::endl;
-        if ((map.getOptional().present()) && (map.getOptional().get())) {
+        if (isOptional(map)) {
             os << insertTabs(1) << "++size;" << std::endl;
             os << insertTabs(1) << "if (" << map.getName() << ".has_value()) {" << std::endl;
             os << generateSizeOfMap(map, 2, map.getName() + ".value()") << std::endl;
@@ -1057,7 +1057,7 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
     } else {
         for (const auto& element : structure.getPrimitive()) {
             os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
-            if ((element.getOptional().present()) && (element.getOptional().get())) {
+            if (isOptional(element)) {
                 os << insertTabs(1) << "// Serialise " << element.getName() << " presence flag" << std::endl;
                 os << insertTabs(1) << "*(data + offset++) = " << element.getName() << ".has_value() ? 1 : 0;" << std::endl;
                 os << std::endl;
@@ -1074,7 +1074,7 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         
         for (const auto& enumeration : structure.getEnumeration()) {
             os << insertTabs(1) << "// Serialise " << enumeration.getName() << std::endl;
-            if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+            if (isOptional(enumeration)) {
                 os << insertTabs(1) << "// Serialise " << enumeration.getName() << " presence flag" << std::endl;
                 os << insertTabs(1) << "*(data + offset++) = " << enumeration.getName() << ".has_value() ? 1 : 0;" << std::endl;
                 os << std::endl;
@@ -1091,7 +1091,7 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         
         for (const auto& subStructure : structure.getStructure()) {
             os << insertTabs(1) << "// Serialise " << subStructure.getName() << std::endl;
-            if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+            if (isOptional(subStructure)) {
                 os << insertTabs(1) << "// Serialise " << subStructure.getName() << " presence flag" << std::endl;
                 os << insertTabs(1) << "*(data + offset++) = " << subStructure.getName() << ".has_value() ? 1 : 0;" << std::endl;
                 os << std::endl;
@@ -1108,7 +1108,7 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         
         for (const auto& array : structure.getArray()) {
             os << insertTabs(1) << "// Serialise " << array.getName() << std::endl;
-            if ((array.getOptional().present()) && (array.getOptional().get())) {
+            if (isOptional(array)) {
                 os << insertTabs(1) << "// Serialise " << array.getName() << " presence flag" << std::endl;
                 os << insertTabs(1) << "*(data + offset++) = " << array.getName() << ".has_value() ? 1 : 0;" << std::endl;
                 os << std::endl;
@@ -1125,7 +1125,7 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         
         for (const auto& sequence : structure.getSequence()) {
             os << insertTabs(1) << "// Serialise " << sequence.getName() << std::endl;
-            if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+            if (isOptional(sequence)) {
                 os << insertTabs(1) << "// Serialise " << sequence.getName() << " presence flag" << std::endl;
                 os << insertTabs(1) << "*(data + offset++) = " << sequence.getName() << ".has_value() ? 1 : 0;" << std::endl;
                 os << std::endl;
@@ -1142,7 +1142,7 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         
         for (const auto& map : structure.getMap()) {
             os << insertTabs(1) << "// Serialise " << map.getName() << std::endl;
-            if ((map.getOptional().present()) && (map.getOptional().get())) {
+            if (isOptional(map)) {
                 os << insertTabs(1) << "// Serialise " << map.getName() << " presence flag" << std::endl;
                 os << insertTabs(1) << "*(data + offset++) = " << map.getName() << ".has_value() ? 1 : 0;" << std::endl;
                 os << std::endl;
@@ -1179,7 +1179,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
     } else {
         for (const auto& element : structure.getPrimitive()) {
             os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
-            if ((element.getOptional().present()) && (element.getOptional().get())) {
+            if (isOptional(element)) {
                 os << insertTabs(1) << "if (*(data + offset++) == 1) {" << std::endl;
                 os << insertTabs(2) << element.getName() << " = typename std::decay_t<decltype(" << element.getName() << ")>::value_type{};" << std::endl;
                 os << generateDeserialise(element, 2, element.getName() + ".value()");
@@ -1195,7 +1195,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         
         for (const auto& enumeration : structure.getEnumeration()) {
             os << insertTabs(1) << "// Deserialise " << enumeration.getName() << std::endl;
-            if ((enumeration.getOptional().present()) && (enumeration.getOptional().get())) {
+            if (isOptional(enumeration)) {
                 os << insertTabs(1) << "if (*(data + offset++) == 1) {" << std::endl;
                 os << insertTabs(2) << enumeration.getName() << " = typename std::decay_t<decltype(" << enumeration.getName() << ")>::value_type{};" << std::endl;
                 os << generateDeserialise(enumeration, 2, enumeration.getName() + ".value()");
@@ -1211,7 +1211,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         
         for (const auto& subStructure : structure.getStructure()) {
             os << insertTabs(1) << "// Deserialise " << subStructure.getName() << std::endl;
-            if ((subStructure.getOptional().present()) && (subStructure.getOptional().get())) {
+            if (isOptional(subStructure)) {
                 os << insertTabs(1) << "if (*(data + offset++) == 1) {" << std::endl;
                 os << insertTabs(2) << subStructure.getName() << " = typename std::decay_t<decltype(" << subStructure.getName() << ")>::value_type{};" << std::endl;
                 os << generateDeserialise(subStructure, 2, subStructure.getName() + ".value()");
@@ -1227,7 +1227,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         
         for (const auto& array : structure.getArray()) {
             os << insertTabs(1) << "// Deserialise " << array.getName() << std::endl;
-            if ((array.getOptional().present()) && (array.getOptional().get())) {
+            if (isOptional(array)) {
                 os << insertTabs(1) << "if (*(data + offset++) == 1) {" << std::endl;
                 os << insertTabs(2) << array.getName() << " = typename std::decay_t<decltype(" << array.getName() << ")>::value_type{};" << std::endl;
                 os << generateDeserialise(array, 2, array.getName() + ".value()");
@@ -1243,7 +1243,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         
         for (const auto& sequence : structure.getSequence()) {
             os << insertTabs(1) << "// Deserialise " << sequence.getName() << std::endl;
-            if ((sequence.getOptional().present()) && (sequence.getOptional().get())) {
+            if (isOptional(sequence)) {
                 os << insertTabs(1) << "if (*(data + offset++) == 1) {" << std::endl;
                 os << insertTabs(2) << sequence.getName() << " = typename std::decay_t<decltype(" << sequence.getName() << ")>::value_type{};" << std::endl;
                 os << generateDeserialise(sequence, 2, sequence.getName() + ".value()");
@@ -1259,7 +1259,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         
         for (const auto& map : structure.getMap()) {
             os << insertTabs(1) << "// Deserialise " << map.getName() << std::endl;
-            if ((map.getOptional().present()) && (map.getOptional().get())) {
+            if (isOptional(map)) {
                 os << insertTabs(1) << "if (*(data + offset++) == 1) {" << std::endl;
                 os << insertTabs(2) << map.getName() << " = typename std::decay_t<decltype(" << map.getName() << ")>::value_type{};" << std::endl;
                 os << generateDeserialise(map, 2, map.getName() + ".value()");
@@ -1791,4 +1791,14 @@ std::string CppGenerator::convertPrimitiveTypeToCppType(const Messaging::NamedPr
     }
 
     return os.str();
+}
+
+bool CppGenerator::isOptional(const auto& element) {
+    bool returnVal = false;
+
+    if (element.getOptional().present()) {
+        returnVal = element.getOptional().get();
+    }
+    
+    return returnVal;
 }

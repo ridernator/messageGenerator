@@ -169,5 +169,7 @@ class CppGenerator : Generator {
 
         std::string convertPrimitiveTypeToCppType(const Messaging::NamedPrimitive::TypeType& element);
         
+        bool isOptional(const auto& element);
+        
         const static std::string SEQ_SIZE_TYPE;
 };

@@ -1,3 +1,5 @@
 #!/bin/bash
 
-make -C ../../ CONF=Debug && ../../dist/Debug/GNU-Linux/messagegenerator --cpp stressTest.xml --outputFolder . && make CONF=Debug && ./dist/Debug/GNU-Linux/stresstest
+cd "$(dirname "$0")"
+
+make -j12 -C ../../ CONF=Debug && ../../dist/Debug/GNU-Linux/messagegenerator --cpp stressTest.xml --outputFolder . && make -j12 CONF=Debug && ./dist/Debug/GNU-Linux/stresstest

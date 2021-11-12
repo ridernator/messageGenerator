@@ -143,7 +143,7 @@ class CppGenerator : Generator {
         std::string generateGetterCxx(const Messaging::Structure& structure,
                                       const Messaging::NamedMap& map);
         
-        uint64_t sizeOfPrimitiveType(const Messaging::NamedPrimitive::TypeType& type);
+        uint64_t sizeOfPrimitiveType(const Messaging::PrimitiveType& type);
         
         uint64_t sizeOfEnumeration(const std::string& enumString);
         

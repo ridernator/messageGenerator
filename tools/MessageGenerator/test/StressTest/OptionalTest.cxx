@@ -186,11 +186,11 @@ namespace MyNamespace {
 
         // If primitive is present then add on size of it
         if (primitive.has_value()) {
-            size += sizeof(uint64_t);
+            size += sizeof(std::decay_t<decltype(primitive)>::value_type);
         }
         // If enumeration is present then add on size of it
         if (enumeration.has_value()) {
-            size += sizeof(Colour);
+            size += sizeof(std::decay_t<decltype(enumeration)>::value_type);
         }
         // Add on size of structure
         ++size;

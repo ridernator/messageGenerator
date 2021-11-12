@@ -861,7 +861,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
         if (isOptional(element)) {
             os << insertTabs(1) << "// If " << element.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << element.getName() << ".has_value()) {" << std::endl;
-            os << insertTabs(2) << "size += sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << ");" << std::endl;
+            os << insertTabs(2) << "size += sizeof(std::decay_t<decltype(" << element.getName() << ")>::value_type);" << std::endl;
             os << insertTabs(1) << '}' << std::endl;
         }
     }
@@ -870,7 +870,7 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
         if (isOptional(enumeration)) {
             os << insertTabs(1) << "// If " << enumeration.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << enumeration.getName() << ".has_value()) {" << std::endl;
-            os << insertTabs(2) << "size += sizeof(" << enumeration.getType() << ");" << std::endl;
+            os << insertTabs(2) << "size += sizeof(std::decay_t<decltype(" << enumeration.getName() << ")>::value_type);" << std::endl;
             os << insertTabs(1) << '}' << std::endl;
         }
     }
@@ -1685,7 +1685,7 @@ std::string CppGenerator::getCxxType(const Messaging::Map& map) {
     return os.str();
 }
 
-uint64_t CppGenerator::sizeOfPrimitiveType(const Messaging::NamedPrimitive::TypeType& type) {
+uint64_t CppGenerator::sizeOfPrimitiveType(const Messaging::PrimitiveType& type) {
     uint64_t size = 0;
 
     if ((type == "signed_int_8") || (type == "unsigned_int_8")) {

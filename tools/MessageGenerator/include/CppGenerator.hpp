@@ -37,21 +37,13 @@ class CppGenerator : Generator {
 
         std::string generateSettersHxx(const Messaging::Structure& structure);
 
-        std::string generateGetterHxx(const Messaging::NamedPrimitive& primitive);
-
         std::string generateSetterHxx(const Messaging::NamedPrimitive& primitive);
-
-        std::string generateGetterHxx(const Messaging::NamedEnumeration& enumeration);
 
         std::string generateSetterHxx(const Messaging::NamedEnumeration& enumeration);
 
-        std::string generateGetterHxx(const Messaging::NamedStructure& structure);
-
-        std::string generateGetterHxx(const Messaging::NamedSequence& sequence);
-
-        std::string generateGetterHxx(const Messaging::NamedArray& array);
-
-        std::string generateGetterHxx(const Messaging::NamedMap& map);
+        std::string generateGetterHxx(const auto& map,
+                                      const std::string& type,
+                                      const bool returnReference = true);
 
         std::string generateMembersHxx(const Messaging::Structure& structure);
 

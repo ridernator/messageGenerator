@@ -1295,8 +1295,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::NamedPrimitive& e
                                               const std::string& parentName) {
     std::ostringstream os;   
     
-    os << insertTabs(numTabs) << "memcpy(&" << parentName << ", data + offset, sizeof(" << convertPrimitiveTypeToCppType(element.getType()) << "));" << std::endl;
-    os << insertTabs(numTabs) << "offset += sizeof(" << parentName << ");" << std::endl;
+    os << generateDeserialiseElement(parentName, numTabs);
 
     return os.str();
 }
@@ -1316,8 +1315,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::NamedEnumeration&
                                               const std::string& parentName) {
     std::ostringstream os;   
     
-    os << insertTabs(numTabs) << "memcpy(&" << parentName << ", data + offset, sizeof(" << parentName << "));" << std::endl;
-    os << insertTabs(numTabs) << "offset += sizeof(" << parentName << ");" << std::endl;
+    os << generateDeserialiseElement(parentName, numTabs);
 
     return os.str();
 }
@@ -1348,11 +1346,9 @@ std::string CppGenerator::generateSerialise(const Messaging::Array& array,
     std::ostringstream os;
     
     if (array.getType().getPrimitive().present()) {
-        os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << "[0], sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitive().get()) << ") * " << parentName << ".size());" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
+        os << generateSerialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
     } else if (array.getType().getEnumeration().present()) {
-        os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << "[0], sizeof(" << array.getType().getEnumeration().get() << ") * " << parentName << ".size());" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << array.getType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
+        os << generateSerialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
     } else if (array.getType().getStructureType().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".serialise(data + offset, offset);" << std::endl;
@@ -1380,11 +1376,9 @@ std::string CppGenerator::generateDeserialise(const Messaging::Array& array,
     std::ostringstream os;
     
     if (array.getType().getPrimitive().present()) {
-        os << insertTabs(numTabs) << "memcpy(&" << parentName << "[0], data + offset, sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitive().get()) << ") * " << parentName << ".size());" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
+        os << generateDeserialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
     } else if (array.getType().getEnumeration().present()) {
-        os << insertTabs(numTabs) << "memcpy(&" << parentName << "[0], data + offset, sizeof(" << array.getType().getEnumeration().get() << ") * " << parentName << ".size());" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << array.getType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
+        os << generateDeserialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
     } else if (array.getType().getStructureType().present()) {
         os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".deserialise(data + offset, offset);" << std::endl;
@@ -1422,11 +1416,9 @@ std::string CppGenerator::generateSerialise(const Messaging::Sequence& sequence,
     os << insertTabs(numTabs) << "// Serialise " << parentName << " data" << std::endl;
     
     if (sequence.getType().getPrimitive().present()) {
-        os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << "[0], sizeof(" << convertPrimitiveTypeToCppType(sequence.getType().getPrimitive().get()) << ") * " << sensibleName << "Size);" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << convertPrimitiveTypeToCppType(sequence.getType().getPrimitive().get()) << ") * " << sensibleName << "Size;" << std::endl;
+        os << generateSerialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
     } else if (sequence.getType().getEnumeration().present()) {
-        os << insertTabs(numTabs) << "memcpy(data + offset, &" << parentName << "[0], sizeof(" << sequence.getType().getEnumeration().get() << ") * " << sensibleName << "Size);" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << sequence.getType().getEnumeration().get() << ") * " << sensibleName << "Size;" << std::endl;
+        os << generateSerialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
     } else if (sequence.getType().getStructureType().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".serialise(data + offset, offset);" << std::endl;
@@ -1459,18 +1451,15 @@ std::string CppGenerator::generateDeserialise(const Messaging::Sequence& sequenc
     
     os << insertTabs(numTabs) << "// Deserialise size of " << parentName << std::endl;
     os << insertTabs(numTabs) << SEQ_SIZE_TYPE << ' ' << sensibleName << "Size;" << std::endl;
-    os << insertTabs(numTabs) << "memcpy(&" << sensibleName << "Size, data + offset, sizeof(" << sensibleName << "Size));" << std::endl;
-    os << insertTabs(numTabs) << "offset += sizeof(" << sensibleName << "Size);" << std::endl;
+    os << generateDeserialiseElement(sensibleName + "Size", numTabs);
     os << std::endl;
     os << insertTabs(numTabs) << "// Deserialise " << parentName << " data" << std::endl;
     os << insertTabs(numTabs) << parentName << ".resize(" << sensibleName << "Size);" << std::endl;
     
     if (sequence.getType().getPrimitive().present()) {
-        os << insertTabs(numTabs) << "memcpy(&" << parentName << "[0], data + offset, sizeof(" << convertPrimitiveTypeToCppType(sequence.getType().getPrimitive().get()) << ") * " << sensibleName << "Size);" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << convertPrimitiveTypeToCppType(sequence.getType().getPrimitive().get()) << ") * " << sensibleName << "Size;" << std::endl;
+    os << generateDeserialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
     } else if (sequence.getType().getEnumeration().present()) {
-        os << insertTabs(numTabs) << "memcpy(&" << parentName << "[0], data + offset, sizeof(" << sequence.getType().getEnumeration().get() << ") * " << sensibleName << "Size);" << std::endl;
-        os << insertTabs(numTabs) << "offset += sizeof(" << sequence.getType().getEnumeration().get() << ") * " << sensibleName << "Size;" << std::endl;
+    os << generateDeserialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
     } else if (sequence.getType().getStructureType().present()) {
         os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".deserialise(data + offset, offset);" << std::endl;
@@ -1547,8 +1536,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::Map& map,
     
     os << insertTabs(numTabs) << "// Deserialise size of " << parentName << std::endl;
     os << insertTabs(numTabs) << SEQ_SIZE_TYPE << ' ' << sensibleName << "Size;" << std::endl;
-    os << insertTabs(numTabs) << "memcpy(&" << sensibleName << "Size, data + offset, sizeof(" << sensibleName << "Size));" << std::endl;
-    os << insertTabs(numTabs) << "offset += sizeof(" << sensibleName << "Size);" << std::endl;
+    os << generateDeserialiseElement(sensibleName + "Size", numTabs);
     os << std::endl;
     os << insertTabs(numTabs) << "// Deserialise " << parentName << " data" << std::endl;
     os << insertTabs(numTabs) << "for (" << SEQ_SIZE_TYPE << " index = 0; index < " << sensibleName << "Size; ++index) {" << std::endl;
@@ -1556,12 +1544,10 @@ std::string CppGenerator::generateDeserialise(const Messaging::Map& map,
     
     if (map.getKeyType().getPrimitive().present()) {
         os << insertTabs(numTabs + 1) << convertPrimitiveTypeToCppType(map.getKeyType().getPrimitive().get()) << " first" << +(numTabs - 1) << ';' << std::endl;
-        os << insertTabs(numTabs + 1) << "memcpy(&first" << +(numTabs - 1) << ", data + offset, sizeof(first" << +(numTabs - 1) << "));" << std::endl;
-        os << insertTabs(numTabs + 1) << "offset += sizeof(first" << +(numTabs - 1) << ");" << std::endl;
+        os << generateDeserialiseElement("first" + std::to_string(numTabs - 1), numTabs + 1);
     } else if (map.getKeyType().getEnumeration().present()) {
         os << insertTabs(numTabs + 1) << map.getKeyType().getEnumeration().get() << " first" << +(numTabs - 1) << ';' << std::endl;
-        os << insertTabs(numTabs + 1) << "memcpy(&first" << +(numTabs - 1) << ", data + offset, sizeof(first" << +(numTabs - 1) << "));" << std::endl;
-        os << insertTabs(numTabs + 1) << "offset += sizeof(first" << +(numTabs - 1) << ");" << std::endl;
+        os << generateDeserialiseElement("first" + std::to_string(numTabs - 1), numTabs + 1);
     }
 
     os << std::endl;
@@ -1569,12 +1555,10 @@ std::string CppGenerator::generateDeserialise(const Messaging::Map& map,
     
     if (map.getValueType().getPrimitive().present()) {
         os << insertTabs(numTabs + 1) << convertPrimitiveTypeToCppType(map.getValueType().getPrimitive().get()) << " second" << +(numTabs - 1) << ';' << std::endl;
-        os << insertTabs(numTabs + 1) << "memcpy(&second" << +(numTabs - 1) << ", data + offset, sizeof(second" << +(numTabs - 1) << "));" << std::endl;
-        os << insertTabs(numTabs + 1) << "offset += sizeof(second" << +(numTabs - 1) << ");" << std::endl;
+        os << generateDeserialiseElement("second" + std::to_string(numTabs - 1), numTabs + 1);
     } else if (map.getValueType().getEnumeration().present()) {
         os << insertTabs(numTabs + 1) << map.getValueType().getEnumeration().get() << " second" << +(numTabs - 1) << ";" << std::endl;
-        os << insertTabs(numTabs + 1) << "memcpy(&second" << +(numTabs - 1) << ", data + offset, sizeof(second" << +(numTabs - 1) << "));" << std::endl;
-        os << insertTabs(numTabs + 1) << "offset += sizeof(second" << +(numTabs - 1) << ");" << std::endl;
+        os << generateDeserialiseElement("second" + std::to_string(numTabs - 1), numTabs + 1);
     } else if (map.getValueType().getStructureType().present()) {
         os << insertTabs(numTabs + 1) << map.getValueType().getStructureType().get() << " second" << +(numTabs - 1) << ';' << std::endl;
         os << insertTabs(numTabs + 1) << "second" << +(numTabs - 1) << ".deserialise(data + offset, offset);" << std::endl;
@@ -1801,6 +1785,38 @@ std::string CppGenerator::generateSerialiseElement(const std::string& element,
     
     os << insertTabs(numTabs) << "memcpy(data + offset, &" << element << ", sizeof(" << element << "));" << std::endl;
     os << insertTabs(numTabs) << "offset += sizeof(" << element << ");" << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateSerialiseElementWithSize(const std::string& element,
+                                                           const std::string& size,
+                                                           const uint8_t numTabs) {
+    std::ostringstream os;
+    
+    os << insertTabs(numTabs) << "memcpy(data + offset, &" << element << ", sizeof(" << element << ") * " << size << ");" << std::endl;
+    os << insertTabs(numTabs) << "offset += sizeof(" << element << ") * " << size << ';' << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialiseElement(const std::string& element,
+                                                     const uint8_t numTabs) {
+    std::ostringstream os;
+    
+    os << insertTabs(numTabs) << "memcpy(&" << element << ", data + offset, sizeof(" << element << "));" << std::endl;
+    os << insertTabs(numTabs) << "offset += sizeof(" << element << ");" << std::endl;
+    
+    return os.str();
+}
+
+std::string CppGenerator::generateDeserialiseElementWithSize(const std::string& element,
+                                                             const std::string& size,
+                                                             const uint8_t numTabs) {
+    std::ostringstream os;
+    
+    os << insertTabs(numTabs) << "memcpy(&" << element << ", data + offset, sizeof(" << element << ") * " << size << ");" << std::endl;
+    os << insertTabs(numTabs) << "offset += sizeof(" << element << ") * " << size << ';' << std::endl;
     
     return os.str();
 }

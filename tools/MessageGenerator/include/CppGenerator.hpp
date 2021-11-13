@@ -118,6 +118,17 @@ class CppGenerator : Generator {
         std::string generateSerialiseElement(const std::string& element,
                                              const uint8_t numTabs);
 
+        std::string generateSerialiseElementWithSize(const std::string& element,
+                                                     const std::string& size,
+                                                     const uint8_t numTabs);
+
+        std::string generateDeserialiseElement(const std::string& element,
+                                               const uint8_t numTabs);
+
+        std::string generateDeserialiseElementWithSize(const std::string& element,
+                                                       const std::string& size,
+                                                       const uint8_t numTabs);
+
         std::string generateGettersCxx(const Messaging::Structure& structure);
 
         std::string generateSettersCxx(const Messaging::Structure& structure);

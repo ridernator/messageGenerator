@@ -83,8 +83,8 @@ namespace MyNamespace {
 
             // Serialise primitiveToArray value data
             for (const auto& e2 : e0.second) {
-                memcpy(data + offset, &e2[0], sizeof(uint8_t) * e2.size());
-                offset += sizeof(uint8_t) * e2.size();
+                memcpy(data + offset, &e2[0], sizeof(e2[0]) * e2.size());
+                offset += sizeof(e2[0]) * e2.size();
             }
         }
 
@@ -113,8 +113,8 @@ namespace MyNamespace {
                 offset += sizeof(e2Size);
 
                 // Serialise e2 data
-                memcpy(data + offset, &e2[0], sizeof(uint8_t) * e2Size);
-                offset += sizeof(uint8_t) * e2Size;
+                memcpy(data + offset, &e2[0], sizeof(e2[0]) * e2Size);
+                offset += sizeof(e2[0]) * e2Size;
             }
         }
 
@@ -161,7 +161,7 @@ namespace MyNamespace {
 
     void MapTest::deserialise(const char* data, uint64_t& offset) {
         // Deserialise lastElement
-        memcpy(&lastElement, data + offset, sizeof(uint64_t));
+        memcpy(&lastElement, data + offset, sizeof(lastElement));
         offset += sizeof(lastElement);
 
         // Deserialise colour
@@ -249,8 +249,8 @@ namespace MyNamespace {
             // Deserialise primitiveToArray value data
             std::array<std::array<uint8_t, 2>, 2> second0;
             for (auto& e2 : second0) {
-                memcpy(&e2[0], data + offset, sizeof(uint8_t) * e2.size());
-                offset += sizeof(uint8_t) * e2.size();
+                memcpy(&e2[0], data + offset, sizeof(e2[0]) * e2.size());
+                offset += sizeof(e2[0]) * e2.size();
             }
 
             primitiveToArray.insert({first0, second0});
@@ -286,8 +286,8 @@ namespace MyNamespace {
 
                 // Deserialise e2 data
                 e2.resize(e2Size);
-                memcpy(&e2[0], data + offset, sizeof(uint8_t) * e2Size);
-                offset += sizeof(uint8_t) * e2Size;
+                memcpy(&e2[0], data + offset, sizeof(e2[0]) * e2Size);
+                offset += sizeof(e2[0]) * e2Size;
             }
 
             primitiveToSequence.insert({first0, second0});

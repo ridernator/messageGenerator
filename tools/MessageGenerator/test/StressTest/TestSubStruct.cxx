@@ -19,7 +19,7 @@ namespace MyNamespace {
 
     void TestSubStruct::deserialise(const char* data, uint64_t& offset) {
         // Deserialise bigUnsigned
-        memcpy(&bigUnsigned, data + offset, sizeof(uint64_t));
+        memcpy(&bigUnsigned, data + offset, sizeof(bigUnsigned));
         offset += sizeof(bigUnsigned);
     }
 

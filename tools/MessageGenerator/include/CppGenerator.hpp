@@ -44,6 +44,11 @@ class CppGenerator : Generator {
         std::string generateGetterHxx(const auto& map,
                                       const std::string& type,
                                       const bool returnReference = true);
+        
+        std::string generateGetterCxx(const Messaging::Structure& structure,
+                                      const auto& element,
+                                      const std::string& type,
+                                      const bool returnReference = true);
 
         std::string generateMembersHxx(const Messaging::Structure& structure);
 
@@ -125,29 +130,11 @@ class CppGenerator : Generator {
 
         std::string generateSettersCxx(const Messaging::Structure& structure);
 
-        std::string generateGetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedPrimitive& primitive);
-
         std::string generateSetterCxx(const Messaging::Structure& structure,
                                       const Messaging::NamedPrimitive& primitive);
 
-        std::string generateGetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedEnumeration& enumeration);
-
         std::string generateSetterCxx(const Messaging::Structure& structure,
                                       const Messaging::NamedEnumeration& enumeration);
-
-        std::string generateGetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedStructure& subStructure);
-
-        std::string generateGetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedArray& array);
-
-        std::string generateGetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedSequence& sequence);
-
-        std::string generateGetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedMap& map);
         
         std::string getCxxType(const Messaging::Array& array);
         

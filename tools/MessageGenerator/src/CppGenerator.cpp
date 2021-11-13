@@ -686,8 +686,8 @@ std::string CppGenerator::generateIncludesHxx(const Messaging::Structure& struct
     for (const auto& array : structure.getArray()) {
         if (array.getType().getEnumeration().present()) {
             uniqueHeaders.insert(array.getType().getEnumeration().get());
-        } else if (array.getType().getStructureType().present()) {
-            uniqueHeaders.insert(array.getType().getStructureType().get());
+        } else if (array.getType().getStructure().present()) {
+            uniqueHeaders.insert(array.getType().getStructure().get());
         }
     }
     
@@ -817,9 +817,9 @@ std::string CppGenerator::generateSizeOfArray(const Messaging::Array& array,
         os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getEnumeration().present()) {
         os << insertTabs(numTabs) << "size += sizeof(" << array.getType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
-    } else if (array.getType().getStructureType().present()) {
+    } else if (array.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
-        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << array.getType().getStructureType() << std::endl;
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << array.getType().getStructure() << std::endl;
         os << insertTabs(numTabs + 1) << "size += e" << +numTabs << ".getSizeInBytes();" << std::endl;
         os << insertTabs(numTabs) << '}' << std::endl;
     } else if (array.getType().getArray().present()) {
@@ -851,9 +851,9 @@ std::string CppGenerator::generateSizeOfSequence(const Messaging::Sequence& sequ
         os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(sequence.getType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (sequence.getType().getEnumeration().present()) {
         os << insertTabs(numTabs) << "size += sizeof(" << sequence.getType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
-    } else if (sequence.getType().getStructureType().present()) {
+    } else if (sequence.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
-        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << sequence.getType().getStructureType() << std::endl;
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << sequence.getType().getStructure() << std::endl;
         os << insertTabs(numTabs + 1) << "size += e" << +numTabs << ".getSizeInBytes();" << std::endl;
         os << insertTabs(numTabs) << '}' << std::endl;
     } else if (sequence.getType().getArray().present()) {
@@ -898,9 +898,9 @@ std::string CppGenerator::generateSizeOfMap(const Messaging::Map& map,
         os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(map.getValueType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (map.getValueType().getEnumeration().present()) {
         os << insertTabs(numTabs) << "size += sizeof(" << map.getValueType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
-    } else if (map.getValueType().getStructureType().present()) {
+    } else if (map.getValueType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
-        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << map.getValueType().getStructureType() << std::endl;
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << map.getValueType().getStructure() << std::endl;
         os << insertTabs(numTabs + 1) << "size += e" << +numTabs << ".second.getSizeInBytes();" << std::endl;
         os << insertTabs(numTabs) << '}' << std::endl;
     } else if (map.getValueType().getArray().present()) {
@@ -1227,7 +1227,7 @@ std::string CppGenerator::generateSerialise(const Messaging::Array& array,
         os << generateSerialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
     } else if (array.getType().getEnumeration().present()) {
         os << generateSerialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
-    } else if (array.getType().getStructureType().present()) {
+    } else if (array.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".serialise(data + offset, offset);" << std::endl;
         os << insertTabs(numTabs) << '}' << std::endl;
@@ -1257,7 +1257,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::Array& array,
         os << generateDeserialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
     } else if (array.getType().getEnumeration().present()) {
         os << generateDeserialiseElementWithSize(parentName + "[0]", parentName + ".size()", numTabs);
-    } else if (array.getType().getStructureType().present()) {
+    } else if (array.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".deserialise(data + offset, offset);" << std::endl;
         os << insertTabs(numTabs) << '}' << std::endl;
@@ -1297,7 +1297,7 @@ std::string CppGenerator::generateSerialise(const Messaging::Sequence& sequence,
         os << generateSerialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
     } else if (sequence.getType().getEnumeration().present()) {
         os << generateSerialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
-    } else if (sequence.getType().getStructureType().present()) {
+    } else if (sequence.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".serialise(data + offset, offset);" << std::endl;
         os << insertTabs(numTabs) << '}' << std::endl;
@@ -1338,7 +1338,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::Sequence& sequenc
     os << generateDeserialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
     } else if (sequence.getType().getEnumeration().present()) {
     os << generateDeserialiseElementWithSize(parentName + "[0]", sensibleName + "Size", numTabs);
-    } else if (sequence.getType().getStructureType().present()) {
+    } else if (sequence.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;
         os << insertTabs(numTabs + 1) << 'e' << +numTabs << ".deserialise(data + offset, offset);" << std::endl;
         os << insertTabs(numTabs) << '}' << std::endl;
@@ -1388,7 +1388,7 @@ std::string CppGenerator::generateSerialise(const Messaging::Map& map,
         os << generateSerialiseElement("e" + std::to_string(numTabs - 1) + ".second", numTabs + 1);
     } else if (map.getValueType().getEnumeration().present()) {
         os << generateSerialiseElement("e" + std::to_string(numTabs - 1) + ".second", numTabs + 1);
-    } else if (map.getValueType().getStructureType().present()) {
+    } else if (map.getValueType().getStructure().present()) {
         os << insertTabs(numTabs + 1) << 'e' << +(numTabs - 1) << ".second.serialise(data + offset, offset);" << std::endl;
     } else if (map.getValueType().getSequence().present()) {
         os << generateSerialise(map.getValueType().getSequence().get(), numTabs + 1, ("e" + std::to_string(numTabs - 1) + ".second"));
@@ -1437,8 +1437,8 @@ std::string CppGenerator::generateDeserialise(const Messaging::Map& map,
     } else if (map.getValueType().getEnumeration().present()) {
         os << insertTabs(numTabs + 1) << map.getValueType().getEnumeration().get() << " second" << +(numTabs - 1) << ";" << std::endl;
         os << generateDeserialiseElement("second" + std::to_string(numTabs - 1), numTabs + 1);
-    } else if (map.getValueType().getStructureType().present()) {
-        os << insertTabs(numTabs + 1) << map.getValueType().getStructureType().get() << " second" << +(numTabs - 1) << ';' << std::endl;
+    } else if (map.getValueType().getStructure().present()) {
+        os << insertTabs(numTabs + 1) << map.getValueType().getStructure().get() << " second" << +(numTabs - 1) << ';' << std::endl;
         os << insertTabs(numTabs + 1) << "second" << +(numTabs - 1) << ".deserialise(data + offset, offset);" << std::endl;
     } else if (map.getValueType().getSequence().present()) {
         os << insertTabs(numTabs + 1) << getCxxType(map.getValueType().getSequence().get()) << " second" << +(numTabs - 1) << ';' << std::endl;
@@ -1468,8 +1468,8 @@ std::string CppGenerator::getCxxType(const Messaging::Array& array) {
         os << convertPrimitiveTypeToCppType(array.getType().getPrimitive().get());
     } else if (array.getType().getEnumeration().present()) {
         os << array.getType().getEnumeration().get();
-    } else if (array.getType().getStructureType().present()) {
-        os << array.getType().getStructureType().get();
+    } else if (array.getType().getStructure().present()) {
+        os << array.getType().getStructure().get();
     } else if (array.getType().getArray().present()) {
         os << getCxxType(array.getType().getArray().get());
     } else if (array.getType().getSequence().present()) {
@@ -1492,8 +1492,8 @@ std::string CppGenerator::getCxxType(const Messaging::Sequence& sequence) {
         os << convertPrimitiveTypeToCppType(sequence.getType().getPrimitive().get());
     } else if (sequence.getType().getEnumeration().present()) {
         os << sequence.getType().getEnumeration().get();
-    } else if (sequence.getType().getStructureType().present()) {
-        os << sequence.getType().getStructureType().get();
+    } else if (sequence.getType().getStructure().present()) {
+        os << sequence.getType().getStructure().get();
     } else if (sequence.getType().getArray().present()) {
         os << getCxxType(sequence.getType().getArray().get());
     } else if (sequence.getType().getSequence().present()) {
@@ -1524,8 +1524,8 @@ std::string CppGenerator::getCxxType(const Messaging::Map& map) {
         os << convertPrimitiveTypeToCppType(map.getValueType().getPrimitive().get());
     } else if (map.getValueType().getEnumeration().present()) {
         os << map.getValueType().getEnumeration().get();
-    } else if (map.getValueType().getStructureType().present()) {
-        os << map.getValueType().getStructureType().get();
+    } else if (map.getValueType().getStructure().present()) {
+        os << map.getValueType().getStructure().get();
     } else if (map.getValueType().getArray().present()) {
         os << getCxxType(map.getValueType().getArray().get());
     } else if (map.getValueType().getSequence().present()) {

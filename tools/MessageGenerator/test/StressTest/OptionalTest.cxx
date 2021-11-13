@@ -178,44 +178,65 @@ namespace MyNamespace {
     }
 
     uint64_t OptionalTest::getSizeInBytes() const {
+        uint64_t size = 0;
+
+        // Add on size of primitive
         // Optionality flag for primitive = 1 byte
-        // lastElement = 8 bytes (uint64_t)
-        // Optionality flag for enumeration = 1 byte
-        // Size of primitive types in this structure
-        uint64_t size = 10;
+        ++size;
 
         // If primitive is present then add on size of it
         if (primitive.has_value()) {
             size += sizeof(std::decay_t<decltype(primitive)>::value_type);
         }
+
+        // Add on size of lastElement
+        size += sizeof(lastElement);
+
+        // Add on size of enumeration
+        // Optionality flag for enumeration = 1 byte
+        ++size;
+
         // If enumeration is present then add on size of it
         if (enumeration.has_value()) {
             size += sizeof(std::decay_t<decltype(enumeration)>::value_type);
         }
+
         // Add on size of structure
+        // Optionality flag for structure = 1 byte
         ++size;
+
+        // If structure is present then add on size of it
         if (structure.has_value()) {
             size += structure.value().getSizeInBytes();
         }
 
         // Add on size of array
+        // Optionality flag for array = 1 byte
         ++size;
+
+        // If array is present then add on size of it
         if (array.has_value()) {
             size += sizeof(uint16_t) * array.value().size();
-
         }
+
         // Add on size of sequence
+        // Optionality flag for sequence = 1 byte
         ++size;
+
+        // If sequence is present then add on size of it
         if (sequence.has_value()) {
             // Add on size of sequence.value() length field
             size += sizeof(uint64_t);
 
             // Add on size of sequence.value() data
             size += sizeof(Colour) * sequence.value().size();
-
         }
+
         // Add on size of map
+        // Optionality flag for map = 1 byte
         ++size;
+
+        // If map is present then add on size of it
         if (map.has_value()) {
             // Add on size of map.value() length field
             size += sizeof(uint64_t);
@@ -225,8 +246,8 @@ namespace MyNamespace {
 
             // Add on size of map.value() value data
             size += sizeof(Colour) * map.value().size();
-
         }
+
         return size;
     }
 

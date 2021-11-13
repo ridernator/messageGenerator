@@ -24,9 +24,10 @@ namespace MyNamespace {
     }
 
     uint64_t TestSubStruct::getSizeInBytes() const {
-        // bigUnsigned = 8 bytes (uint64_t)
-        // Size of primitive types in this structure
-        uint64_t size = 8;
+        uint64_t size = 0;
+
+        // Add on size of bigUnsigned
+        size += sizeof(bigUnsigned);
 
         return size;
     }

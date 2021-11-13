@@ -700,56 +700,51 @@ std::string CppGenerator::generateIncludesHxx(const Messaging::Structure& struct
 
 std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& structure) {
     std::ostringstream os;   
-    uint64_t size = 0;
     
     os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() const {" << std::endl;
     
-    for (const auto& primitive : structure.getPrimitive()) {
-        if (isOptional(primitive)) {
-            os << insertTabs(1) << "// Optionality flag for " << primitive.getName() << " = 1 byte" << std::endl;
-            ++size;
-        } else {
-            os << insertTabs(1) << "// " << primitive.getName() << " = " << sizeOfPrimitiveType(primitive.getType()) << " bytes (" << convertPrimitiveTypeToCppType(primitive.getType()) << ')' << std::endl;
-            size += sizeOfPrimitiveType(primitive.getType());
-        }
-    }
-    
-    for (const auto& enumeration : structure.getEnumeration()) {
-        if (isOptional(enumeration)) {
-            os << insertTabs(1) << "// Optionality flag for " << enumeration.getName() << " = 1 byte" << std::endl;
-            ++size;
-        } else {
-            os << insertTabs(1) << "// " << enumeration.getName() << " = " << sizeOfEnumeration(enumeration.getType()) << " bytes (" << enumeration.getType() << ')' << std::endl;
-            size += sizeOfEnumeration(enumeration.getType());
-        }
-    }
-    
-    os << insertTabs(1) << "// Size of primitive types in this structure" << std::endl;
-    os << insertTabs(1) << "uint64_t size = " << size << ';' << std::endl;
+    os << insertTabs(1) << "uint64_t size = 0;" << std::endl;
     os << std::endl;
     
     for (const auto& primitive : structure.getPrimitive()) {
-        if (isOptional(primitive)) {
+        os << insertTabs(1) << "// Add on size of " << primitive.getName() << std::endl;
+        if (isOptional(primitive)) {            
+            os << insertTabs(1) << "// Optionality flag for " << primitive.getName() << " = 1 byte" << std::endl;
+            os << insertTabs(1) << "++size;" << std::endl;
+            os << std::endl;
             os << insertTabs(1) << "// If " << primitive.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << primitive.getName() << ".has_value()) {" << std::endl;
             os << insertTabs(2) << "size += sizeof(std::decay_t<decltype(" << primitive.getName() << ")>::value_type);" << std::endl;
             os << insertTabs(1) << '}' << std::endl;
+        } else {
+            os << insertTabs(1) << "size += sizeof(" << primitive.getName() << ");" << std::endl;
         }
+        os << std::endl;
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        if (isOptional(enumeration)) {
+        os << insertTabs(1) << "// Add on size of " << enumeration.getName() << std::endl;
+        if (isOptional(enumeration)) {            
+            os << insertTabs(1) << "// Optionality flag for " << enumeration.getName() << " = 1 byte" << std::endl;
+            os << insertTabs(1) << "++size;" << std::endl;
+            os << std::endl;
             os << insertTabs(1) << "// If " << enumeration.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << enumeration.getName() << ".has_value()) {" << std::endl;
             os << insertTabs(2) << "size += sizeof(std::decay_t<decltype(" << enumeration.getName() << ")>::value_type);" << std::endl;
             os << insertTabs(1) << '}' << std::endl;
+        } else {
+            os << insertTabs(1) << "size += sizeof(" << enumeration.getName() << ");" << std::endl;
         }
+        os << std::endl;
     }
        
     for (const auto& subStructure : structure.getStructure()) {
         os << insertTabs(1) << "// Add on size of " << subStructure.getName() << std::endl;
         if (isOptional(subStructure)) {
+            os << insertTabs(1) << "// Optionality flag for " << subStructure.getName() << " = 1 byte" << std::endl;
             os << insertTabs(1) << "++size;" << std::endl;
+            os << std::endl;
+            os << insertTabs(1) << "// If " << subStructure.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << subStructure.getName() << ".has_value()) {" << std::endl;
             os << insertTabs(2) << "size += " << subStructure.getName() << ".value().getSizeInBytes();" << std::endl;
             os << insertTabs(1) << '}' << std::endl;
@@ -762,37 +757,49 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     for (const auto& array : structure.getArray()) {
         os << insertTabs(1) << "// Add on size of " << array.getName() << std::endl;
         if (isOptional(array)) {
+            os << insertTabs(1) << "// Optionality flag for " << array.getName() << " = 1 byte" << std::endl;
             os << insertTabs(1) << "++size;" << std::endl;
+            os << std::endl;
+            os << insertTabs(1) << "// If " << array.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << array.getName() << ".has_value()) {" << std::endl;
-            os << generateSizeOfArray(array, 2, array.getName() + ".value()") << std::endl;
+            os << generateSizeOfArray(array, 2, array.getName() + ".value()");
             os << insertTabs(1) << '}' << std::endl;
         } else {
-            os << generateSizeOfArray(array, 1, array.getName()) << std::endl;
+            os << generateSizeOfArray(array, 1, array.getName());
         }
+        os << std::endl;
     }
        
     for (const auto& sequence : structure.getSequence()) {
         os << insertTabs(1) << "// Add on size of " << sequence.getName() << std::endl;
         if (isOptional(sequence)) {
+            os << insertTabs(1) << "// Optionality flag for " << sequence.getName() << " = 1 byte" << std::endl;
             os << insertTabs(1) << "++size;" << std::endl;
+            os << std::endl;
+            os << insertTabs(1) << "// If " << sequence.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << sequence.getName() << ".has_value()) {" << std::endl;
-            os << generateSizeOfSequence(sequence, 2, sequence.getName() + ".value()") << std::endl;
+            os << generateSizeOfSequence(sequence, 2, sequence.getName() + ".value()");
             os << insertTabs(1) << '}' << std::endl;
         } else {
-            os << generateSizeOfSequence(sequence, 1, sequence.getName()) << std::endl;
+            os << generateSizeOfSequence(sequence, 1, sequence.getName());
         }
+        os << std::endl;
     }
        
     for (const auto& map : structure.getMap()) {
         os << insertTabs(1) << "// Add on size of " << map.getName() << std::endl;
         if (isOptional(map)) {
+            os << insertTabs(1) << "// Optionality flag for " << map.getName() << " = 1 byte" << std::endl;
             os << insertTabs(1) << "++size;" << std::endl;
+            os << std::endl;
+            os << insertTabs(1) << "// If " << map.getName() << " is present then add on size of it" << std::endl;
             os << insertTabs(1) << "if (" << map.getName() << ".has_value()) {" << std::endl;
-            os << generateSizeOfMap(map, 2, map.getName() + ".value()") << std::endl;
+            os << generateSizeOfMap(map, 2, map.getName() + ".value()");
             os << insertTabs(1) << '}' << std::endl;
         } else {
-            os << generateSizeOfMap(map, 1, map.getName()) << std::endl;
+            os << generateSizeOfMap(map, 1, map.getName());
         }
+        os << std::endl;
     }
     
     os << insertTabs(1) << "return size;" << std::endl;
@@ -1530,56 +1537,6 @@ std::string CppGenerator::getCxxType(const Messaging::Map& map) {
     os << ">";
     
     return os.str();
-}
-
-uint64_t CppGenerator::sizeOfPrimitiveType(const Messaging::PrimitiveType& type) {
-    uint64_t size = 0;
-
-    if ((type == "signed_int_8") || (type == "unsigned_int_8")) {
-        size = 1;
-    } else if ((type == "signed_int_16") || (type == "unsigned_int_16")) {
-        size = 2;
-    } else if ((type == "signed_int_32") || (type == "unsigned_int_32")) {
-        size = 4;
-    } else if ((type == "signed_int_64") || (type == "unsigned_int_64")) {
-        size = 8;
-    } else if (type == "float_32") {
-        size = 4;
-    } else if (type == "float_64") {
-        size = 8;
-    }
-
-    return size;
-}
-
-uint64_t CppGenerator::sizeOfEnumeration(const std::string& enumString) {
-    uint64_t size = 0;
-    
-    for (const auto& enumeration : definitions.getEnumeration()) {
-        if (enumString.compare(enumeration.getName()) == 0) {
-            if ((enumeration.getBaseType() == "signed_int_8") || (enumeration.getBaseType() == "unsigned_int_8")) {
-                size = 1;
-            } else if ((enumeration.getBaseType() == "signed_int_16") || (enumeration.getBaseType() == "unsigned_int_16")) {
-                size = 2;
-            } else if ((enumeration.getBaseType() == "signed_int_32") || (enumeration.getBaseType() == "unsigned_int_32")) {
-                size = 4;
-            } else if ((enumeration.getBaseType() == "signed_int_64") || (enumeration.getBaseType() == "unsigned_int_64")) {
-                size = 8;
-            } else {
-                std::cerr << "Error : Enumeration (" << enumeration.getName() << ") has an invalid base type (" << enumeration.getBaseType() << ')' << std::endl;
-                std::exit(EXIT_FAILURE);
-            }
-
-            break;
-        }
-    }
-    
-    if (size == 0) {
-        std::cerr << "Error : Enumeration has an invalid type (" << enumString << ')' << std::endl;
-        std::exit(EXIT_FAILURE);
-    }
-    
-    return size;
 }
     
 std::string CppGenerator::convertEnumBaseTypeToCppType(const Messaging::Enumeration::BaseTypeType& type) {

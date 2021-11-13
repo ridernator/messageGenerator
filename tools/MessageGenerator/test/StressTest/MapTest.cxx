@@ -350,10 +350,13 @@ namespace MyNamespace {
     }
 
     uint64_t MapTest::getSizeInBytes() const {
-        // lastElement = 8 bytes (uint64_t)
-        // colour = 1 bytes (Colour)
-        // Size of primitive types in this structure
-        uint64_t size = 9;
+        uint64_t size = 0;
+
+        // Add on size of lastElement
+        size += sizeof(lastElement);
+
+        // Add on size of colour
+        size += sizeof(colour);
 
         // Add on size of tss
         size += tss.getSizeInBytes();

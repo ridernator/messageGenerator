@@ -181,8 +181,8 @@ bool CppGenerator::generateSourceFile(const Messaging::Structure& structure,
 std::string CppGenerator::generateGettersCxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
-    for (const auto& element : structure.getPrimitive()) {
-        os << generateGetterCxx(structure, element) << std::endl;
+    for (const auto& primitive : structure.getPrimitive()) {
+        os << generateGetterCxx(structure, primitive) << std::endl;
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
@@ -211,8 +211,8 @@ std::string CppGenerator::generateGettersCxx(const Messaging::Structure& structu
 std::string CppGenerator::generateSettersCxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
-    for (const auto& element : structure.getPrimitive()) {
-        os << generateSetterCxx(structure, element) << std::endl;
+    for (const auto& primitive : structure.getPrimitive()) {
+        os << generateSetterCxx(structure, primitive) << std::endl;
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
@@ -223,18 +223,18 @@ std::string CppGenerator::generateSettersCxx(const Messaging::Structure& structu
 }
 
 std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structure,
-                                            const Messaging::NamedPrimitive& element) {
+                                            const Messaging::NamedPrimitive& primitive) {
     std::ostringstream os;
     
-    std::string upperName = element.getName();
+    std::string upperName = primitive.getName();
     upperName[0] = toupper(upperName[0]);
 
-    if (isOptional(element)) {
-        os << insertTabs() << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
+    if (isOptional(primitive)) {
+        os << insertTabs() << "std::optional<" << convertPrimitiveTypeToCppType(primitive.getType()) << ">& " << structure.getName() << "::get" << upperName << "() {" << std::endl;
     } else {
-        os << insertTabs() << convertPrimitiveTypeToCppType(element.getType()) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
+        os << insertTabs() << convertPrimitiveTypeToCppType(primitive.getType()) << ' ' << structure.getName() << "::get" << upperName << "() const {" << std::endl;
     }
-    os << insertTabs(1) << "return " << element.getName() << ";" << std::endl;
+    os << insertTabs(1) << "return " << primitive.getName() << ";" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
     return os.str();
@@ -313,14 +313,14 @@ std::string CppGenerator::generateGetterCxx(const Messaging::Structure& structur
 }
 
 std::string CppGenerator::generateSetterCxx(const Messaging::Structure& structure,
-                                            const Messaging::NamedPrimitive& element) {
+                                            const Messaging::NamedPrimitive& primitive) {
     std::ostringstream os;
     
-    std::string upperName = element.getName();
+    std::string upperName = primitive.getName();
     upperName[0] = toupper(upperName[0]);
     
-    os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveTypeToCppType(element.getType()) << " value) {" << std::endl;
-    os << insertTabs(1) << element.getName() << " = value;" << std::endl;
+    os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << convertPrimitiveTypeToCppType(primitive.getType()) << " value) {" << std::endl;
+    os << insertTabs(1) << primitive.getName() << " = value;" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
     return os.str();
@@ -435,8 +435,8 @@ std::string CppGenerator::generateDestructorCxx(const Messaging::Structure& stru
 std::string CppGenerator::generateGettersHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
-    for (const auto& element : structure.getPrimitive()) {
-        os << generateGetterHxx(element) << std::endl;
+    for (const auto& primitive : structure.getPrimitive()) {
+        os << generateGetterHxx(primitive) << std::endl;
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
@@ -467,8 +467,8 @@ std::string CppGenerator::generateGettersHxx(const Messaging::Structure& structu
 std::string CppGenerator::generateSettersHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
-    for (const auto& element : structure.getPrimitive()) {
-        os << generateSetterHxx(element) << std::endl;
+    for (const auto& primitive : structure.getPrimitive()) {
+        os << generateSetterHxx(primitive) << std::endl;
     }
     
     for (const auto& enumeration : structure.getEnumeration()) {
@@ -478,51 +478,51 @@ std::string CppGenerator::generateSettersHxx(const Messaging::Structure& structu
     return os.str();
 }
 
-std::string CppGenerator::generateGetterHxx(const Messaging::NamedPrimitive& element) {
+std::string CppGenerator::generateGetterHxx(const Messaging::NamedPrimitive& primitive) {
     std::ostringstream os;
-    std::string name = element.getName();
+    std::string name = primitive.getName();
     
     name[0] = toupper(name[0]);
         
     os << insertTabs(2) << "/**" << std::endl;
-    os << insertTabs(2) << " * Getter for " << element.getName() << std::endl;
+    os << insertTabs(2) << " * Getter for " << primitive.getName() << std::endl;
 
-    if (element.getDocumentation().present()) {
+    if (primitive.getDocumentation().present()) {
         os << insertTabs(2) << " *" << std::endl;
-        os << insertTabs(2) << " * " << element.getName() << " defined as : " << element.getDocumentation().get() << std::endl;
+        os << insertTabs(2) << " * " << primitive.getName() << " defined as : " << primitive.getDocumentation().get() << std::endl;
     }
 
     os << insertTabs(2) << " *" << std::endl;
-    os << insertTabs(2) << " * @return " << element.getName() << std::endl;
+    os << insertTabs(2) << " * @return " << primitive.getName() << std::endl;
     os << insertTabs(2) << " */" << std::endl;
     
-    if (isOptional(element)) {
-        os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << ">& get" << name << "();" << std::endl;
+    if (isOptional(primitive)) {
+        os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(primitive.getType()) << ">& get" << name << "();" << std::endl;
     } else {
-        os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << " get" << name << "() const;" << std::endl;
+        os << insertTabs(2) << convertPrimitiveTypeToCppType(primitive.getType()) << " get" << name << "() const;" << std::endl;
     }
     
     return os.str();
 }
 
-std::string CppGenerator::generateSetterHxx(const Messaging::NamedPrimitive& element) {
+std::string CppGenerator::generateSetterHxx(const Messaging::NamedPrimitive& primitive) {
     std::ostringstream os;
-    std::string name = element.getName();
+    std::string name = primitive.getName();
 
     name[0] = toupper(name[0]);
 
     os << insertTabs(2) << "/**" << std::endl;
-    os << insertTabs(2) << " * Setter for " << element.getName() << std::endl;
+    os << insertTabs(2) << " * Setter for " << primitive.getName() << std::endl;
 
-    if (element.getDocumentation().present()) {
+    if (primitive.getDocumentation().present()) {
         os << insertTabs(2) << " *" << std::endl;
-        os << insertTabs(2) << " * " << element.getName() << " defined as : " << element.getDocumentation().get() << std::endl;
+        os << insertTabs(2) << " * " << primitive.getName() << " defined as : " << primitive.getDocumentation().get() << std::endl;
     }
 
     os << insertTabs(2) << " *" << std::endl;
     os << insertTabs(2) << " * @param value The new value to set" << std::endl;
     os << insertTabs(2) << " */" << std::endl;
-    os << insertTabs(2) << "void set" << name << "(const " << convertPrimitiveTypeToCppType(element.getType()) << " value);" << std::endl;
+    os << insertTabs(2) << "void set" << name << "(const " << convertPrimitiveTypeToCppType(primitive.getType()) << " value);" << std::endl;
     
     return os.str();
 }
@@ -687,17 +687,17 @@ std::string CppGenerator::generateSetterHxx(const Messaging::NamedEnumeration& e
 std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
 
-    for (const auto& element : structure.getPrimitive()) {
-        if (element.getDocumentation().present()) {
+    for (const auto& primitive : structure.getPrimitive()) {
+        if (primitive.getDocumentation().present()) {
             os << insertTabs(2) << "/**" << std::endl;
-            os << insertTabs(2) << " * " << element.getDocumentation().get() << std::endl;
+            os << insertTabs(2) << " * " << primitive.getDocumentation().get() << std::endl;
             os << insertTabs(2) << " */" << std::endl;
         }
 
-        if (isOptional(element)) {
-            os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(element.getType()) << "> " << element.getName() << ';' << std::endl;
+        if (isOptional(primitive)) {
+            os << insertTabs(2) << "std::optional<" << convertPrimitiveTypeToCppType(primitive.getType()) << "> " << primitive.getName() << ';' << std::endl;
         } else {
-            os << insertTabs(2) << convertPrimitiveTypeToCppType(element.getType()) << ' ' << element.getName() << ';' << std::endl;
+            os << insertTabs(2) << convertPrimitiveTypeToCppType(primitive.getType()) << ' ' << primitive.getName() << ';' << std::endl;
         }
         os << std::endl;
     }
@@ -833,13 +833,13 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     
     os << insertTabs(0) << "uint64_t " << structure.getName() << "::getSizeInBytes() const {" << std::endl;
     
-    for (const auto& element : structure.getPrimitive()) {
-        if (isOptional(element)) {
-            os << insertTabs(1) << "// Optionality flag for " << element.getName() << " = 1 byte" << std::endl;
+    for (const auto& primitive : structure.getPrimitive()) {
+        if (isOptional(primitive)) {
+            os << insertTabs(1) << "// Optionality flag for " << primitive.getName() << " = 1 byte" << std::endl;
             ++size;
         } else {
-            os << insertTabs(1) << "// " << element.getName() << " = " << sizeOfPrimitiveType(element.getType()) << " bytes (" << convertPrimitiveTypeToCppType(element.getType()) << ')' << std::endl;
-            size += sizeOfPrimitiveType(element.getType());
+            os << insertTabs(1) << "// " << primitive.getName() << " = " << sizeOfPrimitiveType(primitive.getType()) << " bytes (" << convertPrimitiveTypeToCppType(primitive.getType()) << ')' << std::endl;
+            size += sizeOfPrimitiveType(primitive.getType());
         }
     }
     
@@ -857,11 +857,11 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
     os << insertTabs(1) << "uint64_t size = " << size << ';' << std::endl;
     os << std::endl;
     
-    for (const auto& element : structure.getPrimitive()) {
-        if (isOptional(element)) {
-            os << insertTabs(1) << "// If " << element.getName() << " is present then add on size of it" << std::endl;
-            os << insertTabs(1) << "if (" << element.getName() << ".has_value()) {" << std::endl;
-            os << insertTabs(2) << "size += sizeof(std::decay_t<decltype(" << element.getName() << ")>::value_type);" << std::endl;
+    for (const auto& primitive : structure.getPrimitive()) {
+        if (isOptional(primitive)) {
+            os << insertTabs(1) << "// If " << primitive.getName() << " is present then add on size of it" << std::endl;
+            os << insertTabs(1) << "if (" << primitive.getName() << ".has_value()) {" << std::endl;
+            os << insertTabs(2) << "size += sizeof(std::decay_t<decltype(" << primitive.getName() << ")>::value_type);" << std::endl;
             os << insertTabs(1) << '}' << std::endl;
         }
     }
@@ -1055,18 +1055,18 @@ std::string CppGenerator::generateSerialiseCxx(const Messaging::Structure& struc
         (structure.getMap().empty())) {
         os << insertTabs(1) << "// Nothing to serialise" << std::endl;
     } else {
-        for (const auto& element : structure.getPrimitive()) {
-            os << insertTabs(1) << "// Serialise " << element.getName() << std::endl;
-            if (isOptional(element)) {
-                os << insertTabs(1) << "// Serialise " << element.getName() << " presence flag" << std::endl;
-                os << insertTabs(1) << "*(data + offset++) = " << element.getName() << ".has_value() ? 1 : 0;" << std::endl;
+        for (const auto& primitive : structure.getPrimitive()) {
+            os << insertTabs(1) << "// Serialise " << primitive.getName() << std::endl;
+            if (isOptional(primitive)) {
+                os << insertTabs(1) << "// Serialise " << primitive.getName() << " presence flag" << std::endl;
+                os << insertTabs(1) << "*(data + offset++) = " << primitive.getName() << ".has_value() ? 1 : 0;" << std::endl;
                 os << std::endl;
-                os << insertTabs(1) << "// Serialise " << element.getName() << " data" << std::endl;
-                os << insertTabs(1) << "if (" << element.getName() << ".has_value()) {" << std::endl;
-                os << generateSerialise(element, 2, element.getName() + ".value()");
+                os << insertTabs(1) << "// Serialise " << primitive.getName() << " data" << std::endl;
+                os << insertTabs(1) << "if (" << primitive.getName() << ".has_value()) {" << std::endl;
+                os << generateSerialise(primitive, 2, primitive.getName() + ".value()");
                 os << insertTabs(1) << '}' << std::endl;
             } else {
-                os << generateSerialise(element, 1, element.getName());
+                os << generateSerialise(primitive, 1, primitive.getName());
             }
             
             os << std::endl;
@@ -1177,17 +1177,17 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
         (structure.getMap().empty())) {
         os << insertTabs(1) << "// Nothing to deserialise" << std::endl;
     } else {
-        for (const auto& element : structure.getPrimitive()) {
-            os << insertTabs(1) << "// Deserialise " << element.getName() << std::endl;
-            if (isOptional(element)) {
+        for (const auto& primitive : structure.getPrimitive()) {
+            os << insertTabs(1) << "// Deserialise " << primitive.getName() << std::endl;
+            if (isOptional(primitive)) {
                 os << insertTabs(1) << "if (*(data + offset++) == 1) {" << std::endl;
-                os << insertTabs(2) << element.getName() << " = typename std::decay_t<decltype(" << element.getName() << ")>::value_type{};" << std::endl;
-                os << generateDeserialise(element, 2, element.getName() + ".value()");
+                os << insertTabs(2) << primitive.getName() << " = typename std::decay_t<decltype(" << primitive.getName() << ")>::value_type{};" << std::endl;
+                os << generateDeserialise(primitive, 2, primitive.getName() + ".value()");
                 os << insertTabs(1) << "} else {" << std::endl;
-                os << insertTabs(2) << element.getName() << ".reset();" << std::endl;
+                os << insertTabs(2) << primitive.getName() << ".reset();" << std::endl;
                 os << insertTabs(1) << '}' << std::endl;
             } else {
-                os << generateDeserialise(element, 1, element.getName());
+                os << generateDeserialise(primitive, 1, primitive.getName());
             }
             
             os << std::endl;
@@ -1280,7 +1280,7 @@ std::string CppGenerator::generateDeserialiseCxx(const Messaging::Structure& str
     return os.str();
 }
 
-std::string CppGenerator::generateSerialise(const Messaging::NamedPrimitive& element,
+std::string CppGenerator::generateSerialise(const Messaging::NamedPrimitive&,
                                             const uint8_t numTabs,
                                             const std::string& parentName) {
     std::ostringstream os;   
@@ -1290,7 +1290,7 @@ std::string CppGenerator::generateSerialise(const Messaging::NamedPrimitive& ele
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialise(const Messaging::NamedPrimitive& element,
+std::string CppGenerator::generateDeserialise(const Messaging::NamedPrimitive&,
                                               const uint8_t numTabs,
                                               const std::string& parentName) {
     std::ostringstream os;   
@@ -1300,7 +1300,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::NamedPrimitive& e
     return os.str();
 }
 
-std::string CppGenerator::generateSerialise(const Messaging::NamedEnumeration& enumeration,
+std::string CppGenerator::generateSerialise(const Messaging::NamedEnumeration&,
                                             const uint8_t numTabs,
                                             const std::string& parentName) {
     std::ostringstream os;   
@@ -1310,7 +1310,7 @@ std::string CppGenerator::generateSerialise(const Messaging::NamedEnumeration& e
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialise(const Messaging::NamedEnumeration& enumeration,
+std::string CppGenerator::generateDeserialise(const Messaging::NamedEnumeration&,
                                               const uint8_t numTabs,
                                               const std::string& parentName) {
     std::ostringstream os;   
@@ -1320,7 +1320,7 @@ std::string CppGenerator::generateDeserialise(const Messaging::NamedEnumeration&
     return os.str();
 }
 
-std::string CppGenerator::generateSerialise(const Messaging::NamedStructure& structure,
+std::string CppGenerator::generateSerialise(const Messaging::NamedStructure&,
                                             const uint8_t numTabs,
                                             const std::string& parentName) {
     std::ostringstream os;   
@@ -1330,7 +1330,7 @@ std::string CppGenerator::generateSerialise(const Messaging::NamedStructure& str
     return os.str();
 }
 
-std::string CppGenerator::generateDeserialise(const Messaging::NamedStructure& structure,
+std::string CppGenerator::generateDeserialise(const Messaging::NamedStructure&,
                                               const uint8_t numTabs,
                                               const std::string& parentName) {
     std::ostringstream os;   

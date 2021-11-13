@@ -37,13 +37,13 @@ class CppGenerator : Generator {
 
         std::string generateSettersHxx(const Messaging::Structure& structure);
 
-        std::string generateGetterHxx(const Messaging::NamedPrimitive& element);
+        std::string generateGetterHxx(const Messaging::NamedPrimitive& primitive);
 
-        std::string generateSetterHxx(const Messaging::NamedPrimitive& element);
+        std::string generateSetterHxx(const Messaging::NamedPrimitive& primitive);
 
-        std::string generateGetterHxx(const Messaging::NamedEnumeration& element);
+        std::string generateGetterHxx(const Messaging::NamedEnumeration& enumeration);
 
-        std::string generateSetterHxx(const Messaging::NamedEnumeration& element);
+        std::string generateSetterHxx(const Messaging::NamedEnumeration& enumeration);
 
         std::string generateGetterHxx(const Messaging::NamedStructure& structure);
 
@@ -67,11 +67,11 @@ class CppGenerator : Generator {
 
         std::string generateDeserialiseCxx(const Messaging::Structure& structure);
 
-        std::string generateSerialise(const Messaging::NamedPrimitive& element,
+        std::string generateSerialise(const Messaging::NamedPrimitive& primitive,
                                       const uint8_t numTabs,
                                       const std::string& parentName);
 
-        std::string generateDeserialise(const Messaging::NamedPrimitive& element,
+        std::string generateDeserialise(const Messaging::NamedPrimitive& primitive,
                                         const uint8_t numTabs,
                                         const std::string& parentName);
 
@@ -134,10 +134,10 @@ class CppGenerator : Generator {
         std::string generateSettersCxx(const Messaging::Structure& structure);
 
         std::string generateGetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedPrimitive& element);
+                                      const Messaging::NamedPrimitive& primitive);
 
         std::string generateSetterCxx(const Messaging::Structure& structure,
-                                      const Messaging::NamedPrimitive& element);
+                                      const Messaging::NamedPrimitive& primitive);
 
         std::string generateGetterCxx(const Messaging::Structure& structure,
                                       const Messaging::NamedEnumeration& enumeration);
@@ -181,7 +181,7 @@ class CppGenerator : Generator {
         
         std::string convertEnumBaseTypeToCppType(const Messaging::Enumeration::BaseTypeType& enumeration);
 
-        std::string convertPrimitiveTypeToCppType(const Messaging::NamedPrimitive::TypeType& element);
+        std::string convertPrimitiveTypeToCppType(const Messaging::NamedPrimitive::TypeType& primitive);
         
         bool isOptional(const auto& element);
         

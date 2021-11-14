@@ -156,6 +156,15 @@ class CppGenerator : Generator {
         std::string convertPrimitiveTypeToCppType(const Messaging::NamedPrimitive::TypeType& primitive);
         
         bool isOptional(const auto& element);
+
+        void addRequiredHeaders(const Messaging::Array array,
+                                std::set<std::string>& headers);
+
+        void addRequiredHeaders(const Messaging::Sequence sequence,
+                                std::set<std::string>& headers);
+
+        void addRequiredHeaders(const Messaging::Map map,
+                                std::set<std::string>& headers);
         
         const static std::string SEQ_SIZE_TYPE;
 };

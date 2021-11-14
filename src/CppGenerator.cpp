@@ -536,48 +536,134 @@ std::string CppGenerator::generateMembersHxx(const Messaging::Structure& structu
 std::string CppGenerator::generateIncludesHxx(const Messaging::Structure& structure) {
     std::ostringstream os;
     
-    os << "#include <cstdint>" << std::endl;
-    
-    //if (!structure.getArray().empty()) {
-        os << "#include <array>" << std::endl;
-    //}
-    
-    //if (!structure.getSequence().empty()) {
-        os << "#include <vector>" << std::endl;
-    //}
-    
-    //if (!structure.getMap().empty()) {
-        os << "#include <map>" << std::endl;
-    //}
-    
-    os << std::endl;
-    
-    os << "#include \"BaseMessage.hpp\"" << std::endl;    
-    os << std::endl;
-    
     std::set<std::string> uniqueHeaders;
+
+    for (const auto& primitive : structure.getPrimitive()) {
+        if (isOptional(primitive)) {
+            uniqueHeaders.insert("#include <optional>");
+        }
+
+        uniqueHeaders.insert("#include <cstdint>");
+    }
     
     for (const auto& enumeration : structure.getEnumeration()) {
-        uniqueHeaders.insert(enumeration.getType());
+        if (isOptional(enumeration)) {
+            uniqueHeaders.insert("#include <optional>");
+        }
+
+        uniqueHeaders.insert("#include \"" + enumeration.getType() + ".hxx\"");
     }
     
     for (const auto& subStructure : structure.getStructure()) {
-        uniqueHeaders.insert(subStructure.getType());
+        if (isOptional(subStructure)) {
+            uniqueHeaders.insert("#include <optional>");
+        }
+
+        uniqueHeaders.insert("#include \"" + subStructure.getType() + ".hxx\"");
     }
     
     for (const auto& array : structure.getArray()) {
-        if (array.getType().getEnumeration().present()) {
-            uniqueHeaders.insert(array.getType().getEnumeration().get());
-        } else if (array.getType().getStructure().present()) {
-            uniqueHeaders.insert(array.getType().getStructure().get());
+        if (isOptional(array)) {
+            uniqueHeaders.insert("#include <optional>");
         }
+
+        addRequiredHeaders(array, uniqueHeaders);
+    }
+    
+    for (const auto& sequence : structure.getSequence()) {
+        if (isOptional(sequence)) {
+            uniqueHeaders.insert("#include <optional>");
+        }
+
+        addRequiredHeaders(sequence, uniqueHeaders);
+    }
+    
+    for (const auto& map : structure.getMap()) {
+        if (isOptional(map)) {
+            uniqueHeaders.insert("#include <optional>");
+        }
+
+        addRequiredHeaders(map, uniqueHeaders);
     }
     
     for (const auto& header : uniqueHeaders) {
-	os << "#include \"" << header << ".hxx\"" << std::endl;
+        if (header.find('<') != std::string::npos) {
+            os << header << std::endl;
+        }
+    }    
+    os << std::endl;
+
+    os << "#include \"BaseMessage.hpp\"" << std::endl;  
+    for (const auto& header : uniqueHeaders) {
+        if (header.find('<') == std::string::npos) {
+            os << header << std::endl;
+        }
     }
     
     return os.str();
+}
+
+void CppGenerator::addRequiredHeaders(const Messaging::Array array,
+                                      std::set<std::string>& headers) {
+    headers.insert("#include <array>");
+
+    if (array.getType().getPrimitive().present()) {
+        headers.insert("#include <cstdint>");
+    } else if (array.getType().getEnumeration().present()) {
+        headers.insert("#include \"" + array.getType().getEnumeration().get() + ".hxx\"");
+    } else if (array.getType().getStructure().present()) {
+        headers.insert("#include \"" + array.getType().getStructure().get() + ".hxx\"");
+    } else if (array.getType().getArray().present()) {
+        addRequiredHeaders(array.getType().getArray().get(), headers);
+    } else if (array.getType().getSequence().present()) {
+        addRequiredHeaders(array.getType().getSequence().get(), headers);
+    } else if (array.getType().getMap().present()) {
+        addRequiredHeaders(array.getType().getMap().get(), headers);
+    }
+}
+
+void CppGenerator::addRequiredHeaders(const Messaging::Sequence sequence,
+                                      std::set<std::string>& headers) {
+    headers.insert("#include <vector>");
+
+    if (sequence.getType().getPrimitive().present()) {
+        headers.insert("#include <cstdint>");
+    } else if (sequence.getType().getEnumeration().present()) {
+        headers.insert("#include \"" + sequence.getType().getEnumeration().get() + ".hxx\"");
+    } else if (sequence.getType().getStructure().present()) {
+        headers.insert("#include \"" + sequence.getType().getStructure().get() + ".hxx\"");
+    } else if (sequence.getType().getArray().present()) {
+        addRequiredHeaders(sequence.getType().getArray().get(), headers);
+    } else if (sequence.getType().getSequence().present()) {
+        addRequiredHeaders(sequence.getType().getSequence().get(), headers);
+    } else if (sequence.getType().getMap().present()) {
+        addRequiredHeaders(sequence.getType().getMap().get(), headers);
+    }
+}
+
+void CppGenerator::addRequiredHeaders(const Messaging::Map map,
+                                      std::set<std::string>& headers) {
+    headers.insert("#include <map>");
+
+    if (map.getKeyType().getPrimitive().present()) {
+        headers.insert("#include <cstdint>");
+    } else if (map.getKeyType().getEnumeration().present()) {
+        headers.insert("#include \"" + map.getKeyType().getEnumeration().get() + ".hxx\"");
+    }
+
+    if (map.getValueType().getPrimitive().present()) {
+        headers.insert("#include <cstdint>");
+    } else if (map.getValueType().getEnumeration().present()) {
+        headers.insert("#include \"" + map.getValueType().getEnumeration().get() + ".hxx\"");
+    } else if (map.getValueType().getStructure().present()) {
+        headers.insert("#include \"" + map.getValueType().getStructure().get() + ".hxx\"");
+    } else if (map.getValueType().getArray().present()) {
+        addRequiredHeaders(map.getValueType().getArray().get(), headers);
+    } else if (map.getValueType().getSequence().present()) {
+        addRequiredHeaders(map.getValueType().getSequence().get(), headers);
+    } else if (map.getValueType().getMap().present()) {
+        addRequiredHeaders(map.getValueType().getMap().get(), headers);
+    }
 }
 
 std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& structure) {

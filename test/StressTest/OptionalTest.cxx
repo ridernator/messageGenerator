@@ -51,8 +51,8 @@ namespace MyNamespace {
 
         // Serialise array data
         if (array.has_value()) {
-            memcpy(data + offset, &array.value()[0], sizeof(uint16_t) * array.value().size());
-            offset += sizeof(uint16_t) * array.value().size();
+            memcpy(data + offset, &array.value()[0], sizeof(array.value()[0]) * array.value().size());
+            offset += sizeof(array.value()[0]) * array.value().size();
         }
 
         // Serialise sequence
@@ -67,8 +67,8 @@ namespace MyNamespace {
             offset += sizeof(sequencevalueSize);
 
             // Serialise sequence.value() data
-            memcpy(data + offset, &sequence.value()[0], sizeof(Colour) * sequencevalueSize);
-            offset += sizeof(Colour) * sequencevalueSize;
+            memcpy(data + offset, &sequence.value()[0], sizeof(sequence.value()[0]) * sequencevalueSize);
+            offset += sizeof(sequence.value()[0]) * sequencevalueSize;
         }
 
         // Serialise map
@@ -84,12 +84,12 @@ namespace MyNamespace {
 
             for (const auto& e1 : map.value()) {
                 // Serialise mapvalue key data
-                memcpy(data + offset, &e1.first, sizeof(uint8_t));
-                offset += sizeof(uint8_t);
+                memcpy(data + offset, &e1.first, sizeof(e1.first));
+                offset += sizeof(e1.first);
 
                 // Serialise mapvalue value data
-                memcpy(data + offset, &e1.second, sizeof(Colour));
-                offset += sizeof(Colour);
+                memcpy(data + offset, &e1.second, sizeof(e1.second));
+                offset += sizeof(e1.second);
             }
         }
     }
@@ -98,14 +98,14 @@ namespace MyNamespace {
         // Deserialise primitive
         if (*(data + offset++) == 1) {
             primitive = typename std::decay_t<decltype(primitive)>::value_type{};
-            memcpy(&primitive.value(), data + offset, sizeof(uint64_t));
+            memcpy(&primitive.value(), data + offset, sizeof(primitive.value()));
             offset += sizeof(primitive.value());
         } else {
             primitive.reset();
         }
 
         // Deserialise lastElement
-        memcpy(&lastElement, data + offset, sizeof(uint64_t));
+        memcpy(&lastElement, data + offset, sizeof(lastElement));
         offset += sizeof(lastElement);
 
         // Deserialise enumeration
@@ -128,8 +128,8 @@ namespace MyNamespace {
         // Deserialise array
         if (*(data + offset++) == 1) {
             array = typename std::decay_t<decltype(array)>::value_type{};
-            memcpy(&array.value()[0], data + offset, sizeof(uint16_t) * array.value().size());
-            offset += sizeof(uint16_t) * array.value().size();
+            memcpy(&array.value()[0], data + offset, sizeof(array.value()[0]) * array.value().size());
+            offset += sizeof(array.value()[0]) * array.value().size();
         } else {
             array.reset();
         }
@@ -144,8 +144,8 @@ namespace MyNamespace {
 
             // Deserialise sequence.value() data
             sequence.value().resize(sequencevalueSize);
-            memcpy(&sequence.value()[0], data + offset, sizeof(Colour) * sequencevalueSize);
-            offset += sizeof(Colour) * sequencevalueSize;
+            memcpy(&sequence.value()[0], data + offset, sizeof(sequence.value()[0]) * sequencevalueSize);
+            offset += sizeof(sequence.value()[0]) * sequencevalueSize;
         } else {
             sequence.reset();
         }
@@ -178,44 +178,65 @@ namespace MyNamespace {
     }
 
     uint64_t OptionalTest::getSizeInBytes() const {
+        uint64_t size = 0;
+
+        // Add on size of primitive
         // Optionality flag for primitive = 1 byte
-        // lastElement = 8 bytes (uint64_t)
-        // Optionality flag for enumeration = 1 byte
-        // Size of primitive types in this structure
-        uint64_t size = 10;
+        ++size;
 
         // If primitive is present then add on size of it
         if (primitive.has_value()) {
-            size += sizeof(uint64_t);
+            size += sizeof(std::decay_t<decltype(primitive)>::value_type);
         }
+
+        // Add on size of lastElement
+        size += sizeof(lastElement);
+
+        // Add on size of enumeration
+        // Optionality flag for enumeration = 1 byte
+        ++size;
+
         // If enumeration is present then add on size of it
         if (enumeration.has_value()) {
-            size += sizeof(Colour);
+            size += sizeof(std::decay_t<decltype(enumeration)>::value_type);
         }
+
         // Add on size of structure
+        // Optionality flag for structure = 1 byte
         ++size;
+
+        // If structure is present then add on size of it
         if (structure.has_value()) {
             size += structure.value().getSizeInBytes();
         }
 
         // Add on size of array
+        // Optionality flag for array = 1 byte
         ++size;
+
+        // If array is present then add on size of it
         if (array.has_value()) {
             size += sizeof(uint16_t) * array.value().size();
-
         }
+
         // Add on size of sequence
+        // Optionality flag for sequence = 1 byte
         ++size;
+
+        // If sequence is present then add on size of it
         if (sequence.has_value()) {
             // Add on size of sequence.value() length field
             size += sizeof(uint64_t);
 
             // Add on size of sequence.value() data
             size += sizeof(Colour) * sequence.value().size();
-
         }
+
         // Add on size of map
+        // Optionality flag for map = 1 byte
         ++size;
+
+        // If map is present then add on size of it
         if (map.has_value()) {
             // Add on size of map.value() length field
             size += sizeof(uint64_t);
@@ -225,8 +246,8 @@ namespace MyNamespace {
 
             // Add on size of map.value() value data
             size += sizeof(Colour) * map.value().size();
-
         }
+
         return size;
     }
 

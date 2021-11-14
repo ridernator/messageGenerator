@@ -241,7 +241,7 @@
         <xs:choice>                
             <xs:group ref="PrimitiveTypes" />
 
-            <xs:element name="structureType" type="xs:string">
+            <xs:element name="structure" type="xs:string">
                 <xs:annotation>
                     <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                 </xs:annotation>

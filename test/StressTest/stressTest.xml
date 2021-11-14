@@ -49,7 +49,7 @@
             </keyType>
             
             <valueType>
-                <structureType>TestSubStruct</structureType>
+                <structure>TestSubStruct</structure>
             </valueType>
         </map>
         

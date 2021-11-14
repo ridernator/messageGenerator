@@ -31,12 +31,12 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToPrimitive) {
             // Serialise primitiveToPrimitive key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToPrimitive value data
-            memcpy(data + offset, &e0.second, sizeof(float));
-            offset += sizeof(float);
+            memcpy(data + offset, &e0.second, sizeof(e0.second));
+            offset += sizeof(e0.second);
         }
 
         // Serialise primitiveToEnum
@@ -47,12 +47,12 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToEnum) {
             // Serialise primitiveToEnum key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToEnum value data
-            memcpy(data + offset, &e0.second, sizeof(Colour));
-            offset += sizeof(Colour);
+            memcpy(data + offset, &e0.second, sizeof(e0.second));
+            offset += sizeof(e0.second);
         }
 
         // Serialise primitiveToStruct
@@ -63,8 +63,8 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToStruct) {
             // Serialise primitiveToStruct key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToStruct value data
             e0.second.serialise(data + offset, offset);
@@ -78,13 +78,13 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToArray) {
             // Serialise primitiveToArray key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToArray value data
             for (const auto& e2 : e0.second) {
-                memcpy(data + offset, &e2[0], sizeof(uint8_t) * e2.size());
-                offset += sizeof(uint8_t) * e2.size();
+                memcpy(data + offset, &e2[0], sizeof(e2[0]) * e2.size());
+                offset += sizeof(e2[0]) * e2.size();
             }
         }
 
@@ -96,8 +96,8 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToSequence) {
             // Serialise primitiveToSequence key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToSequence value data
             // Serialise size of e0.second
@@ -113,8 +113,8 @@ namespace MyNamespace {
                 offset += sizeof(e2Size);
 
                 // Serialise e2 data
-                memcpy(data + offset, &e2[0], sizeof(uint8_t) * e2Size);
-                offset += sizeof(uint8_t) * e2Size;
+                memcpy(data + offset, &e2[0], sizeof(e2[0]) * e2Size);
+                offset += sizeof(e2[0]) * e2Size;
             }
         }
 
@@ -126,8 +126,8 @@ namespace MyNamespace {
 
         for (const auto& e0 : primitiveToMap) {
             // Serialise primitiveToMap key data
-            memcpy(data + offset, &e0.first, sizeof(uint8_t));
-            offset += sizeof(uint8_t);
+            memcpy(data + offset, &e0.first, sizeof(e0.first));
+            offset += sizeof(e0.first);
 
             // Serialise primitiveToMap value data
             // Serialise size of e0.second
@@ -137,8 +137,8 @@ namespace MyNamespace {
 
             for (const auto& e1 : e0.second) {
                 // Serialise e0second key data
-                memcpy(data + offset, &e1.first, sizeof(uint16_t));
-                offset += sizeof(uint16_t);
+                memcpy(data + offset, &e1.first, sizeof(e1.first));
+                offset += sizeof(e1.first);
 
                 // Serialise e0second value data
                 // Serialise size of e1.second
@@ -148,12 +148,12 @@ namespace MyNamespace {
 
                 for (const auto& e2 : e1.second) {
                     // Serialise e1second key data
-                    memcpy(data + offset, &e2.first, sizeof(uint16_t));
-                    offset += sizeof(uint16_t);
+                    memcpy(data + offset, &e2.first, sizeof(e2.first));
+                    offset += sizeof(e2.first);
 
                     // Serialise e1second value data
-                    memcpy(data + offset, &e2.second, sizeof(Colour));
-                    offset += sizeof(Colour);
+                    memcpy(data + offset, &e2.second, sizeof(e2.second));
+                    offset += sizeof(e2.second);
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace MyNamespace {
 
     void MapTest::deserialise(const char* data, uint64_t& offset) {
         // Deserialise lastElement
-        memcpy(&lastElement, data + offset, sizeof(uint64_t));
+        memcpy(&lastElement, data + offset, sizeof(lastElement));
         offset += sizeof(lastElement);
 
         // Deserialise colour
@@ -249,8 +249,8 @@ namespace MyNamespace {
             // Deserialise primitiveToArray value data
             std::array<std::array<uint8_t, 2>, 2> second0;
             for (auto& e2 : second0) {
-                memcpy(&e2[0], data + offset, sizeof(uint8_t) * e2.size());
-                offset += sizeof(uint8_t) * e2.size();
+                memcpy(&e2[0], data + offset, sizeof(e2[0]) * e2.size());
+                offset += sizeof(e2[0]) * e2.size();
             }
 
             primitiveToArray.insert({first0, second0});
@@ -286,8 +286,8 @@ namespace MyNamespace {
 
                 // Deserialise e2 data
                 e2.resize(e2Size);
-                memcpy(&e2[0], data + offset, sizeof(uint8_t) * e2Size);
-                offset += sizeof(uint8_t) * e2Size;
+                memcpy(&e2[0], data + offset, sizeof(e2[0]) * e2Size);
+                offset += sizeof(e2[0]) * e2Size;
             }
 
             primitiveToSequence.insert({first0, second0});
@@ -350,10 +350,13 @@ namespace MyNamespace {
     }
 
     uint64_t MapTest::getSizeInBytes() const {
-        // lastElement = 8 bytes (uint64_t)
-        // colour = 1 bytes (Colour)
-        // Size of primitive types in this structure
-        uint64_t size = 9;
+        uint64_t size = 0;
+
+        // Add on size of lastElement
+        size += sizeof(lastElement);
+
+        // Add on size of colour
+        size += sizeof(colour);
 
         // Add on size of tss
         size += tss.getSizeInBytes();

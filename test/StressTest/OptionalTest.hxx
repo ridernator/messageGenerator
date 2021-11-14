@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <array>
-#include <vector>
+#include <cstdint>
 #include <map>
+#include <optional>
+#include <vector>
 
 #include "BaseMessage.hpp"
-
 #include "Colour.hxx"
 #include "TestSubStruct.hxx"
 

@@ -6,7 +6,7 @@
             <name>StressTest</name>
             <c-extensions/>
             <cpp-extensions>cpp,cxx</cpp-extensions>
-            <header-extensions>hxx</header-extensions>
+            <header-extensions>hpp,hxx</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList/>

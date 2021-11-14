@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Messaging {
     class BaseMessage {
         public:

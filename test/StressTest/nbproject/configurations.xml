@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>BaseMessage.hpp</itemPath>
       <itemPath>Colour.hxx</itemPath>
       <itemPath>MapTest.hxx</itemPath>
       <itemPath>OptionalTest.hxx</itemPath>
@@ -48,6 +49,8 @@
           <warningLevel>3</warningLevel>
         </ccTool>
       </compileType>
+      <item path="BaseMessage.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Colour.hxx" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapTest.cxx" ex="false" tool="1" flavor2="0">
@@ -87,6 +90,8 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="BaseMessage.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Colour.hxx" ex="false" tool="3" flavor2="0">
       </item>
       <item path="MapTest.cxx" ex="false" tool="1" flavor2="0">

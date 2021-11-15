@@ -7,8 +7,6 @@ int main(int argc, char** argv) {
     {
         MyNamespace::MapTest t;
         MyNamespace::MapTest t2;
-        t.setColour(MyNamespace::Colour::RED);
-        t.setLastElement(42);
 
         t.getPrimitiveToPrimitive().insert({1, 2});
         t.getPrimitiveToPrimitive().insert({3, 4});
@@ -37,7 +35,6 @@ int main(int argc, char** argv) {
         offset = 0;
         t2.deserialise(bytes, offset);
         std::cout << "\tOffset after deserialise : " << offset << std::endl;
-        std::cout << "\tlastElement is " << t2.getLastElement() << std::endl;
 
         delete [] bytes;
     }

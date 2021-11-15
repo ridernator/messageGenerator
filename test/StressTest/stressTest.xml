@@ -121,11 +121,15 @@
             </valueType>
         </map>
         
-        <structure name="tss" type="TestSubStruct" />
-        
-        <enumeration name="colour" type="Colour" />
-        
-        <primitive name="lastElement" type="unsigned_int_64" />
+        <map name="stringTo32String">
+            <keyType>
+                <string type="8"/>
+            </keyType>
+            
+            <valueType>
+                <string type="32"/>
+            </valueType>
+        </map>
     </structure>
     
     <structure name="OptionalTest">

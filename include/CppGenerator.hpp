@@ -133,6 +133,8 @@ class CppGenerator : Generator {
                                       const auto& element,
                                       const std::string& type);
         
+        std::string getCxxType(const Messaging::String& string);
+        
         std::string getCxxType(const Messaging::Array& array);
         
         std::string getCxxType(const Messaging::Sequence& sequence);

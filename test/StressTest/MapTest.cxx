@@ -12,17 +12,6 @@ namespace MyNamespace {
     }
 
     void MapTest::serialise(char* data, uint64_t& offset) const {
-        // Serialise lastElement
-        memcpy(data + offset, &lastElement, sizeof(lastElement));
-        offset += sizeof(lastElement);
-
-        // Serialise colour
-        memcpy(data + offset, &colour, sizeof(colour));
-        offset += sizeof(colour);
-
-        // Serialise tss
-        tss.serialise(data, offset);
-
         // Serialise primitiveToPrimitive
         // Serialise size of primitiveToPrimitive
         uint64_t primitiveToPrimitiveSize = primitiveToPrimitive.size();
@@ -157,20 +146,21 @@ namespace MyNamespace {
                 }
             }
         }
+
+        // Serialise stringTo32String
+        // Serialise size of stringTo32String
+        uint64_t stringTo32StringSize = stringTo32String.size();
+        memcpy(data + offset, &stringTo32StringSize, sizeof(stringTo32StringSize));
+        offset += sizeof(stringTo32StringSize);
+
+        for (const auto& e0 : stringTo32String) {
+            // Serialise stringTo32String key data
+
+            // Serialise stringTo32String value data
+        }
     }
 
     void MapTest::deserialise(const char* data, uint64_t& offset) {
-        // Deserialise lastElement
-        memcpy(&lastElement, data + offset, sizeof(lastElement));
-        offset += sizeof(lastElement);
-
-        // Deserialise colour
-        memcpy(&colour, data + offset, sizeof(colour));
-        offset += sizeof(colour);
-
-        // Deserialise tss
-        tss.deserialise(data, offset);
-
         // Deserialise primitiveToPrimitive
         // Deserialise size of primitiveToPrimitive
         uint64_t primitiveToPrimitiveSize;
@@ -347,19 +337,25 @@ namespace MyNamespace {
 
             primitiveToMap.insert({first0, second0});
         }
+
+        // Deserialise stringTo32String
+        // Deserialise size of stringTo32String
+        uint64_t stringTo32StringSize;
+        memcpy(&stringTo32StringSize, data + offset, sizeof(stringTo32StringSize));
+        offset += sizeof(stringTo32StringSize);
+
+        // Deserialise stringTo32String data
+        for (uint64_t index = 0; index < stringTo32StringSize; ++index) {
+            // Deserialise stringTo32String key data
+
+            // Deserialise stringTo32String value data
+
+            stringTo32String.insert({first0, second0});
+        }
     }
 
     uint64_t MapTest::getSizeInBytes() const {
         uint64_t size = 0;
-
-        // Add on size of lastElement
-        size += sizeof(lastElement);
-
-        // Add on size of colour
-        size += sizeof(colour);
-
-        // Add on size of tss
-        size += tss.getSizeInBytes();
 
         // Add on size of primitiveToPrimitive
         // Add on size of primitiveToPrimitive length field
@@ -458,19 +454,15 @@ namespace MyNamespace {
             }
         }
 
+        // Add on size of stringTo32String
+        // Add on size of stringTo32String length field
+        size += sizeof(uint64_t);
+
+        // Add on size of stringTo32String key data
+
+        // Add on size of stringTo32String value data
+
         return size;
-    }
-
-    uint64_t MapTest::getLastElement() const {
-        return lastElement;
-    }
-
-    Colour MapTest::getColour() const {
-        return colour;
-    }
-
-    TestSubStruct& MapTest::getTss() {
-        return tss;
     }
 
     std::map<uint8_t, float>& MapTest::getPrimitiveToPrimitive() {
@@ -497,12 +489,8 @@ namespace MyNamespace {
         return primitiveToMap;
     }
 
-    void MapTest::setLastElement(const uint64_t value) {
-        lastElement = value;
-    }
-
-    void MapTest::setColour(const Colour value) {
-        colour = value;
+    std::map<std::string, std::u32string>& MapTest::getStringTo32String() {
+        return stringTo32String;
     }
 
 }

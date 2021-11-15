@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <map>
+#include <string>
 #include <vector>
 
 #include "BaseMessage.hpp"
@@ -35,27 +36,6 @@ namespace MyNamespace {
              * @return The size of the serialised version of this class in bytes
              */
             uint64_t getSizeInBytes() const;
-
-            /**
-             * Getter for lastElement
-             *
-             * @return lastElement
-             */
-            uint64_t getLastElement() const;
-
-            /**
-             * Getter for colour
-             *
-             * @return colour
-             */
-            Colour getColour() const;
-
-            /**
-             * Getter for tss
-             *
-             * @return tss
-             */
-            TestSubStruct& getTss();
 
             /**
              * Getter for primitiveToPrimitive
@@ -100,26 +80,13 @@ namespace MyNamespace {
             std::map<uint8_t, std::map<uint16_t, std::map<uint16_t, Colour>>>& getPrimitiveToMap();
 
             /**
-             * Setter for lastElement
+             * Getter for stringTo32String
              *
-             * @param value The new value to set
+             * @return stringTo32String
              */
-            void setLastElement(const uint64_t value);
-
-            /**
-             * Setter for colour
-             *
-             * @param value The new value to set
-             */
-            void setColour(const Colour value);
+            std::map<std::string, std::u32string>& getStringTo32String();
 
         private :
-            uint64_t lastElement;
-
-            Colour colour;
-
-            TestSubStruct tss;
-
             std::map<uint8_t, float> primitiveToPrimitive;
 
             std::map<uint8_t, Colour> primitiveToEnum;
@@ -131,5 +98,7 @@ namespace MyNamespace {
             std::map<uint8_t, std::vector<std::vector<uint8_t>>> primitiveToSequence;
 
             std::map<uint8_t, std::map<uint16_t, std::map<uint16_t, Colour>>> primitiveToMap;
+
+            std::map<std::string, std::u32string> stringTo32String;
     };
 }

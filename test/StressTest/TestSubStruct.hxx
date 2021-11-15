@@ -48,5 +48,13 @@ namespace MyNamespace {
 
         private :
             uint64_t bigUnsigned;
+
+            std::string a8String;
+
+            std::string b8String;
+
+            std::u16string a16String;
+
+            std::u32string a32String;
     };
 }

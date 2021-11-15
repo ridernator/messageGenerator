@@ -137,6 +137,14 @@
         
         <enumeration name="enumeration" type="Colour" optional="true" />
                
+        <string name="string1" optional="true" />
+               
+        <string name="string2" type="8" optional="true" />
+               
+        <string name="string3" type="16" optional="true" />
+               
+        <string name="string4" type="32" optional="true" />
+               
         <structure name="structure" type="TestSubStruct" optional="true" />
     
         <array name="array" optional="true">

@@ -201,6 +201,42 @@ namespace MyNamespace {
             size += sizeof(std::decay_t<decltype(enumeration)>::value_type);
         }
 
+        // Add on size of string1
+        // Optionality flag for string1 = 1 byte
+        ++size;
+
+        // If string1 is present then add on size of it
+        if (string1.has_value()) {
+            size += sizeof(std::string::value_type) * string1.value().size();
+        }
+
+        // Add on size of string2
+        // Optionality flag for string2 = 1 byte
+        ++size;
+
+        // If string2 is present then add on size of it
+        if (string2.has_value()) {
+            size += sizeof(std::string::value_type) * string2.value().size();
+        }
+
+        // Add on size of string3
+        // Optionality flag for string3 = 1 byte
+        ++size;
+
+        // If string3 is present then add on size of it
+        if (string3.has_value()) {
+            size += sizeof(std::u16string::value_type) * string3.value().size();
+        }
+
+        // Add on size of string4
+        // Optionality flag for string4 = 1 byte
+        ++size;
+
+        // If string4 is present then add on size of it
+        if (string4.has_value()) {
+            size += sizeof(std::u32string::value_type) * string4.value().size();
+        }
+
         // Add on size of structure
         // Optionality flag for structure = 1 byte
         ++size;
@@ -263,6 +299,22 @@ namespace MyNamespace {
         return enumeration;
     }
 
+    std::optional<std::string>& OptionalTest::getString1() {
+        return string1;
+    }
+
+    std::optional<std::string>& OptionalTest::getString2() {
+        return string2;
+    }
+
+    std::optional<std::u16string>& OptionalTest::getString3() {
+        return string3;
+    }
+
+    std::optional<std::u32string>& OptionalTest::getString4() {
+        return string4;
+    }
+
     std::optional<TestSubStruct>& OptionalTest::getStructure() {
         return structure;
     }
@@ -289,6 +341,22 @@ namespace MyNamespace {
 
     void OptionalTest::setEnumeration(const Colour value) {
         enumeration = value;
+    }
+
+    void OptionalTest::setString1(const std::string& value) {
+        string1 = value;
+    }
+
+    void OptionalTest::setString2(const std::string& value) {
+        string2 = value;
+    }
+
+    void OptionalTest::setString3(const std::u16string& value) {
+        string3 = value;
+    }
+
+    void OptionalTest::setString4(const std::u32string& value) {
+        string4 = value;
     }
 
 }

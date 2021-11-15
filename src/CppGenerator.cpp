@@ -764,6 +764,22 @@ std::string CppGenerator::generateGetSizeInBytesCxx(const Messaging::Structure& 
         }
         os << std::endl;
     }
+    
+    for (const auto& string : structure.getString()) {
+        os << insertTabs(1) << "// Add on size of " << string.getName() << std::endl;
+        if (isOptional(string)) {            
+            os << insertTabs(1) << "// Optionality flag for " << string.getName() << " = 1 byte" << std::endl;
+            os << insertTabs(1) << "++size;" << std::endl;
+            os << std::endl;
+            os << insertTabs(1) << "// If " << string.getName() << " is present then add on size of it" << std::endl;
+            os << insertTabs(1) << "if (" << string.getName() << ".has_value()) {" << std::endl;
+            os << insertTabs(2) << "size += sizeof(" << getCxxType(string) << "::value_type) * " << string.getName() << ".value().size();" << std::endl;
+            os << insertTabs(1) << '}' << std::endl;
+        } else {
+            os << insertTabs(1) << "size += sizeof(" << getCxxType(string) << "::value_type) * " << string.getName() << ".size();" << std::endl;
+        }
+        os << std::endl;
+    }
        
     for (const auto& subStructure : structure.getStructure()) {
         os << insertTabs(1) << "// Add on size of " << subStructure.getName() << std::endl;
@@ -844,6 +860,11 @@ std::string CppGenerator::generateSizeOfArray(const Messaging::Array& array,
         os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(array.getType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (array.getType().getEnumeration().present()) {
         os << insertTabs(numTabs) << "size += sizeof(" << array.getType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
+    } else if (array.getType().getString().present()) {
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << getCxxType(array.getType().getString().get()) << std::endl;
+        os << insertTabs(numTabs + 1) << "size += sizeof(" << getCxxType(array.getType().getString().get()) << "::value_type) * e" << +numTabs << ".size();" << std::endl;
+        os << insertTabs(numTabs) << '}' << std::endl;
     } else if (array.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
         os << insertTabs(numTabs + 1) << "// Add on size of each individual " << array.getType().getStructure() << std::endl;
@@ -878,6 +899,11 @@ std::string CppGenerator::generateSizeOfSequence(const Messaging::Sequence& sequ
         os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(sequence.getType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (sequence.getType().getEnumeration().present()) {
         os << insertTabs(numTabs) << "size += sizeof(" << sequence.getType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
+    } else if (sequence.getType().getString().present()) {
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << getCxxType(sequence.getType().getString().get()) << std::endl;
+        os << insertTabs(numTabs + 1) << "size += sizeof(" << getCxxType(sequence.getType().getString().get()) << "::value_type) * e" << +numTabs << ".size();" << std::endl;
+        os << insertTabs(numTabs) << '}' << std::endl;
     } else if (sequence.getType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
         os << insertTabs(numTabs + 1) << "// Add on size of each individual " << sequence.getType().getStructure() << std::endl;
@@ -916,6 +942,11 @@ std::string CppGenerator::generateSizeOfMap(const Messaging::Map& map,
         os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(map.getKeyType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (map.getKeyType().getEnumeration().present()) {
         os << insertTabs(numTabs) << "size += sizeof(" << map.getKeyType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
+    } else if (map.getKeyType().getString().present()) {
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << getCxxType(map.getKeyType().getString().get()) << std::endl;
+        os << insertTabs(numTabs + 1) << "size += sizeof(" << getCxxType(map.getKeyType().getString().get()) << "::value_type) * e" << +numTabs << ".first.size();" << std::endl;
+        os << insertTabs(numTabs) << '}' << std::endl;
     }    
     
     os << std::endl;
@@ -925,6 +956,11 @@ std::string CppGenerator::generateSizeOfMap(const Messaging::Map& map,
         os << insertTabs(numTabs) << "size += sizeof(" << convertPrimitiveTypeToCppType(map.getValueType().getPrimitive().get()) << ") * " << parentName << ".size();" << std::endl;
     } else if (map.getValueType().getEnumeration().present()) {
         os << insertTabs(numTabs) << "size += sizeof(" << map.getValueType().getEnumeration().get() << ") * " << parentName << ".size();" << std::endl;
+    }  else if (map.getValueType().getString().present()) {
+        os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
+        os << insertTabs(numTabs + 1) << "// Add on size of each individual " << getCxxType(map.getValueType().getString().get()) << std::endl;
+        os << insertTabs(numTabs + 1) << "size += sizeof(" << getCxxType(map.getValueType().getString().get()) << "::value_type) * e" << +numTabs << ".second.size();" << std::endl;
+        os << insertTabs(numTabs) << '}' << std::endl;
     } else if (map.getValueType().getStructure().present()) {
         os << insertTabs(numTabs) << "for (const auto& e" << +numTabs << " : " << parentName << ") {" << std::endl;        
         os << insertTabs(numTabs + 1) << "// Add on size of each individual " << map.getValueType().getStructure() << std::endl;

@@ -459,8 +459,16 @@ namespace MyNamespace {
         size += sizeof(uint64_t);
 
         // Add on size of stringTo32String key data
+        for (const auto& e1 : stringTo32String) {
+            // Add on size of each individual std::string
+            size += sizeof(std::string::value_type) * e1.first.size();
+        }
 
         // Add on size of stringTo32String value data
+        for (const auto& e1 : stringTo32String) {
+            // Add on size of each individual std::u32string
+            size += sizeof(std::u32string::value_type) * e1.second.size();
+        }
 
         return size;
     }

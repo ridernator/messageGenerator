@@ -29,6 +29,18 @@ namespace MyNamespace {
         // Add on size of bigUnsigned
         size += sizeof(bigUnsigned);
 
+        // Add on size of a8String
+        size += sizeof(std::string::value_type) * a8String.size();
+
+        // Add on size of b8String
+        size += sizeof(std::string::value_type) * b8String.size();
+
+        // Add on size of a16String
+        size += sizeof(std::u16string::value_type) * a16String.size();
+
+        // Add on size of a32String
+        size += sizeof(std::u32string::value_type) * a32String.size();
+
         return size;
     }
 

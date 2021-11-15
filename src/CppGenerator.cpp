@@ -554,6 +554,14 @@ std::string CppGenerator::generateIncludesHxx(const Messaging::Structure& struct
         uniqueHeaders.insert("#include \"" + enumeration.getType() + ".hxx\"");
     }
     
+    for (const auto& string : structure.getString()) {
+        if (isOptional(string)) {
+            uniqueHeaders.insert("#include <optional>");
+        }
+
+        uniqueHeaders.insert("#include <string>");
+    }
+    
     for (const auto& subStructure : structure.getStructure()) {
         if (isOptional(subStructure)) {
             uniqueHeaders.insert("#include <optional>");
@@ -611,6 +619,8 @@ void CppGenerator::addRequiredHeaders(const Messaging::Array array,
         headers.insert("#include <cstdint>");
     } else if (array.getType().getEnumeration().present()) {
         headers.insert("#include \"" + array.getType().getEnumeration().get() + ".hxx\"");
+    } else if (array.getType().getString().present()) {
+        headers.insert("#include <string>");
     } else if (array.getType().getStructure().present()) {
         headers.insert("#include \"" + array.getType().getStructure().get() + ".hxx\"");
     } else if (array.getType().getArray().present()) {
@@ -630,6 +640,8 @@ void CppGenerator::addRequiredHeaders(const Messaging::Sequence sequence,
         headers.insert("#include <cstdint>");
     } else if (sequence.getType().getEnumeration().present()) {
         headers.insert("#include \"" + sequence.getType().getEnumeration().get() + ".hxx\"");
+    } else if (sequence.getType().getString().present()) {
+        headers.insert("#include <string>");
     } else if (sequence.getType().getStructure().present()) {
         headers.insert("#include \"" + sequence.getType().getStructure().get() + ".hxx\"");
     } else if (sequence.getType().getArray().present()) {
@@ -649,12 +661,16 @@ void CppGenerator::addRequiredHeaders(const Messaging::Map map,
         headers.insert("#include <cstdint>");
     } else if (map.getKeyType().getEnumeration().present()) {
         headers.insert("#include \"" + map.getKeyType().getEnumeration().get() + ".hxx\"");
+    } else if (map.getKeyType().getString().present()) {
+        headers.insert("#include <string>");
     }
 
     if (map.getValueType().getPrimitive().present()) {
         headers.insert("#include <cstdint>");
     } else if (map.getValueType().getEnumeration().present()) {
         headers.insert("#include \"" + map.getValueType().getEnumeration().get() + ".hxx\"");
+    } else if (map.getValueType().getString().present()) {
+        headers.insert("#include <string>");
     } else if (map.getValueType().getStructure().present()) {
         headers.insert("#include \"" + map.getValueType().getStructure().get() + ".hxx\"");
     } else if (map.getValueType().getArray().present()) {

@@ -6,6 +6,10 @@
              namespace="MyNamespace">
     <structure name="TestSubStruct">
         <primitive name="bigUnsigned" type="unsigned_int_64" />
+        <string name="a8String" />
+        <string name="b8String" type="8" />
+        <string name="a16String" type="16" />
+        <string name="a32String" type="32" />
     </structure>
      
     <enumeration name="Colour" baseType="signed_int_8">

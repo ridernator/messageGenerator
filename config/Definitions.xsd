@@ -260,6 +260,12 @@
                     <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
                 </xs:annotation>
             </xs:element>
+
+            <xs:element name="string" type="String">
+                <xs:annotation>
+                    <xs:documentation>Enumeration element which is the type of this array</xs:documentation>
+                </xs:annotation>
+            </xs:element>
         </xs:choice>
     </xs:group>
     

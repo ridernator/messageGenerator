@@ -189,6 +189,10 @@ std::string CppGenerator::generateGettersCxx(const Messaging::Structure& structu
         os << generateGetterCxx(structure, enumeration, enumeration.getType(), false) << std::endl;
     }
     
+    for (const auto& string : structure.getString()) {
+        os << generateGetterCxx(structure, string, getCxxType(string)) << std::endl;
+    }
+    
     for (const auto& subStructure : structure.getStructure()) {
         os << generateGetterCxx(structure, subStructure, subStructure.getType()) << std::endl;
     }
@@ -219,18 +223,28 @@ std::string CppGenerator::generateSettersCxx(const Messaging::Structure& structu
         os << generateSetterCxx(structure, enumeration, enumeration.getType()) << std::endl;
     }
     
+    for (const auto& string : structure.getString()) {
+        os << generateSetterCxx(structure, string, getCxxType(string), true) << std::endl;
+    }
+    
     return os.str();
 }
 
 std::string CppGenerator::generateSetterCxx(const Messaging::Structure& structure,
                                             const auto& element,
-                                            const std::string& type) {
+                                            const std::string& type,
+                                            const bool passAsReference) {
     std::ostringstream os;
     
     std::string upperName = element.getName();
     upperName[0] = toupper(upperName[0]);
     
-    os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << type << " value) {" << std::endl;
+    if (passAsReference) {
+        os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << type << "& value) {" << std::endl;
+    } else {
+        os << insertTabs() << "void " << structure.getName() << "::set" << upperName << "(const " << type << " value) {" << std::endl;
+    }
+    
     os << insertTabs(1) << element.getName() << " = value;" << std::endl;
     os << insertTabs() << '}' << std::endl;
     
@@ -322,6 +336,10 @@ std::string CppGenerator::generateGettersHxx(const Messaging::Structure& structu
         os << generateGetterHxx(enumeration, enumeration.getType(), false) << std::endl;
     }
     
+    for (const auto& string : structure.getString()) {
+        os << generateGetterHxx(string, getCxxType(string)) << std::endl;
+    }
+    
     for (const auto& subStructure : structure.getStructure()) {
         os << generateGetterHxx(subStructure, subStructure.getType()) << std::endl;
     }
@@ -354,11 +372,16 @@ std::string CppGenerator::generateSettersHxx(const Messaging::Structure& structu
         os << generateSetterHxx(enumeration, enumeration.getType()) << std::endl;
     }
     
+    for (const auto& string : structure.getString()) {
+        os << generateSetterHxx(string, getCxxType(string), true) << std::endl;
+    }
+    
     return os.str();
 }
 
 std::string CppGenerator::generateSetterHxx(const auto& element,
-                                            const std::string& type) {
+                                            const std::string& type,
+                                            const bool passAsReference) {
     std::ostringstream os;
     std::string name = element.getName();
 
@@ -375,7 +398,12 @@ std::string CppGenerator::generateSetterHxx(const auto& element,
     os << insertTabs(2) << " *" << std::endl;
     os << insertTabs(2) << " * @param value The new value to set" << std::endl;
     os << insertTabs(2) << " */" << std::endl;
-    os << insertTabs(2) << "void set" << name << "(const " << type << " value);" << std::endl;
+    
+    if (passAsReference) {
+        os << insertTabs(2) << "void set" << name << "(const " << type << "& value);" << std::endl;
+    } else {
+        os << insertTabs(2) << "void set" << name << "(const " << type << " value);" << std::endl;
+    }
     
     return os.str();
 }

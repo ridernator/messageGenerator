@@ -38,7 +38,8 @@ class CppGenerator : Generator {
         std::string generateSettersHxx(const Messaging::Structure& structure);
 
         std::string generateSetterHxx(const auto& element,
-                                      const std::string& type);
+                                      const std::string& type,
+                                      const bool passAsReference = false);
 
         std::string generateGetterHxx(const auto& map,
                                       const std::string& type,
@@ -131,7 +132,8 @@ class CppGenerator : Generator {
 
         std::string generateSetterCxx(const Messaging::Structure& structure,
                                       const auto& element,
-                                      const std::string& type);
+                                      const std::string& type,
+                                      const bool passAsReference = false);
         
         std::string getCxxType(const Messaging::String& string);
         

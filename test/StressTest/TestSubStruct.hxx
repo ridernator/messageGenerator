@@ -40,11 +40,67 @@ namespace MyNamespace {
             uint64_t getBigUnsigned() const;
 
             /**
+             * Getter for a8String
+             *
+             * @return a8String
+             */
+            std::string& getA8String();
+
+            /**
+             * Getter for b8String
+             *
+             * @return b8String
+             */
+            std::string& getB8String();
+
+            /**
+             * Getter for a16String
+             *
+             * @return a16String
+             */
+            std::u16string& getA16String();
+
+            /**
+             * Getter for a32String
+             *
+             * @return a32String
+             */
+            std::u32string& getA32String();
+
+            /**
              * Setter for bigUnsigned
              *
              * @param value The new value to set
              */
             void setBigUnsigned(const uint64_t value);
+
+            /**
+             * Setter for a8String
+             *
+             * @param value The new value to set
+             */
+            void setA8String(const std::string& value);
+
+            /**
+             * Setter for b8String
+             *
+             * @param value The new value to set
+             */
+            void setB8String(const std::string& value);
+
+            /**
+             * Setter for a16String
+             *
+             * @param value The new value to set
+             */
+            void setA16String(const std::u16string& value);
+
+            /**
+             * Setter for a32String
+             *
+             * @param value The new value to set
+             */
+            void setA32String(const std::u32string& value);
 
         private :
             uint64_t bigUnsigned;

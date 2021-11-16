@@ -1,7 +1,8 @@
 #include <iostream>
 
-#include "MapTest.hxx"
+#include "StringTest.hxx"
 #include "OptionalTest.hxx"
+#include "MapTest.hxx"
 
 int main(int argc, char** argv) {
     {
@@ -66,6 +67,25 @@ int main(int argc, char** argv) {
         std::cout << "big unsigned is " << o2.getStructure().value().getBigUnsigned() << std::endl;
         std::cout << "primitive is " << o2.getPrimitive().value() << std::endl;
         std::cout << "array[2] is " << o2.getArray().value()[2] << std::endl;
+
+        delete [] bytes;
+    }
+    
+    {
+        MyNamespace::StringTest o;
+        MyNamespace::StringTest o2;
+        o.setA8String("123");
+
+        std::cout << "StringTest size in bytes : " << o.getSizeInBytes() << std::endl;
+        uint64_t offset = 0;
+        char* bytes = new char[o.getSizeInBytes()];
+        o.serialise(bytes, offset);
+        std::cout << "\tOffset after serialise : " << offset << std::endl;
+
+        offset = 0;
+        o2.deserialise(bytes, offset);
+        std::cout << "\tOffset after deserialise : " << offset << std::endl;
+        std::cout << "\aString is " << o2.getA8String() << std::endl;
 
         delete [] bytes;
     }

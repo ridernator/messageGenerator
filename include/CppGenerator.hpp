@@ -80,6 +80,14 @@ class CppGenerator : Generator {
                                         const uint8_t numTabs,
                                         const std::string& parentName);
 
+        std::string generateSerialise(const Messaging::String& string,
+                                      const uint8_t numTabs,
+                                      const std::string& parentName);
+
+        std::string generateDeserialise(const Messaging::String& string,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
+
         std::string generateSerialise(const Messaging::NamedStructure& structure,
                                       const uint8_t numTabs,
                                       const std::string& parentName);

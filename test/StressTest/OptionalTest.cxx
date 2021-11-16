@@ -36,6 +36,70 @@ namespace MyNamespace {
             offset += sizeof(enumeration.value());
         }
 
+        // Serialise string1
+        // Serialise string1 presence flag
+        *(data + offset++) = string1.has_value() ? 1 : 0;
+
+        // Serialise string1 data
+        if (string1.has_value()) {
+            // Serialise size of string1.value()
+            uint64_t string1valueSize = string1.value().size();
+            memcpy(data + offset, &string1valueSize, sizeof(string1valueSize));
+            offset += sizeof(string1valueSize);
+
+            // Serialise string1.value() data
+            memcpy(data + offset, &string1.value()[0], sizeof(string1.value()[0]) * string1.value().size());
+            offset += sizeof(string1.value()[0]) * string1.value().size();
+        }
+
+        // Serialise string2
+        // Serialise string2 presence flag
+        *(data + offset++) = string2.has_value() ? 1 : 0;
+
+        // Serialise string2 data
+        if (string2.has_value()) {
+            // Serialise size of string2.value()
+            uint64_t string2valueSize = string2.value().size();
+            memcpy(data + offset, &string2valueSize, sizeof(string2valueSize));
+            offset += sizeof(string2valueSize);
+
+            // Serialise string2.value() data
+            memcpy(data + offset, &string2.value()[0], sizeof(string2.value()[0]) * string2.value().size());
+            offset += sizeof(string2.value()[0]) * string2.value().size();
+        }
+
+        // Serialise string3
+        // Serialise string3 presence flag
+        *(data + offset++) = string3.has_value() ? 1 : 0;
+
+        // Serialise string3 data
+        if (string3.has_value()) {
+            // Serialise size of string3.value()
+            uint64_t string3valueSize = string3.value().size();
+            memcpy(data + offset, &string3valueSize, sizeof(string3valueSize));
+            offset += sizeof(string3valueSize);
+
+            // Serialise string3.value() data
+            memcpy(data + offset, &string3.value()[0], sizeof(string3.value()[0]) * string3.value().size());
+            offset += sizeof(string3.value()[0]) * string3.value().size();
+        }
+
+        // Serialise string4
+        // Serialise string4 presence flag
+        *(data + offset++) = string4.has_value() ? 1 : 0;
+
+        // Serialise string4 data
+        if (string4.has_value()) {
+            // Serialise size of string4.value()
+            uint64_t string4valueSize = string4.value().size();
+            memcpy(data + offset, &string4valueSize, sizeof(string4valueSize));
+            offset += sizeof(string4valueSize);
+
+            // Serialise string4.value() data
+            memcpy(data + offset, &string4.value()[0], sizeof(string4.value()[0]) * string4.value().size());
+            offset += sizeof(string4.value()[0]) * string4.value().size();
+        }
+
         // Serialise structure
         // Serialise structure presence flag
         *(data + offset++) = structure.has_value() ? 1 : 0;
@@ -115,6 +179,70 @@ namespace MyNamespace {
             offset += sizeof(enumeration.value());
         } else {
             enumeration.reset();
+        }
+
+        // Deserialise string1
+        if (*(data + offset++) == 1) {
+            string1 = typename std::decay_t<decltype(string1)>::value_type{};
+            // Deserialise size of string1.value()
+            uint64_t string1valueSize;
+            memcpy(&string1valueSize, data + offset, sizeof(string1valueSize));
+            offset += sizeof(string1valueSize);
+            string1.value().resize(string1valueSize);
+
+            // Deserialise string1.value() data
+            memcpy(&string1.value()[0], data + offset, sizeof(string1.value()[0]) * string1.value().size());
+            offset += sizeof(string1.value()[0]) * string1.value().size();
+        } else {
+            string1.reset();
+        }
+
+        // Deserialise string2
+        if (*(data + offset++) == 1) {
+            string2 = typename std::decay_t<decltype(string2)>::value_type{};
+            // Deserialise size of string2.value()
+            uint64_t string2valueSize;
+            memcpy(&string2valueSize, data + offset, sizeof(string2valueSize));
+            offset += sizeof(string2valueSize);
+            string2.value().resize(string2valueSize);
+
+            // Deserialise string2.value() data
+            memcpy(&string2.value()[0], data + offset, sizeof(string2.value()[0]) * string2.value().size());
+            offset += sizeof(string2.value()[0]) * string2.value().size();
+        } else {
+            string2.reset();
+        }
+
+        // Deserialise string3
+        if (*(data + offset++) == 1) {
+            string3 = typename std::decay_t<decltype(string3)>::value_type{};
+            // Deserialise size of string3.value()
+            uint64_t string3valueSize;
+            memcpy(&string3valueSize, data + offset, sizeof(string3valueSize));
+            offset += sizeof(string3valueSize);
+            string3.value().resize(string3valueSize);
+
+            // Deserialise string3.value() data
+            memcpy(&string3.value()[0], data + offset, sizeof(string3.value()[0]) * string3.value().size());
+            offset += sizeof(string3.value()[0]) * string3.value().size();
+        } else {
+            string3.reset();
+        }
+
+        // Deserialise string4
+        if (*(data + offset++) == 1) {
+            string4 = typename std::decay_t<decltype(string4)>::value_type{};
+            // Deserialise size of string4.value()
+            uint64_t string4valueSize;
+            memcpy(&string4valueSize, data + offset, sizeof(string4valueSize));
+            offset += sizeof(string4valueSize);
+            string4.value().resize(string4valueSize);
+
+            // Deserialise string4.value() data
+            memcpy(&string4.value()[0], data + offset, sizeof(string4.value()[0]) * string4.value().size());
+            offset += sizeof(string4.value()[0]) * string4.value().size();
+        } else {
+            string4.reset();
         }
 
         // Deserialise structure
@@ -208,6 +336,9 @@ namespace MyNamespace {
         // If string1 is present then add on size of it
         if (string1.has_value()) {
             size += sizeof(std::string::value_type) * string1.value().size();
+
+            // Add on size of string size field
+            size += sizeof(uint64_t);
         }
 
         // Add on size of string2
@@ -217,6 +348,9 @@ namespace MyNamespace {
         // If string2 is present then add on size of it
         if (string2.has_value()) {
             size += sizeof(std::string::value_type) * string2.value().size();
+
+            // Add on size of string size field
+            size += sizeof(uint64_t);
         }
 
         // Add on size of string3
@@ -226,6 +360,9 @@ namespace MyNamespace {
         // If string3 is present then add on size of it
         if (string3.has_value()) {
             size += sizeof(std::u16string::value_type) * string3.value().size();
+
+            // Add on size of string size field
+            size += sizeof(uint64_t);
         }
 
         // Add on size of string4
@@ -235,6 +372,9 @@ namespace MyNamespace {
         // If string4 is present then add on size of it
         if (string4.has_value()) {
             size += sizeof(std::u32string::value_type) * string4.value().size();
+
+            // Add on size of string size field
+            size += sizeof(uint64_t);
         }
 
         // Add on size of structure

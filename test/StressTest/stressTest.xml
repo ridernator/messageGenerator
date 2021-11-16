@@ -173,4 +173,21 @@
         
         <primitive name="lastElement" type="unsigned_int_64" />
     </structure>
+    
+    <structure name="StringTest" >
+        <string name="a8String" />
+        
+        <string name="b8String" type="8" />
+    
+        <string name="a16String" type="16" />
+        
+        <string name="a32String" type="32" />
+    
+        <array name="array">
+            <size>7</size>
+            <type>
+                <string />
+            </type>
+        </array>
+    </structure>
 </definitions>

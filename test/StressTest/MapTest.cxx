@@ -56,7 +56,7 @@ namespace MyNamespace {
             offset += sizeof(e0.first);
 
             // Serialise primitiveToStruct value data
-            e0.second.serialise(data + offset, offset);
+            e0.second.serialise(data, offset);
         }
 
         // Serialise primitiveToArray
@@ -155,8 +155,24 @@ namespace MyNamespace {
 
         for (const auto& e0 : stringTo32String) {
             // Serialise stringTo32String key data
+            // Serialise size of e0.first
+            uint64_t e0firstSize = e0.first.size();
+            memcpy(data + offset, &e0firstSize, sizeof(e0firstSize));
+            offset += sizeof(e0firstSize);
+
+            // Serialise e0.first data
+            memcpy(data + offset, &e0.first[0], sizeof(e0.first[0]) * e0.first.size());
+            offset += sizeof(e0.first[0]) * e0.first.size();
 
             // Serialise stringTo32String value data
+            // Serialise size of e0.second
+            uint64_t e0secondSize = e0.second.size();
+            memcpy(data + offset, &e0secondSize, sizeof(e0secondSize));
+            offset += sizeof(e0secondSize);
+
+            // Serialise e0.second data
+            memcpy(data + offset, &e0.second[0], sizeof(e0.second[0]) * e0.second.size());
+            offset += sizeof(e0.second[0]) * e0.second.size();
         }
     }
 
@@ -218,7 +234,7 @@ namespace MyNamespace {
 
             // Deserialise primitiveToStruct value data
             TestSubStruct second0;
-            second0.deserialise(data + offset, offset);
+            second0.deserialise(data, offset);
 
             primitiveToStruct.insert({first0, second0});
         }
@@ -347,8 +363,28 @@ namespace MyNamespace {
         // Deserialise stringTo32String data
         for (uint64_t index = 0; index < stringTo32StringSize; ++index) {
             // Deserialise stringTo32String key data
+            std::string first0;
+            // Deserialise size of first0
+            uint64_t first0Size;
+            memcpy(&first0Size, data + offset, sizeof(first0Size));
+            offset += sizeof(first0Size);
+            first0.resize(first0Size);
+
+            // Deserialise first0 data
+            memcpy(&first0[0], data + offset, sizeof(first0[0]) * first0.size());
+            offset += sizeof(first0[0]) * first0.size();
 
             // Deserialise stringTo32String value data
+            std::u32string second0;
+            // Deserialise size of second0
+            uint64_t second0Size;
+            memcpy(&second0Size, data + offset, sizeof(second0Size));
+            offset += sizeof(second0Size);
+            second0.resize(second0Size);
+
+            // Deserialise second0 data
+            memcpy(&second0[0], data + offset, sizeof(second0[0]) * second0.size());
+            offset += sizeof(second0[0]) * second0.size();
 
             stringTo32String.insert({first0, second0});
         }
@@ -462,12 +498,18 @@ namespace MyNamespace {
         for (const auto& e1 : stringTo32String) {
             // Add on size of each individual std::string
             size += sizeof(std::string::value_type) * e1.first.size();
+
+            // Add on size of string size field
+            size += sizeof(uint64_t);
         }
 
         // Add on size of stringTo32String value data
         for (const auto& e1 : stringTo32String) {
             // Add on size of each individual std::u32string
             size += sizeof(std::u32string::value_type) * e1.second.size();
+
+            // Add on size of string size field
+            size += sizeof(uint64_t);
         }
 
         return size;

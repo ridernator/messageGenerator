@@ -1,21 +1,17 @@
-#include "TestSubStruct.hxx"
+#include "StringTest.hxx"
 
 #include <string.h>
 
 namespace MyNamespace {
-    TestSubStruct::TestSubStruct() {
+    StringTest::StringTest() {
 
     }
 
-    TestSubStruct::~TestSubStruct() {
+    StringTest::~StringTest() {
 
     }
 
-    void TestSubStruct::serialise(char* data, uint64_t& offset) const {
-        // Serialise bigUnsigned
-        memcpy(data + offset, &bigUnsigned, sizeof(bigUnsigned));
-        offset += sizeof(bigUnsigned);
-
+    void StringTest::serialise(char* data, uint64_t& offset) const {
         // Serialise a8String
         // Serialise size of a8String
         uint64_t a8StringSize = a8String.size();
@@ -55,13 +51,21 @@ namespace MyNamespace {
         // Serialise a32String data
         memcpy(data + offset, &a32String[0], sizeof(a32String[0]) * a32String.size());
         offset += sizeof(a32String[0]) * a32String.size();
+
+        // Serialise array
+        for (const auto& e1 : array) {
+            // Serialise size of e1
+            uint64_t e1Size = e1.size();
+            memcpy(data + offset, &e1Size, sizeof(e1Size));
+            offset += sizeof(e1Size);
+
+            // Serialise e1 data
+            memcpy(data + offset, &e1[0], sizeof(e1[0]) * e1.size());
+            offset += sizeof(e1[0]) * e1.size();
+        }
     }
 
-    void TestSubStruct::deserialise(const char* data, uint64_t& offset) {
-        // Deserialise bigUnsigned
-        memcpy(&bigUnsigned, data + offset, sizeof(bigUnsigned));
-        offset += sizeof(bigUnsigned);
-
+    void StringTest::deserialise(const char* data, uint64_t& offset) {
         // Deserialise a8String
         // Deserialise size of a8String
         uint64_t a8StringSize;
@@ -105,13 +109,23 @@ namespace MyNamespace {
         // Deserialise a32String data
         memcpy(&a32String[0], data + offset, sizeof(a32String[0]) * a32String.size());
         offset += sizeof(a32String[0]) * a32String.size();
+
+        // Deserialise array
+        for (auto& e1 : array) {
+            // Deserialise size of e1
+            uint64_t e1Size;
+            memcpy(&e1Size, data + offset, sizeof(e1Size));
+            offset += sizeof(e1Size);
+            e1.resize(e1Size);
+
+            // Deserialise e1 data
+            memcpy(&e1[0], data + offset, sizeof(e1[0]) * e1.size());
+            offset += sizeof(e1[0]) * e1.size();
+        }
     }
 
-    uint64_t TestSubStruct::getSizeInBytes() const {
+    uint64_t StringTest::getSizeInBytes() const {
         uint64_t size = 0;
-
-        // Add on size of bigUnsigned
-        size += sizeof(bigUnsigned);
 
         // Add on size of a8String
         size += sizeof(std::string::value_type) * a8String.size();
@@ -137,46 +151,51 @@ namespace MyNamespace {
         // Add on size of string size field
         size += sizeof(uint64_t);
 
+        // Add on size of array
+        for (const auto& e1 : array) {
+            // Add on size of each individual std::string
+            size += sizeof(std::string::value_type) * e1.size();
+
+            // Add on size of string size field
+            size += sizeof(uint64_t);
+        }
+
         return size;
     }
 
-    uint64_t TestSubStruct::getBigUnsigned() const {
-        return bigUnsigned;
-    }
-
-    std::string& TestSubStruct::getA8String() {
+    std::string& StringTest::getA8String() {
         return a8String;
     }
 
-    std::string& TestSubStruct::getB8String() {
+    std::string& StringTest::getB8String() {
         return b8String;
     }
 
-    std::u16string& TestSubStruct::getA16String() {
+    std::u16string& StringTest::getA16String() {
         return a16String;
     }
 
-    std::u32string& TestSubStruct::getA32String() {
+    std::u32string& StringTest::getA32String() {
         return a32String;
     }
 
-    void TestSubStruct::setBigUnsigned(const uint64_t value) {
-        bigUnsigned = value;
+    std::array<std::string, 7>& StringTest::getArray() {
+        return array;
     }
 
-    void TestSubStruct::setA8String(const std::string& value) {
+    void StringTest::setA8String(const std::string& value) {
         a8String = value;
     }
 
-    void TestSubStruct::setB8String(const std::string& value) {
+    void StringTest::setB8String(const std::string& value) {
         b8String = value;
     }
 
-    void TestSubStruct::setA16String(const std::u16string& value) {
+    void StringTest::setA16String(const std::u16string& value) {
         a16String = value;
     }
 
-    void TestSubStruct::setA32String(const std::u32string& value) {
+    void StringTest::setA32String(const std::u32string& value) {
         a32String = value;
     }
 

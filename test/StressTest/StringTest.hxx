@@ -1,22 +1,22 @@
 #pragma once
 
-#include <cstdint>
+#include <array>
 #include <string>
 
 #include "BaseMessage.hpp"
 
 namespace MyNamespace {
-    class TestSubStruct : public Messaging::BaseMessage {
+    class StringTest : public Messaging::BaseMessage {
         public :
             /**
              * Constructor for this class
              */
-            TestSubStruct();
+            StringTest();
 
             /**
              * Destructor for this class
              */
-            ~TestSubStruct();
+            ~StringTest();
 
             void serialise(char* data,
                            uint64_t& offset) const;
@@ -31,13 +31,6 @@ namespace MyNamespace {
              * @return The size of the serialised version of this class in bytes
              */
             uint64_t getSizeInBytes() const;
-
-            /**
-             * Getter for bigUnsigned
-             *
-             * @return bigUnsigned
-             */
-            uint64_t getBigUnsigned() const;
 
             /**
              * Getter for a8String
@@ -68,11 +61,11 @@ namespace MyNamespace {
             std::u32string& getA32String();
 
             /**
-             * Setter for bigUnsigned
+             * Getter for array
              *
-             * @param value The new value to set
+             * @return array
              */
-            void setBigUnsigned(const uint64_t value);
+            std::array<std::string, 7>& getArray();
 
             /**
              * Setter for a8String
@@ -103,8 +96,6 @@ namespace MyNamespace {
             void setA32String(const std::u32string& value);
 
         private :
-            uint64_t bigUnsigned;
-
             std::string a8String;
 
             std::string b8String;
@@ -112,5 +103,7 @@ namespace MyNamespace {
             std::u16string a16String;
 
             std::u32string a32String;
+
+            std::array<std::string, 7> array;
     };
 }

@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/MapTest.o \
 	${OBJECTDIR}/OptionalTest.o \
+	${OBJECTDIR}/StringTest.o \
 	${OBJECTDIR}/TestSubStruct.o \
 	${OBJECTDIR}/main.o
 
@@ -74,6 +75,11 @@ ${OBJECTDIR}/OptionalTest.o: OptionalTest.cxx
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OptionalTest.o OptionalTest.cxx
+
+${OBJECTDIR}/StringTest.o: StringTest.cxx
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Werror -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StringTest.o StringTest.cxx
 
 ${OBJECTDIR}/TestSubStruct.o: TestSubStruct.cxx
 	${MKDIR} -p ${OBJECTDIR}

@@ -6,6 +6,10 @@
              namespace="MyNamespace">
     <structure name="TestSubStruct">
         <primitive name="bigUnsigned" type="unsigned_int_64" />
+        <string name="a8String" />
+        <string name="b8String" type="8" />
+        <string name="a16String" type="16" />
+        <string name="a32String" type="32" />
     </structure>
      
     <enumeration name="Colour" baseType="signed_int_8">
@@ -117,17 +121,29 @@
             </valueType>
         </map>
         
-        <structure name="tss" type="TestSubStruct" />
-        
-        <enumeration name="colour" type="Colour" />
-        
-        <primitive name="lastElement" type="unsigned_int_64" />
+        <map name="stringTo32String">
+            <keyType>
+                <string type="8"/>
+            </keyType>
+            
+            <valueType>
+                <string type="32"/>
+            </valueType>
+        </map>
     </structure>
     
     <structure name="OptionalTest">
         <primitive name="primitive" type="unsigned_int_64" optional="true" />
         
         <enumeration name="enumeration" type="Colour" optional="true" />
+               
+        <string name="string1" optional="true" />
+               
+        <string name="string2" type="8" optional="true" />
+               
+        <string name="string3" type="16" optional="true" />
+               
+        <string name="string4" type="32" optional="true" />
                
         <structure name="structure" type="TestSubStruct" optional="true" />
     
@@ -156,5 +172,22 @@
         </map>
         
         <primitive name="lastElement" type="unsigned_int_64" />
+    </structure>
+    
+    <structure name="StringTest" >
+        <string name="a8String" />
+        
+        <string name="b8String" type="8" />
+    
+        <string name="a16String" type="16" />
+        
+        <string name="a32String" type="32" />
+    
+        <array name="array">
+            <size>7</size>
+            <type>
+                <string />
+            </type>
+        </array>
     </structure>
 </definitions>

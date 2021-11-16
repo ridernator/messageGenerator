@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <map>
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "BaseMessage.hpp"
@@ -59,6 +60,34 @@ namespace MyNamespace {
             std::optional<Colour>& getEnumeration();
 
             /**
+             * Getter for string1
+             *
+             * @return string1
+             */
+            std::optional<std::string>& getString1();
+
+            /**
+             * Getter for string2
+             *
+             * @return string2
+             */
+            std::optional<std::string>& getString2();
+
+            /**
+             * Getter for string3
+             *
+             * @return string3
+             */
+            std::optional<std::u16string>& getString3();
+
+            /**
+             * Getter for string4
+             *
+             * @return string4
+             */
+            std::optional<std::u32string>& getString4();
+
+            /**
              * Getter for structure
              *
              * @return structure
@@ -107,12 +136,48 @@ namespace MyNamespace {
              */
             void setEnumeration(const Colour value);
 
+            /**
+             * Setter for string1
+             *
+             * @param value The new value to set
+             */
+            void setString1(const std::string& value);
+
+            /**
+             * Setter for string2
+             *
+             * @param value The new value to set
+             */
+            void setString2(const std::string& value);
+
+            /**
+             * Setter for string3
+             *
+             * @param value The new value to set
+             */
+            void setString3(const std::u16string& value);
+
+            /**
+             * Setter for string4
+             *
+             * @param value The new value to set
+             */
+            void setString4(const std::u32string& value);
+
         private :
             std::optional<uint64_t> primitive;
 
             uint64_t lastElement;
 
             std::optional<Colour> enumeration;
+
+            std::optional<std::string> string1;
+
+            std::optional<std::string> string2;
+
+            std::optional<std::u16string> string3;
+
+            std::optional<std::u32string> string4;
 
             std::optional<TestSubStruct> structure;
 

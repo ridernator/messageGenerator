@@ -38,7 +38,8 @@ class CppGenerator : Generator {
         std::string generateSettersHxx(const Messaging::Structure& structure);
 
         std::string generateSetterHxx(const auto& element,
-                                      const std::string& type);
+                                      const std::string& type,
+                                      const bool passAsReference = false);
 
         std::string generateGetterHxx(const auto& map,
                                       const std::string& type,
@@ -76,6 +77,14 @@ class CppGenerator : Generator {
                                       const std::string& parentName);
 
         std::string generateDeserialise(const Messaging::NamedEnumeration& enumeration,
+                                        const uint8_t numTabs,
+                                        const std::string& parentName);
+
+        std::string generateSerialise(const Messaging::String& string,
+                                      const uint8_t numTabs,
+                                      const std::string& parentName);
+
+        std::string generateDeserialise(const Messaging::String& string,
                                         const uint8_t numTabs,
                                         const std::string& parentName);
 
@@ -131,7 +140,10 @@ class CppGenerator : Generator {
 
         std::string generateSetterCxx(const Messaging::Structure& structure,
                                       const auto& element,
-                                      const std::string& type);
+                                      const std::string& type,
+                                      const bool passAsReference = false);
+        
+        std::string getCxxType(const Messaging::String& string);
         
         std::string getCxxType(const Messaging::Array& array);
         

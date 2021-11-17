@@ -1,7 +1,10 @@
 #pragma once
 
 #include <array>
+#include <map>
+#include <optional>
 #include <string>
+#include <vector>
 
 #include "BaseMessage.hpp"
 
@@ -61,11 +64,74 @@ namespace MyNamespace {
             std::u32string& getA32String();
 
             /**
+             * Getter for a8StringOpt
+             *
+             * @return a8StringOpt
+             */
+            std::optional<std::string>& getA8StringOpt();
+
+            /**
+             * Getter for b8StringOpt
+             *
+             * @return b8StringOpt
+             */
+            std::optional<std::string>& getB8StringOpt();
+
+            /**
+             * Getter for a16StringOpt
+             *
+             * @return a16StringOpt
+             */
+            std::optional<std::u16string>& getA16StringOpt();
+
+            /**
+             * Getter for a32StringOpt
+             *
+             * @return a32StringOpt
+             */
+            std::optional<std::u32string>& getA32StringOpt();
+
+            /**
              * Getter for array
              *
              * @return array
              */
-            std::array<std::string, 7>& getArray();
+            std::array<std::u16string, 7>& getArray();
+
+            /**
+             * Getter for arrayOpt
+             *
+             * @return arrayOpt
+             */
+            std::optional<std::array<std::u16string, 7>>& getArrayOpt();
+
+            /**
+             * Getter for sequence
+             *
+             * @return sequence
+             */
+            std::vector<std::u32string>& getSequence();
+
+            /**
+             * Getter for sequenceOpt
+             *
+             * @return sequenceOpt
+             */
+            std::optional<std::vector<std::u32string>>& getSequenceOpt();
+
+            /**
+             * Getter for map
+             *
+             * @return map
+             */
+            std::map<std::string, std::u32string>& getMap();
+
+            /**
+             * Getter for mapOpt
+             *
+             * @return mapOpt
+             */
+            std::optional<std::map<std::string, std::u32string>>& getMapOpt();
 
             /**
              * Setter for a8String
@@ -95,6 +161,34 @@ namespace MyNamespace {
              */
             void setA32String(const std::u32string& value);
 
+            /**
+             * Setter for a8StringOpt
+             *
+             * @param value The new value to set
+             */
+            void setA8StringOpt(const std::string& value);
+
+            /**
+             * Setter for b8StringOpt
+             *
+             * @param value The new value to set
+             */
+            void setB8StringOpt(const std::string& value);
+
+            /**
+             * Setter for a16StringOpt
+             *
+             * @param value The new value to set
+             */
+            void setA16StringOpt(const std::u16string& value);
+
+            /**
+             * Setter for a32StringOpt
+             *
+             * @param value The new value to set
+             */
+            void setA32StringOpt(const std::u32string& value);
+
         private :
             std::string a8String;
 
@@ -104,6 +198,24 @@ namespace MyNamespace {
 
             std::u32string a32String;
 
-            std::array<std::string, 7> array;
+            std::optional<std::string> a8StringOpt;
+
+            std::optional<std::string> b8StringOpt;
+
+            std::optional<std::u16string> a16StringOpt;
+
+            std::optional<std::u32string> a32StringOpt;
+
+            std::array<std::u16string, 7> array;
+
+            std::optional<std::array<std::u16string, 7>> arrayOpt;
+
+            std::vector<std::u32string> sequence;
+
+            std::optional<std::vector<std::u32string>> sequenceOpt;
+
+            std::map<std::string, std::u32string> map;
+
+            std::optional<std::map<std::string, std::u32string>> mapOpt;
     };
 }

@@ -181,8 +181,54 @@
     
         <array name="array" size="7">
             <type>
-                <string />
+                <string type="16" />
             </type>
         </array>
+
+        <sequence name="sequence">
+            <type>
+                <string type="32" />
+            </type>
+        </sequence>
+
+        <map name="map">
+            <keyType>
+                <string type="8" />
+            </keyType>
+            
+            <valueType>
+                <string type="32" />
+            </valueType>
+        </map>
+        
+        <string name="a8StringOpt" optional="true" />
+        
+        <string name="b8StringOpt" optional="true" type="8" />
+    
+        <string name="a16StringOpt" optional="true" type="16" />
+        
+        <string name="a32StringOpt" optional="true" type="32" />
+    
+        <array name="arrayOpt" optional="true" size="7">
+            <type>
+                <string type="16" />
+            </type>
+        </array>
+
+        <sequence name="sequenceOpt" optional="true">
+            <type>
+                <string type="32" />
+            </type>
+        </sequence>
+
+        <map name="mapOpt" optional="true">
+            <keyType>
+                <string type="8" />
+            </keyType>
+            
+            <valueType>
+                <string type="32" />
+            </valueType>
+        </map>
     </structure>
 </definitions>

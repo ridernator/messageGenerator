@@ -63,11 +63,9 @@
             </keyType>
             
             <valueType>
-                <array>
-                    <size>2</size>
+                <array size="2">
                     <type>
-                        <array>
-                            <size>2</size>
+                        <array size="2">
                             <type>
                                 <primitive>unsigned_int_8</primitive>
                             </type>
@@ -147,9 +145,7 @@
                
         <structure name="structure" type="TestSubStruct" optional="true" />
     
-        <array name="array" optional="true">
-            <size>3</size>
-        
+        <array name="array" size="3" optional="true">        
             <type>
                 <primitive>unsigned_int_16</primitive>
             </type>
@@ -183,8 +179,7 @@
         
         <string name="a32String" type="32" />
     
-        <array name="array">
-            <size>7</size>
+        <array name="array" size="7">
             <type>
                 <string />
             </type>

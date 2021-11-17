@@ -425,15 +425,15 @@
                     <xs:documentation>Documentation for this element. Will be added to generated source files</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            
-            <xs:element name="size" type="xs:unsignedLong" minOccurs="1" maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation>Size of this array</xs:documentation>
-                </xs:annotation>
-            </xs:element>
         
             <xs:element name="type" type="ArrayType" minOccurs="1" maxOccurs="1" />
         </xs:all>
+            
+        <xs:attribute name="size" type="xs:unsignedLong" use="required">
+            <xs:annotation>
+                <xs:documentation>Size of this array</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     
     <xs:complexType name="NamedArray">

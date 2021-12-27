@@ -2,4 +2,11 @@
 
 cd "$(dirname "$0")"
 
-make -j12 -C ../../ CONF=Debug && ../../dist/Debug/GNU-Linux/messagegenerator --cpp stressTest.xml --outputFolder . && make -j12 CONF=Debug && ./dist/Debug/GNU-Linux/stresstest
+cmake ../.. && \
+make -j12 -C ../.. && \
+../../messageGenerator --cpp stressTest.xml --outputFolder . && \
+mv -v *.cxx src && \
+mv -v *.hxx include && \
+cmake . && \
+make -j12 && \
+./stressTest
